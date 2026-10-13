@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#3a3f22" />
+<title>Study Buddy</title>
+
+<!--
+============================================================
+  STUDY BUDDY — ORGANIZED STRUCTURE
+============================================================
+  This file is divided into clearly labeled sections:
+
+  CSS (in <style>):
+    § 1. THEME VARIABLES   ← colors, spacing, radii
+    § 2. BASE              ← body, resets
+    § 3. TOPBAR            ← header, brand
+    § 4. POMODORO          ← timer widget
+    § 5. LAYOUT            ← wrapper, step screens
+    § 6. CARDS             ← subject & chapter cards
+    § 7. BREADCRUMB        ← navigation
+    § 8. TABS              ← Notes/MCQ/SQ tabs
+    § 9. NOTES             ← note cards, tables, formulas
+    § 10. STUDY CARD       ← MCQ & SQ container
+    § 11. MCQ OPTIONS      ← answer buttons, feedback
+    § 12. SQ ANSWER        ← short question reveal
+    § 13. RESULTS          ← score screen
+    § 14. WATERMARK
+    § 15. RESPONSIVE
+
+  JAVASCRIPT (in <script>):
+    § 1. AUDIO             ← chime sounds
+    § 2. DATA              ← all questions & notes
+    § 3. REGISTRY          ← subjects & chapters
+    § 4. POMODORO LOGIC
+    § 5. HELPERS           ← utils
+    § 6. NAVIGATION        ← step switching
+    § 7. RENDERERS         ← MCQ, SQ, chapter view
+    § 8. INIT
+============================================================
+-->
+
+<style>
+/* ============================================================
+   § 1. THEME VARIABLES — change colors here
+   ============================================================ */
+:root{
+  /* Base */
+  --bg:#e8e2cd;
+  --surface:#f2ecda;
+  --surface-2:#e5dfc8;
+  --surface-3:#dcd5b9;
+
+  /* Text */
+  --ink:#2c2c1e;
+  --ink-soft:#4a4a32;
+  --muted:#736d52;
+
+  /* Lines */
+  --line:#cfc8ab;
+  --line-strong:#b8b090;
+
+  /* Accent (olive) */
+  --accent:#6d7c38;
+  --accent-hover:#7c8a44;
+  --accent-soft:#a3b968;
+  --accent-tint:#dde4c4;
+
+  /* Dark (topbar, buttons) */
+  --dark:#3a3f22;
+  --dark-2:#4a5030;
+
+  /* Feedback */
+  --correct:#3d5a24;
+  --correct-bg:#e2e9cf;
+  --correct-line:#8fa860;
+  --incorrect:#8a382a;
+  --incorrect-bg:#eed8cc;
+  --incorrect-line:#bc8270;
+
+  /* Shape */
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(58,63,34,.05);
+  --shadow:0 2px 8px rgba(58,63,34,.07);
+  --shadow-lg:0 8px 24px rgba(58,63,34,.1);
+}
+
+/* ============================================================
+   § 2. BASE — resets and body
+   ============================================================ */
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(circle at 100% 0%, rgba(163,185,104,.12), transparent 400px),
+    radial-gradient(circle at 0% 100%, rgba(163,185,104,.08), transparent 400px);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;}
+
+/* ============================================================
+   § 3. TOPBAR — header and brand
+   ============================================================ */
+.topbar{
+  background:var(--dark);
+  color:#f0ebd8;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  gap:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-weight:700;font-size:13px;letter-spacing:.08em;
+  cursor:pointer;user-select:none;color:#f0ebd8;
+  padding:6px 8px;border-radius:8px;transition:.15s ease;
+}
+.brand:hover{background:rgba(255,255,255,.06);}
+.brand-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--accent-soft);
+  box-shadow:0 0 8px rgba(163,185,104,.6);
+}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+
+/* ============================================================
+   § 4. POMODORO — timer widget
+   ============================================================ */
+.pomo{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;padding:5px 10px;
+  font-size:12px;color:#f0ebd8;transition:.2s ease;
+}
+.pomo.running{border-color:var(--accent-soft);background:rgba(163,185,104,.12);}
+.pomo.break-mode{border-color:#a3b968;background:rgba(163,185,104,.15);}
+.pomo.warning{border-color:#d4a860;background:rgba(212,168,96,.12);}
+.pomo.warning .pomo-time{color:#e8b878;}
+.pomo-time{
+  font-variant-numeric:tabular-nums;font-weight:700;
+  font-size:13px;min-width:46px;color:#fff;
+}
+.pomo-mode{
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:.1em;opacity:.75;font-weight:700;
+}
+.pomo button{
+  background:transparent;border:1px solid rgba(255,255,255,.18);
+  color:#f0ebd8;border-radius:7px;padding:4px 11px;
+  font-size:11px;font-weight:600;cursor:pointer;transition:.15s ease;
+}
+.pomo button:hover{border-color:var(--accent-soft);background:rgba(255,255,255,.05);}
+.pomo button.primary{
+  background:var(--accent-soft);color:var(--dark);
+  border-color:var(--accent-soft);font-weight:700;
+}
+.pomo button.primary:hover{background:#b5cc80;}
+.pomo select{
+  background:rgba(255,255,255,.08);color:#f0ebd8;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:7px;padding:4px 22px 4px 8px;
+  font-size:11px;cursor:pointer;font-weight:600;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%23d4d0b0' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 6px center;background-size:9px;
+}
+.pomo select option{background:var(--dark);color:#f0ebd8;}
+
+/* ============================================================
+   § 5. LAYOUT — main wrapper and step screens
+   ============================================================ */
+.wrap{
+  width:100%;max-width:1200px;
+  margin:0 auto;padding:56px 40px 100px;
+}
+.step-head{text-align:center;margin-bottom:52px;}
+.step-eyebrow{
+  color:var(--accent);text-transform:uppercase;
+  font-size:11px;letter-spacing:.18em;font-weight:800;margin:0 0 14px;
+}
+.step-title{
+  margin:0;font-size:clamp(30px,4vw,42px);
+  font-weight:800;letter-spacing:-.04em;line-height:1.15;color:var(--ink);
+}
+.step-sub{
+  color:var(--muted);font-size:15px;
+  margin:14px auto 0;max-width:560px;line-height:1.65;
+}
+.grid{display:grid;gap:20px;}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+
+/* ============================================================
+   § 6. CARDS — subject & chapter cards
+   ============================================================ */
+.card-btn{
+  display:block;width:100%;text-align:left;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:30px;
+  cursor:pointer;transition:.2s ease;font-family:inherit;
+  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.card-btn::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 100% 0%, rgba(163,185,104,.14), transparent 60%);
+  opacity:0;transition:opacity .25s ease;pointer-events:none;
+}
+.card-btn:hover{
+  border-color:var(--accent-soft);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-lg);
+}
+.card-btn:hover::before{opacity:1;}
+.card-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.card-emoji{font-size:44px;line-height:1;margin-bottom:16px;display:block;}
+.card-title{margin:0 0 6px;font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);}
+.card-meta{color:var(--muted);font-size:13.5px;font-weight:500;}
+.card-num{
+  font-size:11px;text-transform:uppercase;letter-spacing:.14em;
+  font-weight:800;color:var(--accent);margin-bottom:12px;
+}
+.card-desc{color:var(--ink-soft);font-size:14px;line-height:1.65;margin:10px 0 18px;}
+.card-stats{
+  display:flex;gap:18px;color:var(--muted);font-size:13px;
+  font-weight:600;padding-top:16px;border-top:1px solid var(--line);
+}
+.back{
+  display:inline-flex;align-items:center;gap:6px;
+  background:transparent;border:0;color:var(--muted);
+  font-size:13px;font-weight:600;cursor:pointer;
+  padding:6px 10px;margin-bottom:22px;border-radius:8px;transition:.15s ease;
+}
+.back:hover{color:var(--ink);background:var(--surface-2);}
+.subject-title{
+  font-size:28px;font-weight:800;letter-spacing:-.03em;
+  margin:0 0 30px;color:var(--ink);
+}
+
+/* ============================================================
+   § 7. BREADCRUMB — navigation
+   ============================================================ */
+.crumbs{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:13px;color:var(--muted);margin-bottom:26px;
+}
+.crumbs button{
+  background:transparent;border:0;padding:3px 8px;
+  border-radius:6px;color:var(--accent);font-weight:700;
+  cursor:pointer;font-size:13px;transition:.15s ease;
+}
+.crumbs button:hover{background:var(--surface-2);}
+.crumbs .current{color:var(--ink);font-weight:700;}
+.crumbs .sep{color:var(--line-strong);font-weight:700;}
+.crumbs .spacer{flex:1;}
+.crumbs .switch{
+  background:var(--surface);border:1px solid var(--line);
+  color:var(--ink-soft);padding:7px 15px;border-radius:999px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:.15s ease;box-shadow:var(--shadow-sm);
+}
+.crumbs .switch:hover{color:var(--ink);border-color:var(--accent-soft);}
+
+/* ============================================================
+   § 8. TABS — Notes/MCQ/SQ switcher
+   ============================================================ */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+.tab{
+  background:transparent;border:0;padding:12px 22px;
+  cursor:pointer;font-size:14px;font-weight:700;
+  color:var(--muted);border-bottom:2px solid transparent;
+  margin-bottom:-1px;transition:.15s ease;
+}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ============================================================
+   § 9. NOTES — note cards, tables, formulas
+   ============================================================ */
+.notes{display:grid;gap:18px;}
+.note{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-sm);
+}
+.note h3{margin:0 0 16px;font-size:18px;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
+.note h4{
+  margin:20px 0 8px;font-size:12px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+}
+.note p,.note li{font-size:14.5px;line-height:1.8;color:var(--ink-soft);}
+.note ul,.note ol{padding-left:24px;margin:12px 0;}
+.note li{margin-bottom:5px;}
+.term{
+  color:var(--accent);font-weight:700;background:var(--accent-tint);
+  padding:1px 7px;border-radius:5px;font-size:13px;
+}
+.formula{
+  background:var(--surface-2);border-left:3px solid var(--accent);
+  padding:14px 20px;border-radius:0 10px 10px 0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:14px;line-height:1.8;margin:14px 0;
+  color:var(--ink);overflow-x:auto;
+}
+table{
+  width:100%;border-collapse:collapse;margin:16px 0 4px;
+  font-size:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;
+}
+table th,table td{
+  border-bottom:1px solid var(--line);padding:12px 16px;
+  text-align:left;line-height:1.6;
+}
+table th{
+  font-weight:800;font-size:12px;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted);background:var(--surface-2);
+}
+table tr:last-child td{border-bottom:0;}
+table tbody tr:hover td{background:var(--surface-2);}
+
+/* ============================================================
+   § 10. STUDY CARD — MCQ & SQ container
+   ============================================================ */
+.study-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:40px 44px;box-shadow:var(--shadow);
+}
+.study-top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin-bottom:20px;font-size:12.5px;
+  color:var(--muted);font-weight:700;
+}
+.study-top .cat{
+  background:var(--accent-tint);padding:6px 14px;border-radius:999px;
+  font-size:11.5px;color:var(--accent);font-weight:800;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.bar{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-bottom:32px;}
+.bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-soft));
+  width:0;transition:width .3s ease;border-radius:3px;
+}
+.question{
+  font-size:22px;line-height:1.5;letter-spacing:-.015em;
+  font-weight:700;margin:0 0 26px;color:var(--ink);
+}
+
+/* ============================================================
+   § 11. MCQ OPTIONS — answer buttons, feedback
+   ============================================================ */
+.opts{display:grid;gap:10px;}
+.opt{
+  display:flex;align-items:center;gap:14px;padding:16px 18px;
+  background:var(--surface-2);border:1px solid transparent;
+  border-radius:12px;cursor:pointer;text-align:left;
+  font-size:15px;transition:.15s ease;color:var(--ink);font-weight:500;
+}
+.opt:hover:not(:disabled){border-color:var(--accent-soft);background:var(--surface);}
+.opt:disabled{cursor:default;}
+.opt .lt{
+  flex:0 0 26px;height:26px;border-radius:7px;
+  background:var(--surface);display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:var(--muted);
+  border:1px solid var(--line);transition:.15s ease;
+}
+.opt.sel{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 2px var(--accent-tint);}
+.opt.sel .lt{background:var(--accent);color:#fff;border-color:var(--accent);}
+.opt.right{background:var(--correct-bg);border-color:var(--correct-line);color:var(--correct);}
+.opt.right .lt{background:var(--correct);color:#fff;border-color:var(--correct);}
+.opt.wrong{background:var(--incorrect-bg);border-color:var(--incorrect-line);color:var(--incorrect);}
+.opt.wrong .lt{background:var(--incorrect);color:#fff;border-color:var(--incorrect);}
+.fb{display:none;margin-top:20px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.7;}
+.fb.show{display:block;}
+.fb.good{background:var(--correct-bg);color:var(--correct);border-left:3px solid var(--correct-line);}
+.fb.bad{background:var(--incorrect-bg);color:var(--incorrect);border-left:3px solid var(--incorrect-line);}
+.fb strong{display:block;margin-bottom:5px;font-size:14px;font-weight:800;}
+.actions{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin-top:28px;flex-wrap:wrap;
+}
+.actions-right{display:flex;gap:10px;margin-left:auto;}
+.btn{
+  background:var(--dark);color:#f0ebd8;border:0;border-radius:10px;
+  padding:11px 20px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s ease;
+}
+.btn:hover:not(:disabled){background:var(--dark-2);transform:translateY(-1px);}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.btn.accent{background:var(--accent);color:#f0ebd8;}
+.btn.accent:hover:not(:disabled){background:var(--accent-hover);}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn.ghost:hover:not(:disabled){border-color:var(--accent);background:var(--surface-2);}
+.hint{font-size:12px;color:var(--muted);font-weight:500;}
+
+/* Filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
+.filters .pill{
+  background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;
+  cursor:pointer;transition:.15s ease;box-shadow:var(--shadow-sm);
+}
+.filters .pill:hover{color:var(--ink);border-color:var(--accent-soft);}
+.filters .pill.on{background:var(--dark);color:#f0ebd8;border-color:var(--dark);}
+.filters .spacer{flex:1;}
+.filters .shuffle{
+  background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);
+  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  cursor:pointer;transition:.15s ease;box-shadow:var(--shadow-sm);
+}
+.filters .shuffle:hover{color:var(--ink);border-color:var(--accent-soft);}
+
+/* ============================================================
+   § 12. SQ ANSWER — short question reveal
+   ============================================================ */
+.sq-answer{
+  display:none;margin-top:18px;padding:20px 24px;
+  background:var(--surface-2);border-radius:12px;
+  border-left:3px solid var(--accent);
+  font-size:14.5px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;
+}
+.sq-answer.show{display:block;}
+
+/* ============================================================
+   § 13. RESULTS — score screen
+   ============================================================ */
+.results{
+  text-align:center;padding:52px 40px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+}
+.results .big{font-size:56px;font-weight:800;letter-spacing:-.045em;margin:0;color:var(--ink);}
+.results .big span{color:var(--accent);}
+.results .sub{color:var(--muted);font-size:15px;margin:12px 0 30px;font-weight:500;}
+.results .row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.missed{text-align:left;margin-top:36px;padding-top:26px;border-top:1px solid var(--line);}
+.missed h4{
+  margin:0 0 16px;font-size:12px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);font-weight:800;
+}
+.missed-item{
+  padding:14px 0;border-bottom:1px solid var(--line);
+  font-size:14px;line-height:1.6;
+}
+.missed-item:last-child{border-bottom:0;}
+.missed-item strong{display:block;font-weight:700;margin-bottom:4px;color:var(--ink);}
+.missed-item span{color:var(--muted);font-size:13px;}
+
+/* ============================================================
+   § 14. WATERMARK
+   ============================================================ */
+.wm{
+  position:fixed;bottom:22px;right:26px;z-index:100;
+  font-size:12px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dark);
+  padding:9px 18px;border-radius:999px;
+  background:rgba(242,236,218,.85);
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  pointer-events:none;user-select:none;
+  box-shadow:0 4px 14px rgba(58,63,34,.12);opacity:.9;
+}
+.wm::before{content:"✦ ";color:var(--accent);font-weight:900;}
+
+.hidden{display:none !important;}
+
+/* ============================================================
+   § 15. RESPONSIVE
+   ============================================================ */
+@media (max-width:1024px){
+  .wrap{max-width:820px;padding:48px 32px 90px;}
+  .study-card{padding:34px 36px;}
+  .note{padding:24px 28px;}
+}
+
+@media (max-width:640px){
+  .wrap{max-width:100%;padding:32px 18px 70px;}
+  .topbar{padding:0 12px;height:58px;font-size:12px;gap:10px;}
+  .pomo{gap:6px;padding:4px 8px;}
+  .pomo-mode{font-size:9px;}
+  .pomo-time{font-size:12px;min-width:40px;}
+  .pomo button{padding:4px 8px;font-size:10px;}
+  .pomo select{padding:3px 18px 3px 6px;font-size:10px;background-size:8px;}
+  .step-title{font-size:26px;}
+  .step-sub{font-size:14px;}
+  .study-card{padding:22px 20px;}
+  .study-top{font-size:11.5px;}
+  .question{font-size:18px;}
+  .opt{padding:13px 14px;font-size:14px;gap:12px;}
+  .opt .lt{flex:0 0 24px;height:24px;font-size:11px;}
+  .actions{flex-direction:column;align-items:stretch;}
+  .actions-right{justify-content:flex-end;flex-wrap:wrap;}
+  .crumbs{font-size:12px;margin-bottom:20px;}
+  .crumbs .switch{padding:6px 12px;font-size:11.5px;}
+  .tab{padding:10px 14px;font-size:13px;}
+  .card-btn{padding:22px;}
+  .card-emoji{font-size:34px;margin-bottom:12px;}
+  .card-title{font-size:17px;}
+  .note{padding:22px 20px;}
+  .note h3{font-size:16px;}
+  .note p,.note li{font-size:13.5px;}
+  .formula{font-size:12.5px;padding:12px 14px;}
+  table{font-size:12.5px;}
+  table th,table td{padding:10px 12px;}
+  .filters .pill,.filters .shuffle{padding:6px 12px;font-size:11.5px;}
+  .results{padding:36px 22px;}
+  .results .big{font-size:44px;}
+  .wm{bottom:14px;right:14px;font-size:10.5px;padding:7px 14px;letter-spacing:.1em;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important;animation:none !important;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     HTML — TOPBAR
+     ============================================================ -->
+<header class="topbar">
+  <div class="brand" id="brand">
+    <div class="brand-dot"></div>
+    <span>STUDY BUDDY</span>
+  </div>
+  <div class="topbar-right">
+    <div class="pomo" id="pomo">
+      <span class="pomo-mode" id="pomoMode">Focus</span>
+      <span class="pomo-time" id="pomoTime">25:00</span>
+      <select id="pomoSelect" aria-label="Session length">
+        <option value="15">15/2</option>
+        <option value="25" selected>25/5</option>
+        <option value="50">50/10</option>
+      </select>
+      <button class="primary" id="pomoStart" type="button">Start</button>
+      <button id="pomoReset" type="button" title="Reset">↺</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HTML — MAIN WRAPPER
+     ============================================================ -->
+<div class="wrap">
+
+  <!-- STEP 1: SUBJECT PICKER -->
+  <section id="stepSubject">
+    <div class="step-head">
+      <p class="step-eyebrow">Choose a subject</p>
+      <h1 class="step-title">What are we studying?</h1>
+      <p class="step-sub">Notes, MCQs, and short questions — organized by subject and chapter.</p>
+    </div>
+    <div class="grid grid-2" id="subjectList"></div>
+  </section>
+
+  <!-- STEP 2: CHAPTER PICKER -->
+  <section id="stepChapter" class="hidden">
+    <button class="back" id="backToSubjects">← Subjects</button>
+    <h2 class="subject-title" id="chapterSubject">Chemistry</h2>
+    <div class="grid grid-2" id="chapterList"></div>
+  </section>
+
+  <!-- STEP 3: STUDY VIEW -->
+  <section id="stepStudy" class="hidden">
+    <nav class="crumbs">
+      <button id="crumbSubject">Chemistry</button>
+      <span class="sep">›</span>
+      <span class="current" id="crumbChapter">Chapter</span>
+      <span class="spacer"></span>
+      <button class="switch" id="switchChapter">Chapter</button>
+      <button class="switch" id="switchSubject">Subject</button>
+    </nav>
+    <div id="studyBody"></div>
+  </section>
+
+</div>
+
+<!-- Watermark -->
+<div class="wm">Made by Maruf</div>
+
+<script>
+/* ============================================================
+   JS § 1. AUDIO — chime sounds
+   ============================================================ */
+const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function ensureAudio(){
+  if(!audioCtx){
+    try{ audioCtx = new AudioCtxClass(); }catch(e){ audioCtx = null; }
+  }
+  if(audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
+
+function playTones(freqs){
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  const now = ctx.currentTime;
+  freqs.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    const start = now + i * 0.15;
+    const dur = 0.75;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.15, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    osc.start(start);
+    osc.stop(start + dur + 0.05);
+  });
+}
+
+const playChime     = () => playTones([880, 1174.66]);
+const playWarning   = () => playTones([1318.51]);
+const playBreakEnd  = () => playTones([659.25, 783.99, 1046.5]);
+
+
+/* ============================================================
+   JS § 2. DATA — all questions & notes
+   ------------------------------------------------------------
+   To add/edit questions, change the arrays below.
+   To add/edit notes, change the NOTES object below.
+   ============================================================ */
+
+/* ---------- CHEMISTRY CH 8 — MCQ ---------- */
+const chem8MCQ=[
+{category:"Electrochemistry",question:"Which ion will be charge-free (discharged) first at the cathode?",options:["Mg²⁺","Fe²⁺","Sn²⁺","Pb²⁺"],answer:3,explanation:"The ion lowest in the electrochemical series is discharged first at the cathode; among these, Pb²⁺ sits lowest."},
+{category:"Thermochemistry",question:"What happens when ammonium chloride dissolves in water?",options:["Produces heat","No change in heat","Absorbs heat","ΔH is negative"],answer:2,explanation:"NH₄Cl dissolving in water is endothermic (ΔH ≈ +14.8 kJ/mol), so it absorbs heat."},
+{category:"Thermochemistry",question:"What is the bond energy of the C-O bond, in kJ/mol?",options:["350","615","724","812"],answer:0,explanation:"Standard bond energies: C-O = 350 kJ/mol, C-H = 414 kJ/mol."},
+{category:"Cells & Batteries",question:"Which one is the reducing agent in a dry cell?",options:["Zn rod","Carbon rod","NH₄⁺","MnO₂"],answer:0,explanation:"At the anode, Zn → Zn²⁺ + 2e⁻; zinc loses electrons, making it the reducing agent."},
+{category:"Environment & Energy",question:"Which of the following is NOT responsible for photochemical smog?",options:["SO₂","CO","N₂O","CH₄"],answer:0,explanation:"Photochemical smog forms in sunlight from CO, NOₓ and unburned hydrocarbons — not SO₂."},
+{category:"Electrochemistry",question:"Which one is oxidized first?",options:["OH⁻","SO₄²⁻","Br⁻","NO₃⁻"],answer:0,explanation:"Anions lower in the electrochemical series give up electrons first; OH⁻ is lowest."},
+{category:"Electrochemistry",question:"The aqueous solution of which compound is electroconductive?",options:["Blue vitriol","Glucose","Sugar","Urea"],answer:0,explanation:"Blue vitriol (CuSO₄) is ionic and dissociates into ions."},
+{category:"Electrochemistry",question:"Which one is used in galvanizing?",options:["Cu","Zn","Hg","Ag"],answer:1,explanation:"Galvanizing coats iron with a protective layer of zinc."},
+{category:"Electrochemistry",question:"Which cation will be attracted to the cathode first?",options:["Zn²⁺","Cu²⁺","Sn²⁺","Ca²⁺"],answer:1,explanation:"Cu²⁺ sits lowest among these cations in the electrochemical series."},
+{category:"Thermochemistry",question:"What is the bond energy of Cl-Cl, in kJ/mol?",options:["244","193","151","143"],answer:0,explanation:"Bond energies: Cl-Cl = 244 kJ/mol."},
+{category:"Electrochemistry",question:"Which one is a weak electrolyte?",options:["H₂O","NaCl","CuSO₄","H₂SO₄"],answer:0,explanation:"Pure water dissociates only slightly."},
+{category:"Electrochemistry",question:"Which is the correctly written electrode?",options:["Au | Au³⁺","Ag | Ag²⁺","Sn | Sn³⁺","Pb | Pb"],answer:0,explanation:"Au|Au³⁺ shows the ion with its actual charge."},
+{category:"Thermochemistry",question:"What is the bond energy of H-F?",options:["464 kJ/mol","563 kJ/mol","498 kJ/mol","615 kJ/mol"],answer:1,explanation:"H-F = 563 kJ/mol."},
+{category:"Electrochemistry",question:"How many moles of OH⁻ are needed to produce 16 g of oxygen at the anode?",options:["1","2","3","4"],answer:1,explanation:"4OH⁻ → O₂ + 2H₂O + 4e⁻. 16 g = 0.5 mol O₂ needs 2 mol OH⁻."},
+{category:"Thermochemistry",question:"For N₂(g) + O₂(g) → 2NO(g), what is ΔH (kJ/mol)?",options:["+180","-192","-176.8","+92"],answer:0,explanation:"Forming 2 moles NO absorbs 180 kJ."},
+{category:"Thermochemistry",question:"What is the bond energy of H-H, in kJ/mol?",options:["436","464","498","348"],answer:0,explanation:"H-H = 436 kJ/mol."},
+{category:"Cells & Batteries",question:"Which of the following is used in dry cell paste?",options:["MnO","MnO₂","CaCl₂","C"],answer:1,explanation:"Dry cell paste contains MnO₂."},
+{category:"Electrochemistry",question:"Which is a weak electrolyte?",options:["CH₃COOH","CuSO₄","H₂SO₄","NaCl"],answer:0,explanation:"CH₃COOH only partly ionizes."},
+{category:"Thermochemistry",question:"What is the bond energy of C-H, in kJ/mol?",options:["326","344","391","414"],answer:3,explanation:"The C-H bond energy is 414 kJ/mol."},
+{category:"Electrochemistry",question:"Which one is a moderately active metal?",options:["Au","Al","Hg","Zn"],answer:3,explanation:"Zn is moderately active."},
+{category:"Thermochemistry",question:"What is the bond strength of CO?",options:["724 kJ/mol","391 kJ/mol","615 kJ/mol","350 kJ/mol"],answer:3,explanation:"The single C-O bond energy is 350 kJ/mol."},
+{category:"Electrochemistry",question:"Which is the electrode reaction for Sn(s) | Sn²⁺(aq)?",options:["Sn(s) → Sn²⁺(aq) + e⁻","Sn²⁺(aq) → Sn(s) + 2e⁻","Sn(s) ⇌ Sn²⁺(aq) + 2e⁻","Sn(s) ⇌ Sn²⁺(aq) - 2e⁻"],answer:2,explanation:"Sn|Sn²⁺ is an oxidation half-cell."},
+{category:"Environment & Energy",question:"In ²³⁵₉₂U + ¹₀n → ¹⁴¹₅₆Ba + ᴬ₃₆Kr + 3¹₀n + heat, what is A?",options:["92","141","142","143"],answer:0,explanation:"By conservation: 235 + 1 = 141 + A + 3 ⇒ A = 92."},
+{category:"Thermochemistry",question:"Which one has higher bond energy?",options:["H₂","N₂","Cl₂","O₂"],answer:1,explanation:"N₂'s triple bond has ~945 kJ/mol."},
+{category:"Electrochemistry",question:"Which one is an electronic conductor?",options:["Acidic solution","Salt solution","Basic solution","Graphite"],answer:3,explanation:"Graphite conducts via delocalized electrons."},
+{category:"Electrochemistry",question:"Which of the following is used to make electric wires?",options:["Na","Cu","Sn","Ca"],answer:1,explanation:"Copper has high conductivity and low resistance."},
+{category:"Thermochemistry",question:"What is the bond energy of two moles of Cl-Cl?",options:["326 kJ","431 kJ","488 kJ","498 kJ"],answer:2,explanation:"1 mol Cl-Cl = 244 kJ, so 2 mol = 488 kJ."},
+{category:"Thermochemistry",question:"CH₄ + 2Cl₂ → CH₂Cl₂ + 2HCl. C-H=414, Cl-Cl=244, C-Cl=326, H-Cl=431. ΔH?",options:["-92 kJ","-99 kJ","-192 kJ","-198 kJ"],answer:3,explanation:"ΔH = [2(414)+2(244)] − [2(326)+2(431)] = −198 kJ."},
+{category:"Thermochemistry",question:"How much heat is produced when 1 mole of methane gas is burned?",options:["880 kJ","890 kJ","980 kJ","990 kJ"],answer:1,explanation:"Burning 1 mole CH₄ releases about 890 kJ."},
+{category:"Electrochemistry",question:"Which one is a mild/weak electrolyte?",options:["H₂O","CuSO₄","NaCl","H₂SO₄"],answer:0,explanation:"Water ionizes only slightly."},
+{category:"Environment & Energy",question:"How many billion tons of CO₂ are produced per year by burning fossil fuels?",options:["21.3 Billion","57.34 Billion","57.34 Million","99.99 Million"],answer:0,explanation:"Roughly 21.3 billion tons of CO₂ each year."},
+{category:"Thermochemistry",question:"What is the bond energy of O₂ (O=O), in kJ/mol?",options:["151","244","464","498"],answer:3,explanation:"O=O = 498 kJ/mol."},
+{category:"Electrochemistry",question:"Which one is an electronic conductor?",options:["Iron","Sulphur","Acid","Solution of salt"],answer:0,explanation:"Metals conduct through delocalized electrons."},
+{category:"Environment & Energy",question:"Which substance is mixed with petrol as a fuel?",options:["Methanal","Octane","Heptane","Ethanol"],answer:3,explanation:"Ethanol is commonly blended with petrol as a biofuel."},
+{category:"Electrochemistry",question:"Which ion will be reduced first at the cathode?",options:["Cu²⁺","Sn²⁺","Zn²⁺","Mg²⁺"],answer:0,explanation:"Cu²⁺ sits lowest in the reactivity series among these ions."},
+{category:"Thermochemistry",question:"CaO + CO₂ → CaCO₃. What is ΔH?",options:["-176.8 kJ","+63.95 kJ","-63.95 kJ","+176.8 kJ"],answer:0,explanation:"ΔH = −176.8 kJ/mol."},
+{category:"Electrochemistry",question:"Which ion is reduced first at the cathode?",options:["Fe²⁺","Ag⁺","Al³⁺","Sn²⁺"],answer:1,explanation:"Ag⁺ lies below the others."},
+{category:"Electrochemistry",question:"Which cation gets discharged first?",options:["Zn²⁺","Pb²⁺","Mg²⁺","Cu²⁺"],answer:3,explanation:"Cu²⁺ lies lower than the others."},
+{category:"Electrochemistry",question:"Which of the following is an electrical insulator?",options:["Scrap iron","NaCl solution","C₂H₅OH","Solid CaCl₂"],answer:3,explanation:"Solid ionic compounds have ions locked in a lattice."},
+{category:"Electrochemistry",question:"Which one is discharged first when more than one cation is present?",options:["K⁺","H⁺","Na⁺","Mg²⁺"],answer:1,explanation:"H⁺ is lowest in reactivity."},
+{category:"Thermochemistry",question:"How much heat energy is produced per mole of NH₃ in the Haber process?",options:["-92 kJ","-46 kJ","+46 kJ","+92 kJ"],answer:1,explanation:"2 moles NH₃ release 92 kJ, so 1 mole releases 46 kJ."},
+{category:"Thermochemistry",question:"What is the bond energy of the oxygen-oxygen double bond in O₂?",options:["431 kJ/mol","498 kJ/mol","414 kJ/mol","464 kJ/mol"],answer:1,explanation:"O=O = 498 kJ/mol."},
+{category:"Thermochemistry",question:"N₂(g) + 3H₂(g) ⇌ 2NH₃(g). What is ΔH?",options:["-198 kJ","-92 kJ","+92 kJ","+198 kJ"],answer:1,explanation:"ΔH = −92 kJ."},
+{category:"Cells & Batteries",question:"Which is used in lithium batteries?",options:["PbO₂","MnO₂","Hg₂O","LiCoO₂"],answer:3,explanation:"LiCoO₂ is the cathode material in lithium-ion batteries."},
+{category:"Electrochemistry",question:"Which one acts as cathode in a galvanic cell?",options:["Fe | Fe²⁺","Cu | Cu²⁺","Zn | Zn²⁺","Ag | Ag⁺"],answer:3,explanation:"Ag is least reactive → cathode."},
+{category:"Electrochemistry",question:"Which one is the cathode electrode in a Cu-Ag galvanic cell?",options:["Fe | Fe²⁺","Zn | Zn²⁺","Cu | Cu²⁺","Ag | Ag⁺"],answer:3,explanation:"Ag is less reactive than Cu."},
+{category:"Environment & Energy",question:"Which of the following can be used to produce biofuel?",options:["Palm juice","Polythene","Protein","Polyester"],answer:0,explanation:"Palm juice is fermented to make bioethanol."},
+{category:"Electrochemistry",question:"During electrolysis of concentrated NaCl with Pt cathode, what forms at the cathode?",options:["Na","Na-Hg","H₂","Cl₂"],answer:2,explanation:"H⁺ is reduced in preference to Na⁺."},
+{category:"Environment & Energy",question:"Which one is an active component of photochemical smog?",options:["NO₂","CO₂","N₂O","SO₂"],answer:0,explanation:"NO₂ is an active component."},
+{category:"Thermochemistry",question:"Which produces the least heat per mole upon combustion?",options:["CH₄","C₂H₆","C₃H₈","C₄H₁₀"],answer:0,explanation:"Methane has the shortest carbon chain."},
+{category:"Cells & Batteries",question:"Which one is the anode in a dry cell?",options:["MnO₂","NH₄Cl","Zn container","C rod"],answer:2,explanation:"The zinc container is the anode."},
+{category:"Thermochemistry",question:"In which molecule is more energy required to break the bond?",options:["H₂","O₂","Cl₂","HCl"],answer:1,explanation:"O₂ has a double bond (498 kJ/mol)."},
+{category:"Environment & Energy",question:"Which of the following is known as a bio-fuel?",options:["CH₄","CH₃CH₂OH","CH₃OH","CH₃COOH"],answer:1,explanation:"Ethanol is a classic bio-fuel."},
+{category:"Electrochemistry",question:"Which of the following does NOT conduct electricity?",options:["Aluminium","Graphite","Silver","Diamond"],answer:3,explanation:"Diamond has no free electrons."},
+{category:"Electrochemistry",question:"What is the function of anions in an electrolytic cell?",options:["Provides electrons to the anode","Receives electrons from the cathode","Provides electrons to the electrolyte","Neutralizes charge-free compounds"],answer:0,explanation:"Anions give up electrons at the anode."},
+{category:"Thermochemistry",question:"N₂(g) + O₂(g) ⇌ 2NO(g). What is ΔH?",options:["-92 kJ","-180 kJ","-99 kJ","+180 kJ"],answer:3,explanation:"ΔH = +180 kJ."},
+{category:"Thermochemistry",question:"H₂(g) + I₂(s) → 2HI(g); ΔH = +52 kJ. Which energy diagram fits?",options:["Product energy level higher than reactant","Reactant energy level higher than product","Both at same level","Cyclic curve"],answer:0,explanation:"Endothermic → product above reactants."},
+{category:"Thermochemistry",question:"How many joules of energy are obtained by burning 1 mole of methane?",options:["891,000 J","981,000 J","6,789,000 J","978,000 J"],answer:0,explanation:"≈ 891 kJ = 891,000 J."},
+{category:"Environment & Energy",question:"Which component of air has high heat-absorbing capacity and traps heat?",options:["Oxygen","Carbon dioxide","Nitrogen","Water vapour"],answer:1,explanation:"CO₂ absorbs and re-radiates infrared."},
+{category:"Thermochemistry",question:"2H₂ + O₂ → 2H₂O. H-H=435, O=O=498, O-H=464. What is ΔH?",options:["-244 kJ","+244 kJ","+488 kJ","-488 kJ"],answer:3,explanation:"ΔH = [2(435)+498] − [4(464)] = −488 kJ."},
+{category:"Environment & Energy",question:"Which of the following is present in photochemical smog?",options:["Carbon Monoxide","Carbon Dioxide","Phosphorus Trioxide","Chlorine Heptaoxide"],answer:0,explanation:"CO is present in photochemical smog."},
+{category:"Cells & Batteries",question:"How much electric potential is obtained from a dry cell?",options:["1.0 volt","1.5 volt","2.0 volt","2.5 volt"],answer:1,explanation:"A dry cell produces about 1.5 V."},
+{category:"Cells & Batteries",question:"In a dry cell, which substance is reduced?",options:["H₂O","ZnCl₂","MnO₂","Starch"],answer:2,explanation:"Manganese in MnO₂ is reduced."},
+{category:"Thermochemistry",question:"Bond energies of A-A, B-B and A-B are 435, 244 and 431 kJ/mol. For A₂ + B₂ → 2AB, what is ΔH?",options:["+183 kJ","-679 kJ","-183 kJ","+862 kJ"],answer:2,explanation:"ΔH = (435 + 244) − 2(431) = −183 kJ."},
+{category:"Environment & Energy",question:"What is the chemical formula for lime water?",options:["CaO","CaCO₃","Ca(OH)₂","Ca(HCO₃)₂"],answer:2,explanation:"Lime water is Ca(OH)₂."},
+{category:"Environment & Energy",question:"Which gas produced by burning wood in limited air is extremely harmful?",options:["CO","CO₂","O₂","SO₃"],answer:0,explanation:"CO is highly harmful."},
+{category:"Electrochemistry",question:"Which compound fulfills the demand for electrolytes in our body?",options:["O₂","H₂O","CO₂","NaCl"],answer:3,explanation:"NaCl is the main source of body electrolytes."},
+{category:"Electrochemistry",question:"In the cell Zn | Zn²⁺(aq) || Ag⁺(aq) | Ag, which statement is correct?",options:["Zn²⁺ accepts electrons","Ag⁺ ions accept electrons at the cathode","Ag releases electrons at the anode","Zn releases electrons at the cathode"],answer:1,explanation:"Ag⁺ accepts electrons at the cathode."},
+{category:"Electrochemistry",question:"Which acts as the electrolyte in a glucose sensor?",options:["Thin metal coating","Blood","Glucose","Skin"],answer:1,explanation:"Blood acts as the electrolyte medium."},
+{category:"Electrochemistry",question:"Which compound would be in the vessel during electroplating of Cr over Fe?",options:["CuSO₄","FeSO₄","Cr₂(SO₄)₃","NiSO₄"],answer:2,explanation:"Cr₂(SO₄)₃ supplies Cr³⁺ ions."},
+{category:"Thermochemistry",question:"What is the bond energy of the C-Cl bond, in kJ/mol?",options:["244","326","431","498"],answer:1,explanation:"C-Cl = 326 kJ/mol."},
+{category:"Thermochemistry",question:"What is the bond energy of H-H, in kJ/mol?",options:["464","326","431","436"],answer:3,explanation:"H-H = 436 kJ/mol."},
+{category:"Electrochemistry",question:"How many moles of electrons are needed to produce 2 moles of oxygen gas from OH⁻ at the anode?",options:["1","2","8","4"],answer:2,explanation:"4OH⁻ → O₂ + 2H₂O + 4e⁻, so 2 mol O₂ need 8 mol e⁻."},
+{category:"Electrochemistry",question:"Which one of the following is a weak electrolyte?",options:["H₂O","CuSO₄","H₂SO₄","NaCl"],answer:0,explanation:"Pure water ionizes only slightly."},
+{category:"Electrochemistry",question:"The aqueous solution of which compound is an electrical conductor?",options:["Sugar","Glucose","Urea","Blue vitriol"],answer:3,explanation:"Blue vitriol (CuSO₄) dissociates into ions."},
+{category:"Electrochemistry",question:"Which of the following will be reduced first?",options:["Fe²⁺","Ca²⁺","Zn²⁺","Cu²⁺"],answer:3,explanation:"Cu²⁺ sits lowest in the reactivity series."},
+{category:"Electrochemistry",question:"During electrolysis of dilute H₂SO₄, which reaction occurs at the cathode?",options:["SO₄²⁻ → SO₄ + 2e⁻","4H⁺ + 4e⁻ → 2H₂","H + H → H₂","OH⁻ → OH + e⁻"],answer:1,explanation:"H⁺ is reduced at the cathode."},
+{category:"Cells & Batteries",question:"In a dry cell, how many electrons does the reaction gain per 2 ammonium ions?",options:["1","2","4","3"],answer:1,explanation:"2NH₄⁺ + 2MnO₂ + 2e⁻ — two ammonium ions take 2 electrons."},
+{category:"Environment & Energy",question:"What year did the Chernobyl nuclear accident happen?",options:["1986","1990","1976","1985"],answer:0,explanation:"Chernobyl: 26 April 1986."},
+{category:"Electrochemistry",question:"Which is NOT produced during electrolysis of concentrated NaCl using Pt electrodes?",options:["Na","NaOH","H₂","Cl₂"],answer:0,explanation:"Sodium metal isn't formed."},
+{category:"Cells & Batteries",question:"Which element is oxidized in a hydrogen fuel cell?",options:["N","H","C","O"],answer:1,explanation:"H₂ → 2H⁺ + 2e⁻ at the anode."},
+{category:"Electrochemistry",question:"Which equation shows a single displacement reaction that actually takes place?",options:["2MgO + C → CO₂ + Mg","MgO + Cu → CuO + Mg","PbO + Zn → ZnO + Pb","ZnO + H₂ → H₂O + Zn"],answer:2,explanation:"Zn is more reactive than Pb."},
+{category:"Electrochemistry",question:"Which ion is reduced first?",options:["Zn²⁺","Cu²⁺","Al³⁺","Ca²⁺"],answer:1,explanation:"Cu²⁺ lies lower in the electrochemical series."},
+{category:"Electrochemistry",question:"In electrolysis of an aqueous solution, which reaction occurs at the cathode?",options:["H + H → H₂","OH⁻ → OH + e⁻","SO₄²⁻ → SO₄ + 2e⁻","4H⁺ + 4e⁻ → 2H₂"],answer:3,explanation:"4H⁺ + 4e⁻ → 2H₂."}
+];
+
+/* ---------- CHEMISTRY CH 8 — SQ ---------- */
+const chem8SQ=[
+{category:"Knowledge",question:"What is meant by one calorie? [D.i.B. 25]",answer:"The amount of heat energy required to raise the temperature of 1 gram of water by 1°C is called one calorie. (1 Cal = 4.18 J)"},
+{category:"Knowledge",question:"How much is the bond energy of H-Cl?",answer:"The bond energy of H-Cl is 431 kJ/mole."},
+{category:"Knowledge",question:"How much kJ/mole is the bond energy of O-H? [D.B. 17]",answer:"The bond energy of O-H is 464 kJ/mole."},
+{category:"Knowledge",question:"What is Heat of Reaction? [D.B. 25]",answer:"The amount of heat changed (absorbed or released) during a chemical reaction is called the Heat of Reaction."},
+{category:"Knowledge",question:"What is the ΔH in a reaction?",answer:"The difference between the total internal energy of products and the total internal energy of reactants in a chemical reaction is called the ΔH of that reaction."},
+{category:"Knowledge",question:"What is bond energy? [Ctg.B. 25]",answer:"The energy required to break the bond between any two atoms of a compound and separate them is called bond energy."},
+{category:"Knowledge",question:"What is an exothermic reaction? [B.B. 22; C.B. 20]",answer:"The chemical reaction in which heat is evolved is called an exothermic reaction."},
+{category:"Knowledge",question:"What is the source of all energy on Earth?",answer:"Sun is the source of all energy on Earth."},
+{category:"Knowledge",question:"In which process do plants store energy?",answer:"Plants store energy using the photosynthesis process."},
+{category:"Knowledge",question:"Which atmospheric gas has high heat absorbing capacity?",answer:"CO₂ in the atmosphere has high heat absorbing capacity."},
+{category:"Knowledge",question:"What is electromagnetic ray?",answer:"Heat energy spreads from a warm source to a cold place through a ray which is called electromagnetic ray."},
+{category:"Knowledge",question:"What is electrolysis? [Ctg.B. 20; J.B. 19]",answer:"When a substance forms several substances through current flow in its molten state, that process is called electrolysis."},
+{category:"Knowledge",question:"What is an electrolytic cell? [J.B. 19]",answer:"The electric cell that uses electricity to conduct chemical reactions is called an electrolytic cell."},
+{category:"Knowledge",question:"What is electrode? [J.B. 25; D.j.B. 20]",answer:"In electric cells, electricity enters the solution through some metal plate and then electricity comes out; these plates are called electrodes."},
+{category:"Knowledge",question:"What is Ag/Ag⁺(aq) electrode?",answer:"When silver metal rod or plate is immersed in aqueous silver salt solution, then it is called Ag/Ag⁺(aq) electrode."},
+{category:"Knowledge",question:"What is electrolyte? [J.B. 19]",answer:"Substances that let electricity pass in their melted/solution state and simultaneously bring about a chemical change in that substance are called electrolytes."},
+{category:"Knowledge",question:"What is tin plating?",answer:"The process of plating tin on metal is called tin plating."},
+{category:"Knowledge",question:"What is electroplating? [M.B., R.B., J.B. 25; M.B. 20]",answer:"The process of applying a coating of a less reactive metal onto an object made of another metal through electrolysis is called electroplating."},
+{category:"Knowledge",question:"What is an electrochemical cell? [Self-Assessment]",answer:"The mechanism that helps chemical reactions convert chemical energy into electrical energy is called an electrochemical cell."},
+{category:"Knowledge",question:"What is galvanizing? [S.B. 24; D.j.B. 20]",answer:"The process of plating zinc on iron is called galvanizing."},
+{category:"Knowledge",question:"What is an electronic conductor? [D.B. 25]",answer:"The substance through which electricity is passed using electrons is called an electronic conductor."},
+{category:"Knowledge",question:"What is galvanic cell? [J.B. 20; D.B. 19]",answer:"The cell where chemical elements undergo reactions and produce electrical energy is called a Galvanic cell."},
+{category:"Knowledge",question:"What is salt bridge?",answer:"If the anode and cathode of an electrochemical cell are made in different jars, a curved glass tube filled with salt solution is used to connect them; this system is called a salt bridge."},
+{category:"Knowledge",question:"What is mercury cell?",answer:"The cell made of Zn and mercurous oxide (Hg₂O) is called a mercury cell."},
+{category:"Knowledge",question:"What is dry cell?",answer:"The electrochemical cell where NH₄Cl, MnO₂ and starch mixture are used as electrolyte instead of liquid is called a dry cell."},
+{category:"Knowledge",question:"At what temperature does helium atom form from hydrogen atom?",answer:"15 million °C."},
+{category:"Knowledge",question:"What is nuclear chain reaction?",answer:"When a large atom is hit with a neutron, two new small atoms and two new neutrons form, which goes on like a chain; this process is called a nuclear chain reaction."},
+{category:"Knowledge",question:"What is nuclear fission? [D.j.B. 25; D.B. 20]",answer:"The nuclear process in which the nucleus of a larger and heavy element is broken into the nucleus of smaller elements is called nuclear fission."},
+{category:"Comprehension",question:"Why don't endothermic reactions occur spontaneously?",answer:"Heat doesn't have to be externally provided in spontaneous reactions. The heat absorbing capacity of product must be lower than the reactants for the reaction to be spontaneous. But in endothermic reactions, the heat absorbing capacity of product is higher than reactants. So, the value of ΔH is positive. Again, heat has to be supplied from outside for this reaction to occur, which is against the condition of spontaneous reaction. So, endothermic reaction doesn't occur spontaneously."},
+{category:"Comprehension",question:"What does the positive or negative value of ΔH mean?",answer:"ΔH expresses the change of heat energy in a reaction. ΔH can be calculated by subtracting the total energy evolved from forming new bonds from the total energy required to break old bonds. The value of ΔH positive and negative refers to endothermic and exothermic reaction respectively."},
+{category:"Comprehension",question:"Why is heat generated when lime is mixed with water? [D.B. 25; S.B. 17]",answer:"CaO + H₂O → Ca(OH)₂ + Heat. The internal chemical energy within the product is less than the total internal chemical energy present in the reactants. After the total chemical energy of the reactants is consumed, the excess energy is released as heat."},
+{category:"Comprehension",question:"Why is ethanol called biofuel? [J.B. 17]",answer:"Ethanol is a combustible liquid chemical. Heat is produced when ethanol is burned. Like mineral fuel, ethanol can be used as heat engine fuel. And this ethanol is an organic chemical compound, which can be produced through fermentation process from different starch type crops such as potato, corn, sugarcane etc."},
+{category:"Comprehension",question:"What problem occurs if there is N and S compound in fuel? Explain.",answer:"If S and N compounds are mixed in fuel, then it releases SO₂, SO₃ and NO₂ as byproducts along with CO₂. These byproduct gases cause acid rain which is harmful for the environment."},
+{category:"Comprehension",question:"What do you mean by safe fuel?",answer:"The fuels that don't produce any toxic substances for health and environment are called safe fuels. For example — methane and ethanol are safe fuels."},
+{category:"Comprehension",question:"What does galvanizing mean? Explain. [D.B. 17]",answer:"The process of zinc plating on a metal is called galvanizing. Metals react with air and water, corrode, and cause economical loss. Galvanizing is a process where metals are plated with zinc metal to prevent metal corrosion."},
+{category:"Comprehension",question:"Explain why KCl is an electrolyte. [B.B. 25]",answer:"KCl is an ionic compound. It conducts electricity in a molten or dissolved state and undergoes a chemical change. When electricity is passed through molten KCl, chlorine gas is produced at the anode and potassium ions are formed at the cathode."},
+{category:"Comprehension",question:"Electroplating prevents metal corrosion. Explain.",answer:"Electroplating is used to plate less reactive metal on a highly reactive metal. Since less reactive metals don't react with atmospheric oxygen, the highly reactive metals don't corrode as they are not oxidized."},
+{category:"Comprehension",question:"Why is base mixed water called electrolytic conductor?",answer:"Pure water H₂O is made of two H and one O. But electrolysis of pure water is not possible. If some base is mixed with it, then that base ionizes in the water. The water conducts electricity because of the presence of base ions."},
+{category:"Comprehension",question:"Why is electrode important in electrolysis?",answer:"Two metal plates are required to run electricity through a liquid solution. These are called electrodes. The task of electrodes is to conduct a chemical reaction when electron enters the solution through one electrode and another electrode accepts electron."},
+{category:"Comprehension",question:"Why is anode called oxidation electrode?",answer:"Among the ions present in the electrolytic cell, the one with the highest oxidation potential is attracted by anode and completes oxidation by losing electron. So, anode is called oxidation electrode."},
+{category:"Comprehension",question:"Galvanic cell reaction is a spontaneous reaction — explain.",answer:"Chemical energy transforms into electrical energy in a galvanic cell. Zn metal donates electron and becomes Zn²⁺ ion during oxidation in anode: Zn → Zn²⁺ + 2e⁻. Copper ion in the cathode accepts the electron and completes reduction: Cu²⁺ + 2e⁻ → Cu. So electron flow is spontaneous."},
+{category:"Comprehension",question:"Why is a salt bridge used in a galvanic cell? [J.B. 25; J.B. 20; D.B. 17]",answer:"A salt bridge is used for two reasons: i. It establishes a connection between the solutions of the two half-cells, completing the electrical circuit. ii. It maintains the electrical neutrality of the solutions in both half-cells."},
+{category:"Comprehension",question:"Why is MnO₂ used in a dry cell? [R.B. 25; J.B. 17]",answer:"MnO₂ located at the cathode accepts the electrons produced at the anode and undergoes reduction. This keeps the flow of electrons active, which produces electricity."},
+{category:"Comprehension",question:"Electricity is produced through oxidation-reduction reaction — explain.",answer:"Electron flow is the flow of electricity. In Daniell cell, Zn rod oxidizes by donating electron and Cu²⁺ reduces by accepting electron. This is how electricity is produced using oxidation-reduction."},
+{category:"Comprehension",question:"Explain the structure of a dry cell.",answer:"Dry cell is made of cathode and anode. Jar made of zinc is used as the anode. The jar is filled with a mixture: MnO₂, NH₄Cl, ZnCl₂ and water. A carbon rod made of a heavy coat of MnO₂ is used as the cathode."},
+{category:"Comprehension",question:"What do you mean by one faraday?",answer:"The amount of electric charge required for 1 mole electron flow is called faraday. 1.0F = 96500 C charge."},
+{category:"Comprehension",question:"Write two characteristics of radioactivity.",answer:"i. Only elements with atomic number higher than 82 show radioactivity. ii. Radioactivity is a nuclear event."},
+{category:"Comprehension",question:"Radioactivity is a nuclear fission reaction — explain. [D.B. 16]",answer:"When a radioactive element is struck by a high energy neutron particle it breaks into a nucleus of a new element. This is how a large nucleus breaks into smaller elements, following the condition of the fission reaction."}
+];
+
+/* ---------- CHEMISTRY CH 7 — MCQ ---------- */
+const chem7MCQ=[
+{category:"Oxidation Numbers",question:"In which compound is the latent valency of S equal to 2?",options:["SFe","SO₃","SF₄","H₂S"],answer:2,explanation:"SF₄: sulfur shows +4 active. Highest valency = 6, so latent valency = 6 − 4 = 2."},
+{category:"Redox",question:"H₂S + Cl₂ → S + 2HCl. What type of reaction is this?",options:["Redox reaction","Neutralization","Hydrolysis","Decomposition"],answer:0,explanation:"Cl₂ is reduced (0 → −1), S is oxidized (−2 → 0). Redox reaction."},
+{category:"Reaction Types",question:"Which one is both a hydrolysis and a precipitation reaction?",options:["SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl","AlCl₃ + 3H₂O → Al(OH)₃↓ + 3HCl","CaCl₂ + 6H₂O → CaCl₂·6H₂O","FeSO₄ + 7H₂O → FeSO₄·7H₂O"],answer:1,explanation:"AlCl₃ hydrolyzes, and Al(OH)₃ precipitates out."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of the central atom in K₂Cr₂O₇?",options:["-6","+5","+6","+3"],answer:2,explanation:"2(+1) + 2x + 7(−2) = 0 → x = +6."},
+{category:"Reaction Types",question:"Fe₂(SO₄)₃ + 6NaOH → 2Fe(OH)₃(s) + 3Na₂SO₄. Type?",options:["Redox","Precipitation","Substitution","Isomerization"],answer:1,explanation:"Fe(OH)₃ is an insoluble solid precipitate."},
+{category:"Redox",question:"Sn⁴⁺ + 2Fe²⁺ → Sn²⁺ + 2Fe³⁺. Which species undergoes reduction?",options:["Fe²⁺","Fe³⁺","Sn²⁺","Sn⁴⁺"],answer:3,explanation:"Sn⁴⁺ gains electrons (+4 → +2), so it is reduced."},
+{category:"Reaction Types",question:"HNO₃ + KOH → KNO₃ + H₂O. Which are the spectator ions?",options:["K⁺, NO₃⁻","H⁺, NO₃⁻","KOH","H⁺, OH⁻"],answer:0,explanation:"K⁺ and NO₃⁻ appear unchanged on both sides."},
+{category:"Applications",question:"Which alloy is made by melting copper and tin?",options:["Steel","Brass","Duralumin","Bronze"],answer:3,explanation:"Bronze = copper + tin."},
+{category:"Equilibrium",question:"In which reaction does a pressure effect exist at equilibrium?",options:["NH₄CNO → H₂N−CO−NH₂","N₂ + O₂ ⇌ 2NO","3NO₂ + H₂O ⇌ 2HNO₃ + NO","H₂ + Cl₂ ⇌ 2HCl"],answer:2,explanation:"Gaseous moles differ (3 vs 1) — pressure affects equilibrium."},
+{category:"Applications",question:"By which metal is galvanizing performed?",options:["Zn","Cr","Ag","Sn"],answer:0,explanation:"Galvanizing = coating iron with zinc."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of Mn in KMnO₄?",options:["0","+1","+3","+7"],answer:3,explanation:"1(+1) + x + 4(−2) = 0 → x = +7."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of hydrogen in CaH₂?",options:["0","+1","-1","+2"],answer:2,explanation:"In metal hydrides, hydrogen has −1 oxidation state."},
+{category:"Reaction Types",question:"Which type of reaction is always exothermic?",options:["Addition","Substitution","Decomposition","Neutralization"],answer:3,explanation:"Neutralization always releases heat."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of Cr in chromate ion CrO₄²⁻?",options:["+3","+6","+4","+7"],answer:1,explanation:"x + 4(−2) = −2 → x = +6."},
+{category:"Redox",question:"ZnO + C → Zn + CO. Which species is the oxidant?",options:["C","ZnO","Zn","CO"],answer:1,explanation:"ZnO is reduced, so it is the oxidizing agent."},
+{category:"Applications",question:"What is the color of the precipitate of Fe(OH)₃?",options:["White","Light blue","Reddish brown","Greenish"],answer:2,explanation:"Fe(OH)₃ precipitate is reddish brown."},
+{category:"Applications",question:"How many water molecules are present in blue vitriol?",options:["1","3","5","7"],answer:2,explanation:"CuSO₄·5H₂O — 5 water molecules."},
+{category:"Redox",question:"Zn + Cu²⁺ → Zn²⁺ + Cu. Which one is the oxidant?",options:["Zn","Cu²⁺","Zn²⁺","Cu"],answer:1,explanation:"Cu²⁺ accepts electrons and is reduced."},
+{category:"Applications",question:"What is hydrated ferric oxide (Fe₂O₃·nH₂O)?",options:["Paraffin","Rust","Teflon","Plastic"],answer:1,explanation:"Rust is hydrated ferric oxide."},
+{category:"Reaction Types",question:"What type of chemical reaction occurs upon taking an activated medicine?",options:["Neutralization","Addition","Substitution","Combustion"],answer:0,explanation:"Antacids neutralize excess stomach acid."},
+{category:"Redox",question:"Which one is NOT a redox reaction?",options:["FeCl₃ + H₂S → FeCl₂ + S + HCl","Zn + CuSO₄ → ZnSO₄ + Cu","Na₂SO₄ + BaCl₂ → BaSO₄↓ + 2NaCl","CuO + CO → Cu + CO₂"],answer:2,explanation:"In the precipitation of BaSO₄, no oxidation numbers change."},
+{category:"Applications",question:"Optimum temperature and pressure for the Haber process?",options:["450°C, 200 atm","550°C, 250 atm","450–550°C, 200–250 atm","200–250°C, 450 atm"],answer:2,explanation:"Haber process: 450–550°C, 200–250 atm."},
+{category:"Reaction Types",question:"Which one is an isomerization reaction?",options:["MgCO₃ → MgO + CO₂","NH₄CNO → NH₂−CO−NH₂","NaCl + AgNO₃ → NaNO₃ + AgCl↓","2Mg + O₂ → 2MgO"],answer:1,explanation:"Ammonium cyanate rearranges to urea."},
+{category:"Applications",question:"What is the chemical nature of SiO₂?",options:["Alkaline","Acidic","Inert","Neutral"],answer:1,explanation:"SiO₂ is an acidic oxide."},
+{category:"Oxidation Numbers",question:"S + O₂ → SO₂. What is the latent valency of sulfur in SO₂?",options:["0","2","4","6"],answer:1,explanation:"Sulfur shows +4 active. Latent = 6 − 4 = 2."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of S in H₂SO₄?",options:["+6","+2","+4","+5"],answer:0,explanation:"2(+1) + x + 4(−2) = 0 → x = +6."},
+{category:"Applications",question:"Heat evolved per mole of water in a strong acid-base neutralization?",options:["58.34 kJ","54.34 kJ","55.34 kJ","57.34 kJ"],answer:3,explanation:"Always −57.34 kJ/mol."},
+{category:"Applications",question:"How many water molecules are in one molecule of ferrous sulfate crystal?",options:["5","6","7","2"],answer:2,explanation:"FeSO₄·7H₂O — 7 water molecules."},
+{category:"Reaction Types",question:"SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl. Type?",options:["Neutralization","Redox","Hydration","Hydrolysis"],answer:3,explanation:"Water breaks down SiCl₄ — hydrolysis."},
+{category:"Applications",question:"Grams of O₂ required when 5 g Mg combusts fully? (2Mg + O₂ → 2MgO)",options:["2.33 g","3.33 g","4.33 g","5.33 g"],answer:1,explanation:"Mg = 5/24 mol. O₂ = 2.5/24 mol = 3.33 g."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of sulfur in Na₂S₂O₃?",options:["+2","+4","+6","+3"],answer:0,explanation:"2(+1) + 2x + 3(−2) = 0 → x = +2."},
+{category:"Reaction Types",question:"Mg + O₂ → MgO. Type?",options:["Decomposition only","Combination + redox + combustion","Neutralization","Double displacement"],answer:1,explanation:"Two elements combine → combination; redox; combustion."},
+{category:"Reaction Types",question:"CaCl₂ + 6H₂O → CaCl₂·6H₂O. Type?",options:["Hydrolysis","Hydration","Neutralization","Precipitation"],answer:1,explanation:"Water molecules associate with the salt — hydration."},
+{category:"Oxidation Numbers",question:"What is the oxidation number of O in K₂O₂?",options:["0","-1","-2","+1"],answer:1,explanation:"In peroxides, oxygen has −1 oxidation state."},
+{category:"Applications",question:"What is the role of sand (SiO₂) on slippery roofs?",options:["Adding color","Increasing friction","Reducing heat","Adding weight"],answer:1,explanation:"Sand neutralizes basic slipperiness and increases friction."},
+{category:"Equilibrium",question:"N₂ + 3H₂ ⇌ 2NH₃, ΔH = −92 kJ. Heat per mole NH₃?",options:["−92 kJ","−46 kJ","+46 kJ","+92 kJ"],answer:1,explanation:"92 kJ for 2 moles NH₃ → 46 kJ per mole."},
+{category:"Reaction Types",question:"HCl + Al(OH)₃ → AlCl₃ + 3H₂O. Type?",options:["Redox","Non-redox, exothermic neutralization","Precipitation","Hydrolysis"],answer:1,explanation:"Acid + base → salt + water; non-redox."},
+{category:"Redox",question:"Sn + Cl₂ → SnCl₂. What role does Sn play?",options:["Oxidant","Reductant","Catalyst","Spectator"],answer:1,explanation:"Sn loses electrons (0 → +2) → oxidized → reductant."},
+{category:"Equilibrium",question:"NH₄CNO(s) → NH₂CO−NH₂(s). Why does pressure not affect equilibrium?",options:["Gaseous moles unchanged","No gas involved","Reaction is exothermic","Reaction is fast"],answer:1,explanation:"Both substances are solids — no gaseous species."}
+];
+
+/* ---------- CHEMISTRY CH 7 — SQ ---------- */
+const chem7SQ=[
+{category:"Knowledge",question:"What are reactants?",answer:"The starting substances that participate in a chemical reaction and are converted into products are called reactants."},
+{category:"Knowledge",question:"What are irreversible reactions?",answer:"Reactions in which reactants are converted into products, but the products cannot react back to reform the reactants under the given conditions, are called irreversible reactions."},
+{category:"Knowledge",question:"What are reversible reactions?",answer:"Reactions in which reactants form products and products simultaneously react to reform the original reactants are called reversible reactions."},
+{category:"Knowledge",question:"What are forward and backward reactions?",answer:"The reaction converting reactants into products is the forward reaction; the reaction converting products back into reactants is the backward reaction."},
+{category:"Knowledge",question:"What is an exothermic reaction?",answer:"A chemical reaction in which heat energy is released to the surroundings (ΔH is negative) is called an exothermic reaction."},
+{category:"Knowledge",question:"What is an endothermic reaction?",answer:"A chemical reaction in which heat energy is absorbed from the surroundings (ΔH is positive) is called an endothermic reaction."},
+{category:"Knowledge",question:"What is a redox reaction?",answer:"A chemical reaction involving the transfer of electrons from one reactant species to another is called a redox (reduction-oxidation) reaction."},
+{category:"Knowledge",question:"What is an oxidation reaction?",answer:"The chemical process in which an atom, ion, or molecule loses one or more electrons, resulting in an increase in oxidation state, is called oxidation."},
+{category:"Knowledge",question:"What is a reduction reaction?",answer:"The chemical process in which an atom, ion, or molecule gains one or more electrons, resulting in a decrease in oxidation state, is called reduction."},
+{category:"Knowledge",question:"What is a reductant?",answer:"The chemical species that donates electrons and itself undergoes oxidation during a redox reaction is called a reductant."},
+{category:"Knowledge",question:"What is an oxidant?",answer:"The chemical species that accepts electrons and itself undergoes reduction during a redox reaction is called an oxidant."},
+{category:"Knowledge",question:"What is a hydrolysis reaction?",answer:"A reaction in which water reacts with a compound causing breaking of bonds and forming new compounds is called hydrolysis."},
+{category:"Knowledge",question:"What is a hydration reaction?",answer:"A reaction in which one or more water molecules associate with an ionic compound to form a crystal lattice structure without breaking water chemical bonds is called hydration."},
+{category:"Knowledge",question:"What is a synthesis reaction?",answer:"A chemical reaction in which two or more elements combine directly to form a single compound is called a synthesis reaction."},
+{category:"Knowledge",question:"What is an isomerization reaction?",answer:"A reaction in which atoms within a molecule are rearranged to convert one structural isomer into another without changing the molecular formula."},
+{category:"Knowledge",question:"What is a precipitation reaction?",answer:"A reaction occurring in aqueous solution where two soluble ionic compounds combine to produce an insoluble solid precipitate."},
+{category:"Knowledge",question:"What is the chemical formula of rust?",answer:"The chemical formula of rust is hydrated ferric oxide, Fe₂O₃·nH₂O."},
+{category:"Knowledge",question:"What is the rate of reaction?",answer:"The change in concentration of reactants or products per unit time is called the rate of reaction (Unit: mol L⁻¹·s⁻¹)."},
+{category:"Knowledge",question:"What is a catalyst?",answer:"A substance that alters the rate of a chemical reaction without undergoing any permanent chemical change itself is called a catalyst."},
+{category:"Knowledge",question:"What is Le Chatelier's Principle?",answer:"If a system at chemical equilibrium is subjected to a change in temperature, pressure, or concentration, the position of equilibrium will shift in a direction that tends to counteract that change."},
+{category:"Comprehension",question:"What is meant by a non-redox reaction? Explain with a reaction.",answer:"A non-redox reaction is a chemical reaction in which no transfer of electrons takes place between reactants. The oxidation numbers of all participating atoms/ions remain unchanged.\n\nExample: NaOH + HCl → NaCl + H₂O — Na (+1), O (−2), H (+1), Cl (−1) remain constant."},
+{category:"Comprehension",question:"What are spectator ions? Explain with an example.",answer:"Spectator ions are ions in an aqueous reaction mixture that do not participate directly in the chemical transformation.\n\nExample: In H⁺ + Cl⁻ + Na⁺ + OH⁻ → Na⁺ + Cl⁻ + H₂O, Na⁺ and Cl⁻ are spectator ions."},
+{category:"Comprehension",question:"Determine the oxidation numbers of the central atoms in K₂Cr₂O₇ and Na₂CO₃.",answer:"K₂Cr₂O₇: 2(+1) + 2x + 7(−2) = 0 → 2x = +12 → x = +6. Cr is +6.\n\nNa₂CO₃: 2(+1) + y + 3(−2) = 0 → y = +4. C is +4."},
+{category:"Comprehension",question:"Explain why Hydrolysis and Hydration reactions are not the same.",answer:"Hydrolysis involves the chemical reaction of water with a substance, breaking water's covalent H−OH bonds to form new compounds (e.g., SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl).\n\nHydration is a physical-chemical association where whole water molecules lock into the crystal lattice without breaking chemical bonds (e.g., CuSO₄ + 5H₂O → CuSO₄·5H₂O)."},
+{category:"Comprehension",question:"Why is chemical equilibrium called dynamic in nature?",answer:"Chemical equilibrium appears static because macroscopic properties stop changing. However, at the molecular level, both forward and backward reactions continue simultaneously at equal rates. So chemical equilibrium is dynamic, not static."},
+{category:"Comprehension",question:"Why is the heat of neutralization of a strong acid and strong base always constant (−57.34 kJ/mol)?",answer:"Strong acids and bases ionize completely. The cations of the base and anions of the acid remain as spectator ions. The actual reaction is strictly H⁺ + OH⁻ → H₂O with ΔH = −57.34 kJ/mol."},
+{category:"Comprehension",question:"Explain why Fe²⁺ ion can act as both an oxidizing and a reducing agent.",answer:"Fe²⁺ is at an intermediate oxidation state (+2). It can donate an electron to reach +3 (Fe²⁺ → Fe³⁺ + e⁻, acting as reductant), or accept electrons to reach metallic iron (Fe²⁺ + 2e⁻ → Fe, acting as oxidant)."},
+{category:"Comprehension",question:"Why is rusting of iron classified as a redox process?",answer:"Oxidation: Fe(s) → Fe²⁺ + 2e⁻.\nReduction: O₂ + 2H₂O + 4e⁻ → 4OH⁻.\nThe Fe²⁺ and OH⁻ combine to form hydrated iron(III) oxide. Electron donation and acceptance occur simultaneously, so rusting is a redox process."},
+{category:"Comprehension",question:"Why is the reaction between ammonium cyanate and urea called an isomerization reaction?",answer:"NH₄CNO →Δ→ NH₂−CO−NH₂. Both compounds share the same molecular formula (CH₄N₂O) but have different structural arrangements."},
+{category:"Comprehension",question:"How can a reversible reaction be converted into an irreversible reaction?",answer:"By removing one of the products as fast as it forms: (1) Open Vessel System — if a gas escapes; (2) Precipitation — removing an ion by forming an insoluble precipitate; (3) Chemical Removal — neutralizing or tying up a product."}
+];
+
+/* ---------- PHYSICS CH 8 — MCQ ---------- */
+const phy8MCQ=[
+{category:"Reflection",question:"Which colour of light has the shortest wavelength?",options:["Red","Green","Violet","Yellow"],answer:2,explanation:"Violet has the shortest wavelength."},
+{category:"Spherical Mirrors",question:"Where is a concave mirror used?",options:["On the road","In the periscope","In the view mirror","In the treatment of teeth"],answer:3,explanation:"Concave mirrors give a magnified view in dental treatment."},
+{category:"Plane Mirrors",question:"At how many degrees angle is the plane mirror kept on the bend of the mountain road?",options:["0°","30°","45°","90°"],answer:2,explanation:"45° for road-bend mirrors."},
+{category:"Images & Magnification",question:"If an object is placed at point C in front of a concave mirror, the image will be:",options:["Real and inverted","Real and erect","Virtual and inverted","Virtual and erect"],answer:0,explanation:"Object at C forms a real, inverted image of the same size at C."},
+{category:"Spherical Mirrors",question:"Object 5 cm from focus of a concave mirror. R = 20 cm. Image distance?",options:["50 cm","40 cm","30 cm","10 cm"],answer:2,explanation:"f = 10 cm. Image at 30 cm."},
+{category:"Reflection",question:"Range of wavelength of visible light?",options:["300 nm – 700 nm","400 nm – 700 nm","300 μm – 700 μm","400 μm – 700 μm"],answer:1,explanation:"Visible light: 400–700 nm."},
+{category:"Plane Mirrors",question:"Images formed in a regular plane mirror are:",options:["Real","Inverted","Erect","Larger than object"],answer:2,explanation:"Virtual, erect, same size."},
+{category:"Images & Magnification",question:"f = 10 cm, object placed 20 cm from pole. Magnification?",options:["2","1.5","1","0.5"],answer:2,explanation:"Object at C, same size — m = 1."},
+{category:"Reflection",question:"If wavelength < smallest visible, it is called:",options:["Infrared ray","Ultraviolet light","Microwave","Radio wave"],answer:1,explanation:"Shorter than 400 nm → ultraviolet."},
+{category:"Spherical Mirrors",question:"Angle between principal axis and focal plane?",options:["0°","45°","90°","180°"],answer:2,explanation:"Focal plane is perpendicular — 90°."},
+{category:"Images & Magnification",question:"Magnification if object at the focus of a concave mirror?",options:["Equal","Small","Magnified","Highly magnified"],answer:3,explanation:"Image at infinity."},
+{category:"Reflection",question:"How will the rear car driver know if the front car is slowing?",options:["Brake light","Turn light","Back light","Car's room light"],answer:0,explanation:"Brake lights."},
+{category:"Images & Magnification",question:"Image of pinhole camera is:",options:["Real","Straight","Unclear","Virtual"],answer:0,explanation:"Real, inverted."},
+{category:"Spherical Mirrors",question:"Which is correct for image formed in convex mirror?",options:["Inverted","Real","Erect","Magnified"],answer:2,explanation:"Virtual, erect, diminished."},
+{category:"Spherical Mirrors",question:"Midpoint of the reflecting surface of a spherical mirror?",options:["Pole","Center of curvature","Focus","Optical center"],answer:0,explanation:"Pole."},
+{category:"Reflection",question:"How does a yellow flower look through blue glass?",options:["White","Yellow","Blue","Black"],answer:3,explanation:"Blue absorbed → black."},
+{category:"Plane Mirrors",question:"Angle to place a red rose in front of a mirror to look brightest?",options:["30°","45°","60°","75°"],answer:1,explanation:"Maximum reflection at 45°."},
+{category:"Plane Mirrors",question:"Object 2 m from plane mirror — distance of image from object?",options:["1 m","2 m","3 m","4 m"],answer:3,explanation:"Total = 2 + 2 = 4 m."},
+{category:"Spherical Mirrors",question:"Body between pole and F of concave mirror — image position?",options:["Centre of curvature","Principal focus","In front of focus","Behind the mirror"],answer:3,explanation:"Virtual, behind mirror."},
+{category:"Spherical Mirrors",question:"f = 10 cm, object at C. Image distance?",options:["10 cm","12 cm","20 cm","25 cm"],answer:2,explanation:"Object at C, image at C = 20 cm."},
+{category:"Images & Magnification",question:"Where is a real image formed?",options:["Plane mirror","Convex mirror","Concave mirror","Concave lens"],answer:2,explanation:"Concave mirror (beyond F)."},
+{category:"Spherical Mirrors",question:"Object 30 cm from a concave mirror, image 30 cm away. Focal length?",options:["0.30 m","0.15 m","1.00 m","1.5 m"],answer:1,explanation:"f = 15 cm = 0.15 m."},
+{category:"Images & Magnification",question:"Object at focus F of concave mirror — magnification?",options:["<1","=1",">1","∞"],answer:3,explanation:"Image at infinity."},
+{category:"Images & Magnification",question:"Object between P and F of concave mirror — image?",options:["Real and inverted","Virtual and erect","Virtual and diminished","Real and magnified"],answer:1,explanation:"Virtual, erect, magnified."},
+{category:"Spherical Mirrors",question:"Type of image in dental treatment?",options:["Real and extended","Virtual and extended","Real and small","Virtual and small"],answer:1,explanation:"Virtual, magnified."},
+{category:"Spherical Mirrors",question:"Why concave mirror in a telescope?",options:["Clear image","Smaller image","Magnification","Upright"],answer:0,explanation:"Clear, bright images."},
+{category:"Plane Mirrors",question:"Angle for viewing road bend?",options:["30°","45°","60°","90°"],answer:1,explanation:"45°."},
+{category:"Images & Magnification",question:"f = 10 cm, object at 5 cm in concave mirror. Which is correct?",options:["Virtual and erect","Virtual and inverted","Real and erect","Real and inverted"],answer:0,explanation:"Object inside F."},
+{category:"Images & Magnification",question:"Object beyond C of concave mirror — image nature?",options:["Between F and C; real, inverted, smaller","At F; real, inverted, same size","Beyond C; virtual, erect, larger","Between P and F; virtual, magnified"],answer:0,explanation:"Between F and C, real, inverted, smaller."},
+{category:"Spherical Mirrors",question:"Bulb in front of a mirror → strong beam. What type and where is bulb?",options:["Concave at pole","Concave behind bulb","Plane behind bulb","Concave at focus"],answer:3,explanation:"Bulb at focus → parallel beam."},
+{category:"Spherical Mirrors",question:"In which mirror are both real and virtual images formed?",options:["Plane","Convex","Concave","Panoconvex"],answer:2,explanation:"Concave."},
+{category:"Images & Magnification",question:"Object between infinity and C — image nature?",options:["Real and inverted","Real and erect","Virtual and erect","Virtual and inverted"],answer:0,explanation:"Real, inverted, smaller."},
+{category:"Reflection",question:"Colour observed during lightning flash?",options:["Dark blue","Bluish white","Red & white","Purple"],answer:1,explanation:"Bluish white."},
+{category:"Images & Magnification",question:"Plane mirror image is virtual and- i. Erect ii. Diminished iii. Magnified. Correct?",options:["i","ii","iii","i and iii"],answer:0,explanation:"Virtual and erect."},
+{category:"Reflection",question:"Reflection depends on- i. Medium ii. Distance iii. Angle of incidence. Correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:1,explanation:"Medium and angle of incidence."},
+{category:"Spherical Mirrors",question:"R = 6 cm convex mirror, object 2 cm in front. i. Virtual ii. Real iii. Magnified. Correct?",options:["i","i and iii","ii and iii","i, ii and iii"],answer:0,explanation:"Convex → virtual, erect."}
+];
+
+/* ---------- PHYSICS CH 8 — SQ ---------- */
+const phy8SQ=[
+{category:"Knowledge",question:"What type of wave is light?",answer:"Light is an electromagnetic wave."},
+{category:"Knowledge",question:"Range of wavelength of visible light?",answer:"4 × 10⁻⁷ m to 7 × 10⁻⁷ m (400 nm to 700 nm)."},
+{category:"Knowledge",question:"State the 1st law of reflection.",answer:"The incident ray, the reflected ray, and the normal drawn at the point of incidence all lie in the same plane."},
+{category:"Knowledge",question:"How many conditions are required for total internal reflection?",answer:"Two conditions."},
+{category:"Knowledge",question:"Write down the 2 laws of reflection.",answer:"1st Law: The incident ray, reflected ray, and normal lie in the same plane.\n2nd Law: The angle of reflection equals the angle of incidence (∠i = ∠r)."},
+{category:"Knowledge",question:"What is the surface from where light rays return back?",answer:"The reflecting surface."},
+{category:"Knowledge",question:"What is reflection of light?",answer:"When a ray of light travelling through one medium falls on the boundary of another and a portion returns to the first medium."},
+{category:"Knowledge",question:"What is a mirror?",answer:"A smooth surface on which regular reflection of light occurs."},
+{category:"Knowledge",question:"What is silvering?",answer:"The process of applying a thin coating of silver or mercury on one surface of glass to make a reflecting mirror."},
+{category:"Knowledge",question:"What is a real image?",answer:"If light rays from a point, after reflection or refraction, actually meet at a second point, that second point is called the real image."},
+{category:"Knowledge",question:"What is the principal focus of a spherical mirror?",answer:"When parallel rays strike a spherical mirror and after reflection either converge at a point (concave) or appear to diverge from a point (convex) on the principal axis, that point is called the principal focus."},
+{category:"Knowledge",question:"What is focal length?",answer:"The distance between the pole and the principal focus of a mirror."},
+{category:"Knowledge",question:"What is the center of curvature?",answer:"The center of the hollow sphere of which the spherical mirror forms a part."},
+{category:"Knowledge",question:"Define the principal axis of a mirror.",answer:"The straight line passing through the pole and the center of curvature of a spherical mirror."},
+{category:"Knowledge",question:"Relation between focal length and radius of curvature?",answer:"f = R/2."},
+{category:"Knowledge",question:"What is linear magnification?",answer:"The ratio of the length of the image to the length of the object (m = L'/L)."},
+{category:"Knowledge",question:"What type of mirror is used in rearview and side-view mirrors of a car?",answer:"Convex mirrors."},
+{category:"Knowledge",question:"In dentistry, what type of mirrors are used?",answer:"Concave mirrors."},
+{category:"Comprehension",question:"Explain why the focal length of a plane mirror is infinite.",answer:"The reflecting surface of a plane mirror is perfectly flat (zero curvature, R = ∞). Since f = R/2, f = ∞. Also, parallel rays remain parallel after reflection — they never converge or diverge to a point."},
+{category:"Comprehension",question:"What do you mean by regular and irregular reflection?",answer:"Regular reflection: parallel rays strike a smooth surface and remain parallel (or converge/diverge as a beam) after reflection.\n\nIrregular (Diffused) reflection: parallel rays strike a rough surface and after reflection spread out in different directions."},
+{category:"Comprehension",question:"Explain why a convex mirror always forms a diminished virtual image.",answer:"A convex mirror diverges the falling rays. Reflected rays spread out and never intersect in front of the mirror. Extended backward, they appear to meet between P and F, producing a small, virtual, erect image."},
+{category:"Comprehension",question:"Why is a concave mirror used in the searchlight of a launch?",answer:"A bulb placed at the focus of a concave mirror produces a parallel beam after reflection — this beam travels far without spreading."},
+{category:"Comprehension",question:"Differences between a real image and a virtual image.",answer:"1. Orientation: Virtual images are always erect; real images are always inverted.\n\n2. Image Distance: v is negative for virtual images, positive for real images.\n\n3. Projection: Virtual images cannot be projected on a screen; real images can be."},
+{category:"Comprehension",question:"Explain how to prevent lateral displacement in a plane mirror.",answer:"Use two plane mirrors arranged at 90° to each other. Double reflection reverses left-right orientation back to the original."},
+{category:"Comprehension",question:"Why does a green leaf of a tree look black under blue light? [J.B. 25]",answer:"Chlorophyll absorbs blue light completely and has no green light to reflect. So no light reaches our eyes — the leaf appears black."},
+{category:"Comprehension",question:"Why is a plane mirror used in a dressing table?",answer:"A plane mirror produces a virtual, erect image of the same size as the object, at equal distance behind the mirror — a perfect full-scale view."},
+{category:"Comprehension",question:"Why do dentists use concave mirrors?",answer:"When the tooth lies within the focal length of a concave mirror, it forms an erect, highly magnified virtual image behind the mirror — allowing detailed inspection."},
+{category:"Comprehension",question:"Why is a convex mirror used as a side-view mirror in a car?",answer:"A convex mirror always produces an erect, diminished virtual image, giving a much wider field of view than a plane mirror of the same size."},
+{category:"Comprehension",question:"Why is the angle of reflection zero when a ray is incident perpendicularly?",answer:"When a ray falls normally, the angle of incidence with the normal is 0°. By the second law of reflection, r = i = 0°, so the ray retraces its path."},
+{category:"Comprehension",question:"What colour will a yellow flower appear when seen through red sunglasses?",answer:"A yellow flower reflects red and green light. Red sunglasses transmit only red light. Since the flower reflects red, it appears bright red."},
+{category:"Comprehension",question:"Briefly explain the nature of light.",answer:"Light is a form of energy that propagates as electromagnetic waves. It exhibits dual nature — as a wave and as particles (photons). In vacuum, light travels at 3 × 10⁸ m/s in straight lines."},
+{category:"Comprehension",question:"Why is the lateral inversion of the letter 'M' not noticeable in a plane mirror?",answer:"'M' has vertical axis symmetry — the left half is a mirror image of the right half. So even though lateral inversion occurs, the resulting image looks the same."},
+{category:"Comprehension",question:"Why can't a real image be formed using a convex mirror?",answer:"The reflected rays diverge and never physically meet in front of the mirror. Since actual intersection is required for a real image, a convex mirror can only form virtual images."},
+{category:"Comprehension",question:"Why can there be only one principal axis in a spherical mirror?",answer:"The principal axis passes through two fixed points — pole (P) and center of curvature (C). Two points uniquely define one straight line."},
+{category:"Comprehension",question:"How can you identify a mirror or lens without touching it?",answer:"Convex lens or concave mirror: forms an upright, magnified image (object within focus).\nConcave lens or convex mirror: always forms an upright, diminished image.\nPlane mirror: forms an upright image of exactly the same size."}
+];
+
+/* ---------- PHYSICS CH 7 — MCQ ---------- */
+const phy7MCQ=[
+{category:"SHM",question:"Which relation is correct?",options:["Fs = −kx","T = 2π√(g/l)","1/u + 1/f = 1/v","f = vλ"],answer:0,explanation:"Fs = −kx (Hooke's Law)."},
+{category:"SHM",question:"5 kg hung from spring, length increases by 2 cm. Spring constant?",options:["24.5 N/m","245 N/m","250 N/m","2450 N/m"],answer:3,explanation:"k = mg/x = (5 × 9.8)/0.02 = 2450 N/m."},
+{category:"SHM",question:"Relation between time period and length of string?",options:["T ∝ 1/l","T ∝ √(1/l)","T ∝ l","T ∝ √l"],answer:3,explanation:"T = 2π√(l/g), T ∝ √l."},
+{category:"SHM",question:"Which relation is correct?",options:["3α = 2β = γ","Q = mSC","gT² = 4π²","ρA = RI"],answer:2,explanation:"gT² = 4π²l from the pendulum formula."},
+{category:"SHM",question:"Stone on 2 m string, g = 9.8. Time period?",options:["0.452 s","1.282 s","2.838 s","13.908 s"],answer:2,explanation:"T = 2π√(2/9.8) = 2.838 s."},
+{category:"SHM",question:"Brick on 1 m string. Time period?",options:["1 s","2 s","2.5 s","3 s"],answer:1,explanation:"T ≈ 2 s."},
+{category:"SHM",question:"Which relation is correct?",options:["g = 4π(T²/L)","L = 4π(T²/g)","T = 2π√(g/L)","g = 4π²(L/T²)"],answer:3,explanation:"g = 4π²L/T²."},
+{category:"SHM",question:"Which equation is correct?",options:["h = (u² + v²)/(2g)","g = 4π²L/T²","G = gM/R²","F₁ = F₂(A₂/A₁)"],answer:1,explanation:"g = 4π²L/T²."},
+{category:"SHM",question:"Pendulum T = 1.9 s. Length?",options:["Approx 85.49 cm","Approx 89.54 cm","Approx 98.54 cm","Approx 100 cm"],answer:1,explanation:"L = T²g/(4π²) ≈ 0.8954 m."},
+{category:"SHM",question:"Time period equation for length L and gravity g?",options:["T²g = 4πL","T²g = 4π²L","g = 4πL/T²","g = 4π²T/L"],answer:1,explanation:"T²g = 4π²L."},
+{category:"Waves",question:"Which is an electromagnetic wave?",options:["Light wave","Sound wave","Water wave","Spring wave"],answer:0,explanation:"Light is electromagnetic."},
+{category:"Waves",question:"Which wave produces only a reaction that can be felt?",options:["Gravity wave","Electromagnetic wave","Sound wave","Wave function"],answer:2,explanation:"Sound — felt in ears."},
+{category:"Waves",question:"Which indicates a longitudinal wave?",options:["Light wave","Radio wave","Sound wave","Water wave"],answer:2,explanation:"Sound."},
+{category:"Waves",question:"Direction of longitudinal wave vibration relative to propagation?",options:["Perpendicular","Parallel","At 45°","Randomly"],answer:1,explanation:"Parallel."},
+{category:"Waves",question:"Energy at A (A=50cm) is 100 J. Energy at C (A=100cm)?",options:["50 J","200 J","300 J","400 J"],answer:3,explanation:"E ∝ A². Ratio = 4× → 400 J."},
+{category:"Waves",question:"Which is a transverse wave?",options:["Ocean waves","Radio waves","Sun rays","Sound waves"],answer:0,explanation:"Ocean waves vibrate perpendicular."},
+{category:"Waves",question:"Mechanical waves exhibit: i. Refraction ii. Dispersion iii. Superposition",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"Reflection, refraction, superposition."},
+{category:"Waves",question:"In wave propagation: i. Energy/info transmitted ii. Wave & particle velocity equal iii. Particle velocity highest at equilibrium",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"i and iii are correct."},
+{category:"Waves",question:"Sunlight: i. Electromagnetic ii. Transverse iii. If f increases, v increases",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:0,explanation:"v is constant in a medium."},
+{category:"Waves",question:"Sound waves: i. Reflection ii. Refraction iii. Superposition possible?",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:3,explanation:"All three."},
+{category:"Wave Quantities",question:"Minimum distance between two particles in same phase?",options:["λ/4","λ/2","λ","2λ"],answer:2,explanation:"λ."},
+{category:"Wave Quantities",question:"Distance between two particles in same phase?",options:["λ/4","λ/2","λ","2λ"],answer:2,explanation:"λ."},
+{category:"Wave Quantities",question:"When a wave passes through different media, which quantity is unchanged?",options:["Wave velocity","Wavelength","Frequency","Amplitude"],answer:2,explanation:"Frequency."},
+{category:"Wave Quantities",question:"If time period increases, how does frequency change?",options:["Decreases","Increases","Becomes zero","Unchanged"],answer:0,explanation:"f = 1/T."},
+{category:"Wave Quantities",question:"Which is an electrical insulator?",options:["Gold","Plastic","Silver","Copper"],answer:1,explanation:"Plastic."},
+{category:"Wave Quantities",question:"Maximum displacement from equilibrium — called?",options:["Time period","Amplitude","Frequency","Phase"],answer:1,explanation:"Amplitude."},
+{category:"Wave Quantities",question:"Dimension of frequency?",options:["T","T⁻¹","T⁻²","T²"],answer:1,explanation:"T⁻¹."},
+{category:"Wave Quantities",question:"Sound frequency increases if—",options:["Velocity increases","Wavelength decreases","Wavelength increases","Time period increases"],answer:1,explanation:"f = v/λ, so decreasing λ increases f."},
+{category:"Wave Quantities",question:"Relationship between frequency and time period?",options:["Directly proportional","Inversely proportional","Proportional to square","Inversely proportional to square"],answer:1,explanation:"f = 1/T."},
+{category:"Wave Problems",question:"Sound in iron by 2 kHz tuning fork. Wavelength? (v = 5130 m/s)",options:["0.334 m","1.50 m","1.49 m","5.13 m"],answer:0,explanation:"λ = 5130/2000 = 2.565 m (closest option)."},
+{category:"Wave Problems",question:"Increasing frequency in a specific medium leaves which unchanged?",options:["Wavelength","Wave velocity","Amplitude","Time period"],answer:1,explanation:"Wave velocity — depends on medium."},
+{category:"Wave Problems",question:"150 Hz, travels 1050 m in 3 s. Wavelength?",options:["0.1428 m","0.428 m","2.33 m","7 m"],answer:2,explanation:"v = 350 m/s, λ = 350/150 = 2.33 m."},
+{category:"Wave Problems",question:"P to Q = 0.6 s, M to N = 1.2 s. Ratio f₁:f₂?",options:["1:2","2:3","3:2","3:4"],answer:2,explanation:"T₁ = 0.4 s → f₁ = 2.5 Hz. T₂ = 0.6 s → f₂ = 1.67 Hz. Ratio 3:2."},
+{category:"Wave Problems",question:"Bats can produce sound up to approximately—",options:["100 Hz","200 Hz","100 kHz","200 kHz"],answer:2,explanation:"100 kHz."},
+{category:"Wave Problems",question:"Sound travels 1750 m in 5 s. λ = 0.5 m. Frequency?",options:["0.00143 Hz","175 Hz","700 Hz","3500 Hz"],answer:2,explanation:"v = 350 m/s, f = 700 Hz."},
+{category:"Wave Problems",question:"v = 340 m/s, λ = 250 cm. Time period?",options:["1.36 s","1.7 × 10² s","7.35 × 10⁻² s","7.35 × 10⁻³ s"],answer:3,explanation:"f = 136 Hz, T = 7.35 ms."},
+{category:"Wave Problems",question:"Unit of wave velocity?",options:["m","m s⁻¹","Hz","t"],answer:1,explanation:"m s⁻¹."},
+{category:"Wave Problems",question:"6 seconds for a wave to travel shown distance. Frequency?",options:["0.166 Hz","0.5 Hz","1 Hz","2 Hz"],answer:1,explanation:"f = 3/6 = 0.5 Hz."},
+{category:"Wave Problems",question:"Ratio of wavelengths for 200 Hz and 800 Hz tuning forks?",options:["1:4","4:1","1:2","2:1"],answer:1,explanation:"λ ∝ 1/f → 4:1."},
+{category:"Wave Problems",question:"Wave frequency? (2 full waves in 4 s)",options:["5 Hz","1 Hz","0.5 Hz","2 Hz"],answer:2,explanation:"f = 2/4 = 0.5 Hz."},
+{category:"Wave Problems",question:"Which indicates wavelength?",options:["PR","PQ","PQ","PP"],answer:3,explanation:"PP — same-phase consecutive points."},
+{category:"Wave Problems",question:"v in air = 332 m/s, in water = 1493 m/s. Wavelength in air = 0.2 m. Wavelength in water?",options:["0.04 m","4.5 m","0.9 m","90 m"],answer:2,explanation:"f = 1660 Hz, λ = 1493/1660 ≈ 0.9 m."},
+{category:"Wave Problems",question:"v = 350 m/s, λ = 1250 cm. Time period?",options:["3.571 s","0.28 s","28 s","0.0357 s"],answer:3,explanation:"f = 28 Hz, T = 0.0357 s."},
+{category:"Wave Problems",question:"Which pair is in opposite phase?",options:["P and P'","S and S'","R and R'","P and R"],answer:3,explanation:"Crest and trough — opposite phase."},
+{category:"Wave Problems",question:"Which segment represents one full oscillation?",options:["R to R'","P to Q","P to R","O to P"],answer:2,explanation:"P to R = one cycle."},
+{category:"Wave Problems",question:"For the wave: i. Amplitude 0.4 m ii. f = 1.25 Hz iii. 1.5 complete waves",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:3,explanation:"All three."},
+{category:"Wave Problems",question:"Wave particle velocity increases if: i. f increases ii. λ increases iii. T increases",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:0,explanation:"v = fλ."},
+{category:"Wave Problems",question:"Time period? (f = 100 Hz)",options:["0.005 s","0.01 s","0.003 s","0.1 s"],answer:1,explanation:"T = 0.01 s."},
+{category:"Wave Problems",question:"For the wave (2 waves = 6 m, f = 100 Hz): i. λ = 3 m ii. v = 300 m/s iii. Phases at A, B, C differ",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"i and iii are the indicated response."},
+{category:"Wave Problems",question:"Which points are in same phase?",options:["A, E, K","C, E, I","B, F, J","B, D, I"],answer:2,explanation:"B, F, J are crests."},
+{category:"Wave Problems",question:"Wave (2.5 in 2 s, 1 m total): i. Transverse ii. v = 0.5 m/s iii. f = 1.25 Hz",options:["i & ii","ii & iii","i & iii","i, ii & iii"],answer:3,explanation:"All three."},
+{category:"Wave Problems",question:"Wave velocity? (1.5 waves = 0.15 m, f = 100 Hz)",options:["1000 m/s","15 m/s","150 m/s","10 m/s"],answer:3,explanation:"λ = 0.1 m, v = 10 m/s."},
+{category:"Wave Problems",question:"For the wave: i. 90° angle ii. 500 vibrations in 5 s iii. Via compression",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:0,explanation:"Transverse — i & ii."},
+{category:"Wave Problems",question:"AB = 200 cm, MN = NH = 0.5. Time A→B = 0.025 s. Frequency?",options:["40","80","160","240"],answer:1,explanation:"2T = 0.025 s, T = 0.0125 s, f = 80 Hz."},
+{category:"Wave Problems",question:"For wave: i. E and H same phase ii. Amplitude 1 m iii. v = 160 m/s",options:["i","ii","iii","ii & iii"],answer:1,explanation:"Amplitude = 1 m; E and H are not same phase."},
+{category:"Wave Problems",question:"Wave velocity? (2λ = 10 cm, f = 1100 Hz)",options:["27.5 m/s","55 m/s","110 m/s","330 m/s"],answer:1,explanation:"λ = 0.05 m, v = 55 m/s."},
+{category:"Wave Problems",question:"Time for 8800 full vibrations? (f = 1100 Hz)",options:["3 seconds","4 seconds","8 seconds","10 seconds"],answer:2,explanation:"t = 8800/1100 = 8 s."},
+{category:"Wave Problems",question:"Time period of wave from 2 kHz tuning fork?",options:["0.0005 s","0.005 s","0.05 s","0.5 s"],answer:0,explanation:"T = 1/2000 = 0.0005 s."},
+{category:"Wave Problems",question:"For generated wave (v = 340, f = 2 kHz): i. Mechanical ii. λ = 0.17 m iii. Crests & troughs",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:0,explanation:"Sound is longitudinal — no crests/troughs."},
+{category:"Wave Problems",question:"Time period? (f = 100 Hz)",options:["0.01 s","0.1 s","0.001 s","250 s"],answer:0,explanation:"T = 0.01 s."},
+{category:"Wave Problems",question:"For wave: i. λ = 4 m ii. v = 400 m/s iii. Phases at A, B, C differ",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:3,explanation:"All three."},
+{category:"Wave Problems",question:"Frequency of the wave above?",options:["0.01 Hz","0.02 Hz","50 Hz","100 Hz"],answer:3,explanation:"f = 2/0.02 = 100 Hz."},
+{category:"Wave Problems",question:"For wave: i. R-N = λ/2 ii. Transverse iii. P1, P2 opposite phase",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:0,explanation:"P1, P2 are in phase actually."},
+{category:"Wave Problems",question:"Frequency? (2.5 waves in 4 s)",options:["0.25 Hz","0.5 Hz","0.625 Hz","1.6 Hz"],answer:2,explanation:"f = 2.5/4 = 0.625 Hz."},
+{category:"Wave Problems",question:"Wave velocity? (1.25 waves = 4 m)",options:["1 m/s","1.28 m/s","2 m/s","16 m/s"],answer:2,explanation:"λ = 3.2 m, v = 2 m/s."},
+{category:"Wave Problems",question:"Wavelength in cm? (2.5 waves = 10 cm)",options:["2","4","5","10"],answer:1,explanation:"λ = 4 cm."},
+{category:"Wave Problems",question:"Where is energy of the wave-generating particle maximum? i. A, Q ii. P, R iii. M, C",options:["i","ii","iii","i & iii"],answer:2,explanation:"Amplitude max at M, C."},
+{category:"Sound",question:"Bats produce 100 kHz — type of sound?",options:["Infrasonic","Melodious","Harsh","Ultrasonic"],answer:3,explanation:"Ultrasonic."},
+{category:"Sound",question:"Which wave creates sensation of hearing?",options:["Electromagnetic wave","Radio wave","Mechanical wave","Light wave"],answer:2,explanation:"Mechanical wave."},
+{category:"Sound",question:"Which is a longitudinal wave?",options:["Radio wave","Water wave","Light wave","Sound wave"],answer:3,explanation:"Sound."},
+{category:"Sound",question:"Correct about longitudinal waves?",options:["Light, water are examples","Particles move perpendicular","Crest and trough form a wave","Propagate through compressions and rarefactions"],answer:3,explanation:"Compressions and rarefactions."},
+{category:"Sound",question:"Type of wave is sound?",options:["Electromagnetic","Transverse","Radio","Longitudinal"],answer:3,explanation:"Longitudinal."},
+{category:"Sound",question:"2 kHz in iron at 5130 m/s. Wavelength?",options:["0.38 m","1.28 m","2.57 m","5.13 m"],answer:2,explanation:"λ = 5130/2000 = 2.565 ≈ 2.57 m."},
+{category:"Sound",question:"Sound wave: i. Longitudinal ii. Propagates perpendicular iii. Compressions and rarefactions",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"i and iii."},
+{category:"Sound",question:"Sound: i. Higher temp → lower velocity ii. Doubling A → 4× intensity iii. Lower density → higher velocity",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:2,explanation:"ii and iii are true."},
+{category:"Echo",question:"Persistence of hearing?",options:["0.03 sec","0.01 sec","0.1 sec","0.3 sec"],answer:2,explanation:"0.1 s."},
+{category:"Echo",question:"Minimum time interval to hear two sounds distinctly?",options:["0.5 sec","0.1 sec","0.2 sec","0.3 sec"],answer:1,explanation:"0.1 s."},
+{category:"Echo",question:"Bats use sound for—",options:["Refraction","Reflection","Interference","Superposition"],answer:1,explanation:"Reflection."},
+{category:"Echo",question:"v = 340 m/s. Minimum distance to hear echo?",options:["17 m","1.7 m","34 m","170 m"],answer:0,explanation:"d = 340 × 0.1/2 = 17 m."},
+{category:"Echo",question:"Dry well depth 25 m. Max water height for echo?",options:["0 m","8.5 m","16.5 m","25 m"],answer:1,explanation:"16.5 m air column min. 25 − 16.5 = 8.5 m."},
+{category:"Echo",question:"At −40°C, minimum echo distance?",options:["17.8 m","17.4 m","17.67 m","16.6 m"],answer:2,explanation:"v ≈ 353.35 m/s, d ≈ 17.67 m."},
+{category:"Echo",question:"Minimum distance for echo at 0°C?",options:["16.7 m","16.5 m","17.5 m","17.6 m"],answer:1,explanation:"16.5 m."},
+{category:"Echo",question:"Time for sound to return to A? (25 m, 24°C)",options:["0.144 s","0.072 s","0.151 s","0.075 s"],answer:0,explanation:"v ≈ 346 m/s, t ≈ 0.144 s."},
+{category:"Echo",question:"v = 340 m/s, echo time 1.5 s. Distance?",options:["250 m","255 m","260 m","265 m"],answer:1,explanation:"d = 255 m."},
+{category:"Echo",question:"Time for sound from source to reflector? (30 m, 20°C)",options:["0.181 s","0.088 s","0.175 s","0.09 s"],answer:1,explanation:"v ≈ 341.87, t ≈ 0.088 s."},
+{category:"Echo",question:"Sound echo: i. Not heard from C ii. Heard from B iii. Takes 0.117 s at A",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"i and iii."},
+{category:"Sound Velocity",question:"Velocity of sound on the Moon at 30°C?",options:["356 m/s","330 m/s","44 m/s","0 m/s"],answer:3,explanation:"No medium on Moon."},
+{category:"Sound Velocity",question:"Velocity of sound in air is inversely proportional to √ of which?",options:["Temperature","Volume","Elasticity","Density"],answer:3,explanation:"v ∝ 1/√ρ."},
+{category:"Sound Velocity",question:"In which season does sound travel fastest?",options:["Winter","Rainy","Summer","Spring"],answer:1,explanation:"Rainy (higher humidity)."},
+{category:"Sound Velocity",question:"Wavelength of sound from a given source is highest in which medium?",options:["Air at 0°C","Air at 30°C","Water","Iron"],answer:3,explanation:"Iron — highest velocity."},
+{category:"Sound Velocity",question:"Velocity of sound in mercury?",options:["1284 m/s","1450 m/s","1493 m/s","5130 m/s"],answer:1,explanation:"1450 m/s."},
+{category:"Sound Velocity",question:"In which medium is velocity of sound highest?",options:["Water","Nitrogen","Plasma","Copper"],answer:3,explanation:"Copper > Plasma > Water > Nitrogen."},
+{category:"Sound Velocity",question:"Where is sound velocity highest?",options:["Air","Mercury","Iron","Diamond"],answer:3,explanation:"Diamond — 12,000 m/s."},
+{category:"Sound Velocity",question:"Velocity of sound in water?",options:["1284 m/s","1450 m/s","1493 m/s","5130 m/s"],answer:2,explanation:"1493 m/s."},
+{category:"Sound Velocity",question:"In which medium is sound velocity lowest?",options:["Iron","Water","Air","Kerosene"],answer:2,explanation:"Air — gaseous medium."},
+{category:"Sound Velocity",question:"In which medium is sound velocity maximum?",options:["Solid","Liquid","Gas","Plasma"],answer:0,explanation:"Solid."},
+{category:"Sound Velocity",question:"Velocity of sound at 40°C?",options:["332 m/s","350 m/s","353 m/s","362 m/s"],answer:2,explanation:"v = 330√(313/273) ≈ 353 m/s."},
+{category:"Sound Velocity",question:"Speed of sound in vacuum?",options:["1008 m/s","354 m/s","348 m/s","0 m/s"],answer:3,explanation:"0 m/s."},
+{category:"Sound Velocity",question:"If sound at 10°C = 338 m/s, speed in vacuum at 30°C?",options:["1014 m/s","350 m/s","332 m/s","0 m/s"],answer:3,explanation:"0 m/s."},
+{category:"Sound Velocity",question:"At 20°C, sound speed in iron / speed in water?",options:["3.54","4.54","5.54","6.45"],answer:0,explanation:"5130/1450 ≈ 3.54."},
+{category:"Sound Velocity",question:"Velocity of sound in air at 20°C?",options:["5130 m/s","1450 m/s","340 m/s","342 m/s"],answer:3,explanation:"v ≈ 342 m/s."},
+{category:"Sound Velocity",question:"Velocity of sound in air: i. Directly ∝ square of temp ii. Independent of pressure iii. Inversely ∝ √density",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:2,explanation:"ii and iii are true."},
+{category:"Sound Velocity",question:"Frequency of source S? (v = 340 m/s, λ = 0.8 m)",options:["850","425","273","136"],answer:1,explanation:"f = 425 Hz."},
+{category:"Sound Velocity",question:"If sound velocity increases, in that medium: i. Pressure increases ii. Temp increases iii. Density increases velocity",options:["i","ii","iii","i & ii"],answer:1,explanation:"Temperature increase causes velocity increase."},
+{category:"Applications",question:"In 3D seismic survey, which device records reflected waves?",options:["Grid","Geophone","Transducer","Monitor"],answer:1,explanation:"Geophone."},
+{category:"Applications",question:"Which instrument records reflected wave for ocean depth?",options:["Geophone","Telescope","Radar","Periscope"],answer:0,explanation:"Geophone."},
+{category:"Musical Sound",question:"Which instrument is played using airflow?",options:["Harmonium","Sitar","Violin","Tabla"],answer:0,explanation:"Harmonium."},
+{category:"Musical Sound",question:"Which instrument is string-based?",options:["Flute","Harmonium","Violin","Tabla"],answer:2,explanation:"Violin."},
+{category:"Musical Sound",question:"What makes female voice soft/high-pitched?",options:["Pitch","Vocal cord","Larynx","Wine Pipe"],answer:0,explanation:"Pitch."},
+{category:"Musical Sound",question:"Whose voice has higher pitch?",options:["Elderly","Young male","Female","Male"],answer:2,explanation:"Female."},
+{category:"Musical Sound",question:"Unit of sound intensity?",options:["s","Hz","W m⁻²","W"],answer:2,explanation:"W m⁻²."},
+{category:"Musical Sound",question:"Which is NOT a characteristic of musical sound?",options:["Intensity","Elasticity of medium","Pitch","Timber"],answer:1,explanation:"Three characteristics: Intensity, Pitch, Timber."},
+{category:"Musical Sound",question:"Difference between sounds from different instruments depends on?",options:["Intensity","Quality/Timber","Pitch","Amplitude"],answer:1,explanation:"Timber/Quality."},
+{category:"Musical Sound",question:"To make sound intensity 16 times, amplitude must be?",options:["4 times","16 times","1/16 times","81 times"],answer:0,explanation:"A₂ = √16 = 4 times."},
+{category:"Musical Sound",question:"How is sound intensity related to amplitude?",options:["Inversely ∝ square","Directly ∝ square","Directly ∝ cube","Directly ∝"],answer:1,explanation:"I ∝ A²."},
+{category:"Musical Sound",question:"If amplitude is 4×, intensity becomes how many times?",options:["16 times","4 times","2 times","8 times"],answer:0,explanation:"4² = 16."},
+{category:"Musical Sound",question:"Amplitude needed to make energy 9×?",options:["81 times","3 times","1/81 times","1/9 times"],answer:1,explanation:"√9 = 3."},
+{category:"Musical Sound",question:"Unit of sound intensity: i. W m⁻² ii. J m⁻¹ iii. J s⁻¹ m⁻²",options:["i & ii","i & iii","ii & iii","i, ii & iii"],answer:1,explanation:"i and iii."},
+{category:"Pollution",question:"Unit for measuring sound level?",options:["Hz","W m⁻²","dB","J"],answer:2,explanation:"Decibels (dB)."},
+{category:"Pollution",question:"How to reduce sound pollution?",options:["Loudspeakers","Car horns","Factories away from residential areas","Drums"],answer:2,explanation:"Factories away from homes."}
+];
+
+/* ---------- PHYSICS CH 7 — SQ ---------- */
+const phy7SQ=[
+{category:"SHM",question:"What is simple harmonic motion?",answer:"SHM is a special type of periodic motion where the restoring force is directly proportional to the displacement from the equilibrium position and is directed toward the equilibrium. F = −kx."},
+{category:"SHM",question:"State Hooke's Law.",answer:"Hooke's Law states that the extension or compression of a spring is directly proportional to the applied force, provided the elastic limit is not exceeded: F = kx, or Fs = −kx."},
+{category:"SHM",question:"What is the relation between time period and length of a simple pendulum?",answer:"T = 2π√(l/g). Hence T ∝ √l."},
+{category:"SHM",question:"How is the spring constant defined?",answer:"The spring constant (k) is the force required per unit extension of a spring. From F = kx, k = F/x. Unit: N/m."},
+{category:"Waves",question:"What is a wave?",answer:"A wave is a disturbance that transfers energy and information from one point to another without transferring matter."},
+{category:"Waves",question:"Distinguish between transverse and longitudinal waves.",answer:"Transverse wave: particle vibration is perpendicular to the direction of wave propagation (e.g., light, water waves). Longitudinal wave: particle vibration is parallel to the direction of propagation (e.g., sound waves)."},
+{category:"Waves",question:"What is an electromagnetic wave?",answer:"An electromagnetic wave consists of oscillating electric and magnetic fields that propagate through space at the speed of light (3 × 10⁸ m/s in vacuum). No medium required."},
+{category:"Waves",question:"What is a mechanical wave?",answer:"A mechanical wave requires a material medium to propagate. Examples: sound waves, water waves, spring waves."},
+{category:"Wave Quantities",question:"Define wavelength.",answer:"Wavelength (λ) is the distance between two consecutive points in the same phase of a wave. Unit: metre."},
+{category:"Wave Quantities",question:"What is frequency?",answer:"Frequency (f) is the number of complete vibrations per unit time. Unit: hertz (Hz). f = 1/T."},
+{category:"Wave Quantities",question:"What is the time period of a wave?",answer:"The time period (T) is the time needed for one complete vibration. Unit: second. T = 1/f."},
+{category:"Wave Quantities",question:"What is amplitude?",answer:"Amplitude (A) is the maximum displacement of a particle from its equilibrium position. It determines loudness (sound) or brightness (light)."},
+{category:"Wave Quantities",question:"What is the relationship between wave velocity, frequency, and wavelength?",answer:"v = fλ."},
+{category:"Wave Quantities",question:"When a wave travels from one medium to another, which quantities change and which remain unchanged?",answer:"Frequency remains unchanged (fixed by the source). Wave speed and wavelength change according to the new medium."},
+{category:"Wave Quantities",question:"How is intensity related to amplitude?",answer:"Intensity is directly proportional to the square of the amplitude: I ∝ A². Doubling amplitude quadruples intensity."},
+{category:"Sound",question:"What type of wave is sound?",answer:"Sound is a longitudinal mechanical wave. It requires an elastic medium and cannot travel through a vacuum."},
+{category:"Sound",question:"What is ultrasonic sound?",answer:"Sound with frequency higher than 20,000 Hz is called ultrasonic sound. Bats and dolphins use ultrasonic waves."},
+{category:"Sound",question:"What is infrasonic sound?",answer:"Sound with frequency lower than 20 Hz is called infrasonic sound. Not audible to the human ear."},
+{category:"Echo",question:"What is an echo?",answer:"An echo is the repetition of a sound heard when the original sound is reflected from a distant hard surface and returns to the listener."},
+{category:"Echo",question:"What is persistence of hearing?",answer:"Persistence of hearing is the property of the human brain whereby a sound sensation lasts approximately 0.1 second after the actual sound has stopped."},
+{category:"Echo",question:"What is the minimum distance required to hear an echo?",answer:"At 0°C (v = 330 m/s): d = vt/2 = 16.5 m. At room temperature: about 17 m."},
+{category:"Sound Velocity",question:"On what factors does the speed of sound in air depend?",answer:"Temperature (v ∝ √T), humidity (higher humidity → faster), and air density (v ∝ 1/√ρ). Independent of pressure for a given temperature."},
+{category:"Sound Velocity",question:"How does temperature affect the speed of sound?",answer:"Speed of sound in air increases with temperature: v = 330√(T/273) m/s where T is in kelvin."},
+{category:"Sound Velocity",question:"In which medium does sound travel fastest?",answer:"Solid > Liquid > Gas. Example: iron (5130 m/s) > water (1493 m/s) > air (330 m/s)."},
+{category:"Sound Velocity",question:"What is the speed of sound in vacuum?",answer:"Sound cannot propagate in vacuum. Speed of sound in vacuum is 0 m/s."},
+{category:"Applications",question:"What is a geophone?",answer:"A geophone records reflected sound waves. It is used in 3D seismic surveys and ocean-depth measurement."},
+{category:"Musical Sound",question:"What are the three characteristics of musical sound?",answer:"(1) Intensity (loudness) — depends on amplitude. (2) Pitch — depends on frequency. (3) Timber/Quality — depends on the waveform."},
+{category:"Musical Sound",question:"Why do females have higher-pitched voices than males?",answer:"Females have thinner, shorter vocal cords vibrating at higher frequency. Higher frequency = higher pitch."},
+{category:"Musical Sound",question:"What is the unit of sound intensity?",answer:"W/m² (or J s⁻¹ m⁻²)."},
+{category:"Pollution",question:"What is sound pollution and how can it be reduced?",answer:"Excessive or unwanted sound that disrupts normal activities, measured in decibels (dB). Mitigation: factories away from residential areas, tree planting, sound absorbers, limiting horns/loudspeakers."}
+];
+
+/* ---------- NOTES ---------- */
+const NOTES={
+chem8:`<div class="notes">
+<article class="note"><h3>1 · Energy Basics</h3>
+<p>Energy is the capacity to do work or produce heat. All energy on Earth ultimately comes from the <span class="term">Sun</span>. Plants capture it through <span class="term">photosynthesis</span>.</p>
+<ul><li><strong>Calorie:</strong> heat needed to raise 1 g of water by 1 °C.</li><li><strong>Joule:</strong> SI unit. 1 cal = 4.18 J.</li><li><strong>Kilojoule:</strong> 1 kJ = 1000 J.</li></ul>
+<div class="formula">1 cal = 4.18 J · 1 Cal = 1000 cal = 4180 J</div></article>
+<article class="note"><h3>2 · Thermochemistry</h3>
+<p>Thermochemistry studies heat changes. The key quantity is <span class="term">ΔH</span>.</p>
+<div class="formula">ΔH = Σ(bonds broken) − Σ(bonds formed)</div>
+<table><thead><tr><th>Type</th><th>ΔH sign</th><th>Heat</th></tr></thead><tbody><tr><td>Exothermic</td><td>Negative (−)</td><td>Released</td></tr><tr><td>Endothermic</td><td>Positive (+)</td><td>Absorbed</td></tr></tbody></table></article>
+<article class="note"><h3>3 · Bond Energy (kJ/mol)</h3>
+<table><thead><tr><th>Bond</th><th>E</th><th>Bond</th><th>E</th></tr></thead><tbody><tr><td>H–H</td><td>436</td><td>C–H</td><td>414</td></tr><tr><td>O–H</td><td>464</td><td>C–C</td><td>344</td></tr><tr><td>O=O</td><td>498</td><td>C=O</td><td>724</td></tr><tr><td>Cl–Cl</td><td>244</td><td>N≡N</td><td>945</td></tr></tbody></table></article>
+<article class="note"><h3>4 · Electrochemistry</h3>
+<ul><li><span class="term">Electrolysis:</span> using electric current to decompose a substance.</li><li><span class="term">Galvanic cell:</span> converts chemical → electrical energy.</li><li><span class="term">Electroplating:</span> coating a metal with a less reactive metal.</li><li><span class="term">Galvanizing:</span> coating iron with zinc.</li></ul>
+<p><strong>Mnemonic:</strong> An Ox (Anode Oxidation), Red Cat (Reduction Cathode).</p></article>
+<article class="note"><h3>5 · Cells &amp; Batteries</h3>
+<ul><li><strong>Daniell cell:</strong> Zn | ZnSO₄ ‖ CuSO₄ | Cu, ~1.1 V.</li><li><strong>Dry cell:</strong> Zn anode, C cathode, ~1.5 V.</li><li><strong>Mercury cell:</strong> Zn + Hg₂O.</li><li><strong>Hydrogen fuel cell:</strong> H₂ at anode, O₂ at cathode.</li><li><strong>Lithium battery:</strong> LiCoO₂ cathode.</li></ul></article>
+<article class="note"><h3>6 · Environment &amp; Energy</h3>
+<ul><li><strong>Biofuel:</strong> ethanol from fermentation.</li><li><strong>Photochemical smog:</strong> CO, NOₓ, unburned hydrocarbons.</li><li><strong>CO₂ emissions:</strong> ~21.3 billion tons/year.</li><li><strong>Chernobyl:</strong> 1986.</li></ul></article>
+</div>`,
+chem7:`<div class="notes">
+<article class="note"><h3>1 · Reaction Basics</h3>
+<ul><li><span class="term">Reactants:</span> starting substances converted into products.</li><li><span class="term">Irreversible:</span> products cannot reform reactants.</li><li><span class="term">Reversible:</span> reactants ⇌ products simultaneously.</li><li><span class="term">Forward reaction:</span> reactants → products.</li><li><span class="term">Backward reaction:</span> products → reactants.</li></ul></article>
+<article class="note"><h3>2 · Exothermic vs Endothermic</h3>
+<table><thead><tr><th>Type</th><th>ΔH sign</th><th>Heat</th></tr></thead><tbody><tr><td>Exothermic</td><td>Negative (−)</td><td>Released</td></tr><tr><td>Endothermic</td><td>Positive (+)</td><td>Absorbed</td></tr></tbody></table></article>
+<article class="note"><h3>3 · Redox Reactions</h3>
+<ul><li><span class="term">Oxidation:</span> loss of electrons.</li><li><span class="term">Reduction:</span> gain of electrons.</li><li><span class="term">Reductant:</span> donates electrons; itself oxidized.</li><li><span class="term">Oxidant:</span> accepts electrons; itself reduced.</li></ul>
+<p><strong>OIL RIG:</strong> Oxidation Is Loss, Reduction Is Gain.</p></article>
+<article class="note"><h3>4 · Oxidation Numbers</h3>
+<table><thead><tr><th>Compound</th><th>Atom</th><th>Ox. state</th></tr></thead><tbody>
+<tr><td>K₂Cr₂O₇</td><td>Cr</td><td>+6</td></tr>
+<tr><td>KMnO₄</td><td>Mn</td><td>+7</td></tr>
+<tr><td>H₂SO₄</td><td>S</td><td>+6</td></tr>
+<tr><td>HNO₃</td><td>N</td><td>+5</td></tr>
+<tr><td>Na₂S₂O₃</td><td>S</td><td>+2</td></tr>
+<tr><td>Na₂CO₃</td><td>C</td><td>+4</td></tr>
+<tr><td>CrO₄²⁻</td><td>Cr</td><td>+6</td></tr>
+<tr><td>CaH₂</td><td>H</td><td>−1</td></tr>
+<tr><td>K₂O₂</td><td>O</td><td>−1</td></tr>
+</tbody></table></article>
+<article class="note"><h3>5 · Reaction Types</h3>
+<table><thead><tr><th>Type</th><th>Example</th></tr></thead><tbody>
+<tr><td>Combination</td><td>Mg + O₂ → MgO</td></tr>
+<tr><td>Decomposition</td><td>MgCO₃ → MgO + CO₂</td></tr>
+<tr><td>Single displacement</td><td>Zn + CuSO₄ → ZnSO₄ + Cu</td></tr>
+<tr><td>Double displacement</td><td>NaCl + AgNO₃ → AgCl↓ + NaNO₃</td></tr>
+<tr><td>Neutralization</td><td>NaOH + HCl → NaCl + H₂O</td></tr>
+<tr><td>Precipitation</td><td>BaCl₂ + Na₂SO₄ → BaSO₄↓ + 2NaCl</td></tr>
+<tr><td>Hydrolysis</td><td>SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl</td></tr>
+<tr><td>Hydration</td><td>CuSO₄ + 5H₂O → CuSO₄·5H₂O</td></tr>
+<tr><td>Isomerization</td><td>NH₄CNO → NH₂CO−NH₂</td></tr>
+</tbody></table></article>
+<article class="note"><h3>6 · Equilibrium &amp; Haber</h3>
+<div class="formula">N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH = −92 kJ</div>
+<p>Optimum: 450–550 °C, 200–250 atm, iron catalyst.</p>
+<p><strong>Le Chatelier:</strong> a system at equilibrium shifts to counteract any change.</p></article>
+<article class="note"><h3>7 · Heat of Neutralization</h3>
+<p>Strong acid + strong base → ΔH = −57.34 kJ/mol (constant) because only H⁺ + OH⁻ → H₂O occurs.</p></article>
+</div>`,
+phy8:`<div class="notes">
+<article class="note"><h3>1 · Nature of Light</h3>
+<ul><li>Speed of light in vacuum: <strong>3 × 10⁸ m/s</strong>.</li><li>Light is an <span class="term">electromagnetic wave</span>.</li><li>Visible range: <strong>400–700 nm</strong>.</li><li>Violet = shortest wavelength; red = longest.</li></ul></article>
+<article class="note"><h3>2 · Reflection &amp; Laws</h3>
+<p>When light bounces off a boundary back into the first medium, it is <span class="term">reflection</span>.</p>
+<ol><li>Incident ray, reflected ray, and normal lie in the same plane.</li><li>Angle of incidence equals angle of reflection: ∠i = ∠r.</li></ol>
+<p><strong>Regular:</strong> smooth surface. <strong>Irregular (diffused):</strong> rough surface.</p></article>
+<article class="note"><h3>3 · Mirror Basics</h3>
+<p><span class="term">Silvering:</span> coating one side of glass with silver/mercury.</p>
+<p><strong>Plane mirror image:</strong> virtual, erect, same size, at equal distance behind mirror, laterally inverted.</p></article>
+<article class="note"><h3>4 · Spherical Mirrors</h3>
+<ul><li><strong>Pole (P):</strong> midpoint of reflecting surface.</li><li><strong>Center of curvature (C):</strong> center of the sphere.</li><li><strong>Radius of curvature (r):</strong> distance from C to P.</li><li><strong>Principal axis:</strong> line through P and C.</li><li><strong>Principal focus (F):</strong> where parallel rays converge or appear to diverge.</li><li><strong>Focal length:</strong> f = r / 2.</li></ul>
+<p><strong>Concave = converging; Convex = diverging.</strong></p></article>
+<article class="note"><h3>5 · Image Formation (Concave)</h3>
+<table><thead><tr><th>Object</th><th>Image</th></tr></thead><tbody>
+<tr><td>At ∞</td><td>At F, real, inverted, tiny</td></tr>
+<tr><td>Beyond C</td><td>Between F and C, real, inverted, smaller</td></tr>
+<tr><td>At C</td><td>At C, real, inverted, same size</td></tr>
+<tr><td>Between C and F</td><td>Beyond C, real, inverted, magnified</td></tr>
+<tr><td>At F</td><td>At infinity</td></tr>
+<tr><td>Between P and F</td><td>Behind mirror, virtual, erect, magnified</td></tr>
+</tbody></table>
+<p>Convex mirror: always virtual, erect, diminished.</p></article>
+<article class="note"><h3>6 · Magnification &amp; Formulas</h3>
+<div class="formula">1/f = 1/u + 1/v · m = −v/u</div>
+<table><thead><tr><th></th><th>Concave</th><th>Convex</th></tr></thead><tbody>
+<tr><td>u (object)</td><td>+</td><td>+</td></tr>
+<tr><td>v (image)</td><td>+ if real, − if virtual</td><td>−</td></tr>
+<tr><td>f (focal length)</td><td>−</td><td>+</td></tr>
+</tbody></table></article>
+<article class="note"><h3>7 · Uses of Mirrors</h3>
+<ul><li><strong>Plane:</strong> dressing table, periscope, road bends.</li><li><strong>Concave:</strong> dentist, torch, searchlight, telescope.</li><li><strong>Convex:</strong> vehicle rear-view mirrors, security mirrors.</li></ul></article>
+</div>`,
+phy7:`<div class="notes">
+<article class="note"><h3>1 · Simple Harmonic Motion</h3>
+<p><span class="term">SHM</span> is a special type of periodic motion where the restoring force is directly proportional to displacement from equilibrium.</p>
+<div class="formula">F = −kx · T = 2π√(l/g) · g = 4π²L/T²</div>
+<p>k = F/x = mg/x (spring constant). T ∝ √l for a pendulum.</p></article>
+<article class="note"><h3>2 · Wave Types</h3>
+<table><thead><tr><th>Type</th><th>Vibration</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Transverse</td><td>Perpendicular</td><td>Light, water, radio</td></tr>
+<tr><td>Longitudinal</td><td>Parallel</td><td>Sound, spring</td></tr>
+<tr><td>Electromagnetic</td><td>Transverse</td><td>Light, X-rays</td></tr>
+</tbody></table></article>
+<article class="note"><h3>3 · Wave Quantities</h3>
+<div class="formula">v = fλ · f = 1/T · I ∝ A²</div>
+<ul><li>Same-phase distance = λ.</li><li>Frequency is fixed by the source.</li><li>Wave speed and wavelength change with medium.</li></ul></article>
+<article class="note"><h3>4 · Sound Waves</h3>
+<ul><li>Longitudinal mechanical wave.</li><li>Via compressions &amp; rarefactions.</li><li>Cannot travel in vacuum.</li></ul>
+<table><thead><tr><th>Range</th><th>Frequency</th></tr></thead><tbody>
+<tr><td>Infrasonic</td><td>&lt; 20 Hz</td></tr>
+<tr><td>Audible</td><td>20 Hz – 20 kHz</td></tr>
+<tr><td>Ultrasonic</td><td>&gt; 20 kHz</td></tr>
+</tbody></table></article>
+<article class="note"><h3>5 · Echo &amp; Persistence</h3>
+<p>Persistence ≈ 0.1 s. Echo minimum distance: d = v·t / 2 (t = 0.1 s).</p>
+<table><thead><tr><th>Temp</th><th>v</th><th>d</th></tr></thead><tbody>
+<tr><td>0 °C</td><td>330 m/s</td><td>16.5 m</td></tr>
+<tr><td>20 °C</td><td>343 m/s</td><td>17.15 m</td></tr>
+</tbody></table></article>
+<article class="note"><h3>6 · Speed of Sound</h3>
+<div class="formula">Solids &gt; Liquids &gt; Gases &gt; Vacuum (= 0)</div>
+<table><thead><tr><th>Medium</th><th>v (m/s)</th></tr></thead><tbody>
+<tr><td>Diamond</td><td>12,000</td></tr>
+<tr><td>Iron</td><td>5,130</td></tr>
+<tr><td>Water</td><td>1,493</td></tr>
+<tr><td>Air (0 °C)</td><td>330</td></tr>
+<tr><td>Vacuum</td><td>0</td></tr>
+</tbody></table>
+<div class="formula">v = 330·√(T/273) m/s (T in K)</div></article>
+<article class="note"><h3>7 · Musical Sound</h3>
+<table><thead><tr><th>Characteristic</th><th>Depends on</th></tr></thead><tbody>
+<tr><td>Intensity</td><td>Amplitude (I ∝ A²)</td></tr>
+<tr><td>Pitch</td><td>Frequency</td></tr>
+<tr><td>Timber</td><td>Waveform</td></tr>
+</tbody></table></article>
+<article class="note"><h3>8 · Sound Pollution</h3>
+<ul><li>Unwanted sound, measured in dB.</li><li>Mitigation: factories away from homes, trees, absorbers.</li></ul></article>
+</div>`
+};
+
+
+/* ============================================================
+   JS § 3. REGISTRY — subjects & chapters
+   ------------------------------------------------------------
+   To add a subject: add an entry to SUBJECTS.
+   To add a chapter: add an entry to REGISTRY and list its id in SUBJECTS.
+   ============================================================ */
+const REGISTRY={
+  chem8:{
+    id:"chem8", subject:"chemistry",
+    subjectLabel:"Chemistry", subjectIcon:"🧪",
+    chapterNum:"08", title:"Chemistry & Energy",
+    desc:"Electrochemistry, thermochemistry, bond energy, cells & batteries, and energy sustainability.",
+    mcq:chem8MCQ, sq:chem8SQ, notesHTML:NOTES.chem8
+  },
+  chem7:{
+    id:"chem7", subject:"chemistry",
+    subjectLabel:"Chemistry", subjectIcon:"⚗",
+    chapterNum:"07", title:"Chemical Reactions",
+    desc:"Redox, oxidation numbers, hydrolysis, hydration, precipitation, equilibrium, and reaction types.",
+    mcq:chem7MCQ, sq:chem7SQ, notesHTML:NOTES.chem7
+  },
+  phy8:{
+    id:"phy8", subject:"physics",
+    subjectLabel:"Physics", subjectIcon:"⚛",
+    chapterNum:"08", title:"Reflection of Light",
+    desc:"Reflection laws, plane mirrors, spherical mirrors, image formation, and magnification.",
+    mcq:phy8MCQ, sq:phy8SQ, notesHTML:NOTES.phy8
+  },
+  phy7:{
+    id:"phy7", subject:"physics",
+    subjectLabel:"Physics", subjectIcon:"🌊",
+    chapterNum:"07", title:"SHM & Waves",
+    desc:"Simple harmonic motion, wave types, sound waves, echo, and sound pollution.",
+    mcq:phy7MCQ, sq:phy7SQ, notesHTML:NOTES.phy7
+  }
+};
+
+const SUBJECTS=[
+  {id:"chemistry",name:"Chemistry",icon:"🧪",tagline:"Matter, energy, and reactions",chapters:["chem8","chem7"]},
+  {id:"physics",name:"Physics",icon:"⚛",tagline:"Light, waves, and optics",chapters:["phy8","phy7"]}
+];
+
+
+/* ============================================================
+   JS § 4. POMODORO LOGIC
+   ============================================================ */
+const pomo=document.getElementById("pomo");
+const pomoMode=document.getElementById("pomoMode");
+const pomoTime=document.getElementById("pomoTime");
+const pomoStart=document.getElementById("pomoStart");
+const pomoReset=document.getElementById("pomoReset");
+const pomoSelect=document.getElementById("pomoSelect");
+const BREAK_MAP={"15":2,"25":5,"50":10};
+const WARN=30;
+const PS={mode:"focus",running:false,remaining:25*60,total:25*60,intervalId:null,warnFired:false};
+
+function focusSec(){return (parseInt(pomoSelect.value,10)||25)*60;}
+function breakSec(){const m=parseInt(pomoSelect.value,10)||25;return (BREAK_MAP[String(m)]||5)*60;}
+
+function updPomo(){
+  const s=PS.remaining;
+  pomoTime.textContent=`${Math.floor(s/60).toString().padStart(2,"0")}:${(s%60).toString().padStart(2,"0")}`;
+  pomoMode.textContent=PS.mode==="focus"?"Focus":"Break";
+  pomo.classList.toggle("running",PS.running&&PS.mode==="focus");
+  pomo.classList.toggle("break-mode",PS.mode==="break");
+  const warn=PS.running&&PS.remaining<=WARN&&PS.remaining>0;
+  pomo.classList.toggle("warning",warn);
+  pomoStart.textContent=PS.running?"Pause":(PS.remaining===PS.total?"Start":"Resume");
+}
+
+function startInterval(){
+  if(PS.intervalId)clearInterval(PS.intervalId);
+  PS.intervalId=setInterval(()=>{
+    if(!PS.running)return;
+    PS.remaining--;
+    if(PS.remaining===WARN&&!PS.warnFired){PS.warnFired=true;playWarning();}
+    if(PS.remaining<=0){
+      if(PS.mode==="focus"){
+        PS.mode="break";PS.total=breakSec();PS.remaining=PS.total;PS.warnFired=false;playChime();
+      }else{
+        PS.mode="focus";PS.total=focusSec();PS.remaining=PS.total;
+        PS.running=false;PS.warnFired=false;playBreakEnd();
+        clearInterval(PS.intervalId);PS.intervalId=null;
+      }
+    }
+    updPomo();
+  },1000);
+}
+
+pomoStart.addEventListener("click",()=>{
+  ensureAudio();
+  if(PS.remaining<=0){PS.mode="focus";PS.total=focusSec();PS.remaining=PS.total;PS.warnFired=false;}
+  PS.running=!PS.running;
+  if(PS.running){
+    startInterval();
+    try{if("Notification"in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}
+  }else if(PS.intervalId){clearInterval(PS.intervalId);PS.intervalId=null;}
+  updPomo();
+});
+
+pomoReset.addEventListener("click",()=>{
+  PS.running=false;PS.mode="focus";PS.total=focusSec();PS.remaining=PS.total;PS.warnFired=false;
+  if(PS.intervalId){clearInterval(PS.intervalId);PS.intervalId=null;}
+  updPomo();
+});
+
+pomoSelect.addEventListener("change",()=>{
+  if(PS.running){PS.running=false;if(PS.intervalId){clearInterval(PS.intervalId);PS.intervalId=null;}}
+  PS.mode="focus";PS.total=focusSec();PS.remaining=PS.total;PS.warnFired=false;
+  updPomo();
+});
+
+PS.total=focusSec();PS.remaining=PS.total;updPomo();
+
+
+/* ============================================================
+   JS § 5. HELPERS
+   ============================================================ */
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+
+/* ============================================================
+   JS § 6. NAVIGATION — step switching
+   ============================================================ */
+let curSubject=null,curChapter=null;
+
+const stepSubject=document.getElementById("stepSubject");
+const stepChapter=document.getElementById("stepChapter");
+const stepStudy=document.getElementById("stepStudy");
+const subjectList=document.getElementById("subjectList");
+const chapterList=document.getElementById("chapterList");
+const chapterSubject=document.getElementById("chapterSubject");
+const studyBody=document.getElementById("studyBody");
+
+function showStep(step){
+  stepSubject.classList.toggle("hidden",step!=="subject");
+  stepChapter.classList.toggle("hidden",step!=="chapter");
+  stepStudy.classList.toggle("hidden",step!=="study");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderSubjects(){
+  subjectList.innerHTML="";
+  SUBJECTS.forEach(subj=>{
+    const btn=document.createElement("button");
+    btn.className="card-btn";
+    btn.type="button";
+    const n=subj.chapters.length;
+    btn.innerHTML=`
+      <span class="card-emoji">${subj.icon}</span>
+      <h3 class="card-title">${subj.name}</h3>
+      <div class="card-meta">${n} chapter${n>1?"s":""} · ${subj.tagline}</div>
+    `;
+    btn.addEventListener("click",()=>{curSubject=subj.id;renderChapters();showStep("chapter");});
+    subjectList.appendChild(btn);
+  });
+}
+
+function renderChapters(){
+  const subj=SUBJECTS.find(s=>s.id===curSubject);
+  if(!subj)return;
+  chapterSubject.textContent=subj.name;
+  chapterList.innerHTML="";
+  subj.chapters.forEach(cid=>{
+    const ch=REGISTRY[cid];if(!ch)return;
+    const btn=document.createElement("button");
+    btn.className="card-btn";
+    btn.type="button";
+    btn.innerHTML=`
+      <div class="card-num">Chapter ${ch.chapterNum}</div>
+      <h3 class="card-title">${ch.title}</h3>
+      <p class="card-desc">${ch.desc}</p>
+      <div class="card-stats">
+        <span>📝 ${ch.mcq.length} MCQs</span>
+        <span>📖 ${ch.sq.length} SQs</span>
+      </div>
+    `;
+    btn.addEventListener("click",()=>openChapter(cid));
+    chapterList.appendChild(btn);
+  });
+}
+
+document.getElementById("backToSubjects").addEventListener("click",()=>showStep("subject"));
+document.getElementById("brand").addEventListener("click",()=>showStep("subject"));
+document.getElementById("switchSubject").addEventListener("click",()=>showStep("subject"));
+document.getElementById("switchChapter").addEventListener("click",()=>{renderChapters();showStep("chapter");});
+
+
+/* ============================================================
+   JS § 7. RENDERERS — chapter view, MCQ, SQ
+   ============================================================ */
+function openChapter(cid){
+  const ch=REGISTRY[cid];if(!ch)return;
+  curChapter=cid;
+  document.getElementById("crumbSubject").textContent=ch.subjectLabel;
+  document.getElementById("crumbChapter").textContent=`Chapter ${ch.chapterNum} · ${ch.title}`;
+  document.getElementById("crumbSubject").onclick=()=>{curSubject=ch.subject;renderChapters();showStep("chapter");};
+
+  studyBody.innerHTML=`
+    <div class="tabs">
+      <button class="tab" data-tab="notes">Notes</button>
+      <button class="tab active" data-tab="mcq">MCQ</button>
+      <button class="tab" data-tab="sq">Short Questions</button>
+    </div>
+    <div id="viewNotes" class="hidden"></div>
+    <div id="viewMCQ"></div>
+    <div id="viewSQ" class="hidden"></div>
+  `;
+  document.getElementById("viewNotes").innerHTML=ch.notesHTML||"<p>No notes.</p>";
+
+  const tabs=studyBody.querySelectorAll(".tab");
+  const views={
+    notes:document.getElementById("viewNotes"),
+    mcq:document.getElementById("viewMCQ"),
+    sq:document.getElementById("viewSQ")
+  };
+  tabs.forEach(t=>t.addEventListener("click",()=>{
+    tabs.forEach(x=>x.classList.toggle("active",x===t));
+    const k=t.dataset.tab;
+    Object.keys(views).forEach(key=>views[key].classList.toggle("hidden",key!==k));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }));
+
+  renderMCQ(views.mcq,ch);
+  renderSQ(views.sq,ch);
+  showStep("study");
+}
+
+/* ---------- MCQ renderer ---------- */
+function renderMCQ(root,ch){
+  const cats=["All topics",...new Set(ch.mcq.map(q=>q.category))];
+  root.innerHTML=`
+    <div class="filters">
+      ${cats.map((c,i)=>`<button class="pill${i===0?" on":""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("")}
+      <span class="spacer"></span>
+      <button class="shuffle" id="shuffleBtn" type="button">🔄 Shuffle</button>
+    </div>
+    <div class="study-card">
+      <div class="study-top">
+        <span id="qProgress">Question 1 / ${ch.mcq.length}</span>
+        <span class="cat" id="qCat">—</span>
+      </div>
+      <div class="bar"><div class="bar-fill" id="qBar"></div></div>
+      <h2 class="question" id="qText"></h2>
+      <div class="opts" id="qOpts"></div>
+      <div class="fb" id="qFb"></div>
+      <div class="actions">
+        <span class="hint" id="qHint">Press 1–4 to pick · Enter to submit · ← → to navigate</span>
+        <div class="actions-right">
+          <button class="btn ghost" id="prevBtn" disabled>← Previous</button>
+          <button class="btn accent" id="checkBtn" disabled>Check</button>
+        </div>
+      </div>
+    </div>
+    <div id="qResults" class="hidden"></div>
+  `;
+
+  const state={
+    filter:"All topics",
+    list:[...ch.mcq],
+    idx:0,sel:null,checked:false,
+    correct:0,answered:0,missed:[],answerMap:{}
+  };
+
+  const qCat=document.getElementById("qCat");
+  const qProgress=document.getElementById("qProgress");
+  const qBar=document.getElementById("qBar");
+  const qText=document.getElementById("qText");
+  const qOpts=document.getElementById("qOpts");
+  const qFb=document.getElementById("qFb");
+  const checkBtn=document.getElementById("checkBtn");
+  const prevBtn=document.getElementById("prevBtn");
+  const qResults=document.getElementById("qResults");
+  const shuffleBtn=document.getElementById("shuffleBtn");
+
+  function render(){
+    if(state.idx>=state.list.length)return showResults();
+    const q=state.list[state.idx];
+    const saved=state.answerMap[state.idx];
+    state.sel=saved!==undefined?saved:null;
+    state.checked=saved!==undefined;
+    qCat.textContent=q.category;
+    qProgress.textContent=`Question ${state.idx+1} / ${state.list.length}`;
+    qBar.style.width=`${(state.idx/state.list.length)*100}%`;
+    qText.textContent=q.question;
+    qFb.className="fb"; qFb.innerHTML="";
+    qOpts.innerHTML="";
+    q.options.forEach((opt,i)=>{
+      const b=document.createElement("button");
+      b.className="opt"; b.type="button";
+      b.innerHTML=`<span class="lt">${String.fromCharCode(65+i)}</span><span>${esc(opt)}</span>`;
+      if(state.checked){
+        b.disabled=true;
+        if(i===q.answer)b.classList.add("right");
+        if(i===state.sel&&state.sel!==q.answer)b.classList.add("wrong");
+      }else if(state.sel===i){
+        b.classList.add("sel");
+      }
+      b.addEventListener("click",()=>{
+        if(state.checked)return;
+        state.sel=i;
+        [...qOpts.children].forEach((o,k)=>o.classList.toggle("sel",k===i));
+        checkBtn.disabled=false;
+      });
+      qOpts.appendChild(b);
+    });
+    if(state.checked){
+      const ok=state.sel===q.answer;
+      qFb.className=`fb show ${ok?"good":"bad"}`;
+      qFb.innerHTML=`<strong>${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}`;
+      checkBtn.textContent=state.idx===state.list.length-1?"See results":"Next";
+    }else{
+      checkBtn.textContent="Check";
+    }
+    checkBtn.disabled=!state.checked&&state.sel===null;
+    prevBtn.disabled=state.idx===0;
+  }
+
+  function check(){
+    if(state.sel===null)return;
+    const q=state.list[state.idx];
+    if(!state.checked){
+      state.checked=true;state.answered++;
+      state.answerMap[state.idx]=state.sel;
+      const ok=state.sel===q.answer;
+      if(ok)state.correct++;
+      else state.missed.push({q:q.question,correct:q.options[q.answer],chosen:q.options[state.sel]});
+      render();
+    }else{
+      state.idx++;render();
+    }
+  }
+
+  function prev(){if(state.idx===0)return;state.idx--;render();}
+
+  function showResults(){
+    const pct=state.list.length?Math.round((state.correct/state.list.length)*100):0;
+    document.querySelector("#viewMCQ .study-card").style.display="none";
+    document.querySelector("#viewMCQ .filters").style.display="none";
+    qResults.className="results";
+    qResults.innerHTML=`
+      <p class="big"><span>${pct}%</span></p>
+      <p class="sub">${state.correct} of ${state.list.length} correct</p>
+      <div class="row">
+        <button class="btn accent" id="retryBtn">Try again</button>
+        ${state.missed.length?`<button class="btn ghost" id="reviewBtn">Review missed (${state.missed.length})</button>`:""}
+      </div>
+      ${state.missed.length?`<div class="missed"><h4>Missed questions</h4>${state.missed.map(m=>`<div class="missed-item"><strong>${esc(m.q)}</strong><span>Yours: ${esc(m.chosen)} · Correct: ${esc(m.correct)}</span></div>`).join("")}</div>`:""}
+    `;
+    document.getElementById("retryBtn").addEventListener("click",()=>start(state.filter));
+    const rv=document.getElementById("reviewBtn");
+    if(rv)rv.addEventListener("click",()=>{
+      state.list=state.list.filter(q=>state.missed.some(m=>m.q===q.question));
+      state.idx=0;state.sel=null;state.checked=false;state.correct=0;state.answered=0;state.missed=[];state.answerMap={};
+      qResults.className="hidden";
+      document.querySelector("#viewMCQ .study-card").style.display="";
+      document.querySelector("#viewMCQ .filters").style.display="";
+      render();
+    });
+  }
+
+  function start(filter){
+    state.filter=filter;
+    state.list=filter==="All topics"?[...ch.mcq]:ch.mcq.filter(q=>q.category===filter);
+    state.idx=0;state.sel=null;state.checked=false;state.correct=0;state.answered=0;state.missed=[];state.answerMap={};
+    qResults.className="hidden";
+    document.querySelector("#viewMCQ .study-card").style.display="";
+    document.querySelector("#viewMCQ .filters").style.display="";
+    root.querySelectorAll(".pill").forEach(b=>b.classList.toggle("on",b.dataset.cat===filter));
+    render();
+  }
+
+  root.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>start(b.dataset.cat)));
+  checkBtn.addEventListener("click",check);
+  prevBtn.addEventListener("click",prev);
+  shuffleBtn.addEventListener("click",()=>{
+    state.list=shuffle(state.list);
+    state.idx=0;state.sel=null;state.checked=false;state.correct=0;state.answered=0;state.missed=[];state.answerMap={};
+    qResults.className="hidden";
+    document.querySelector("#viewMCQ .study-card").style.display="";
+    document.querySelector("#viewMCQ .filters").style.display="";
+    render();
+  });
+
+  document.addEventListener("keydown",e=>{
+    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewMCQ").classList.contains("hidden")){
+      if(["1","2","3","4"].includes(e.key)&&!state.checked){
+        const i=Number(e.key)-1;
+        const btn=qOpts.children[i];
+        if(btn)btn.click();
+      }
+      if(e.key==="Enter"&&!checkBtn.disabled)checkBtn.click();
+      if(e.key==="ArrowLeft"&&!prevBtn.disabled)prevBtn.click();
+    }
+  });
+
+  render();
+}
+
+/* ---------- SQ renderer ---------- */
+function renderSQ(root,ch){
+  root.innerHTML=`
+    <div class="study-card">
+      <div class="study-top">
+        <span id="sqProgress">Question 1 / ${ch.sq.length}</span>
+        <span class="cat" id="sqCat">—</span>
+      </div>
+      <div class="bar"><div class="bar-fill" id="sqBar"></div></div>
+      <h2 class="question" id="sqText"></h2>
+      <div class="sq-answer" id="sqAnswer"></div>
+      <div class="actions">
+        <span class="hint">← → to navigate</span>
+        <div class="actions-right">
+          <button class="btn ghost" id="sqPrev" disabled>← Previous</button>
+          <button class="btn accent" id="sqShow">Show answer</button>
+          <button class="btn" id="sqNext">Next →</button>
+        </div>
+      </div>
+    </div>
+  `;
+  let idx=0,revealed=false;
+  const sqCat=document.getElementById("sqCat");
+  const sqProgress=document.getElementById("sqProgress");
+  const sqBar=document.getElementById("sqBar");
+  const sqText=document.getElementById("sqText");
+  const sqAnswer=document.getElementById("sqAnswer");
+  const sqShow=document.getElementById("sqShow");
+  const sqNext=document.getElementById("sqNext");
+  const sqPrev=document.getElementById("sqPrev");
+
+  function render(){
+    const sq=ch.sq[idx];
+    sqCat.textContent=sq.category;
+    sqProgress.textContent=`Question ${idx+1} / ${ch.sq.length}`;
+    sqBar.style.width=`${((idx+1)/ch.sq.length)*100}%`;
+    sqText.textContent=sq.question;
+    sqAnswer.textContent=sq.answer;
+    sqAnswer.classList.remove("show");
+    revealed=false;
+    sqShow.textContent="Show answer";
+    sqPrev.disabled=idx===0;
+  }
+
+  sqShow.addEventListener("click",()=>{
+    revealed=!revealed;
+    sqAnswer.classList.toggle("show",revealed);
+    sqShow.textContent=revealed?"Hide answer":"Show answer";
+  });
+  sqNext.addEventListener("click",()=>{idx=(idx+1)%ch.sq.length;render();});
+  sqPrev.addEventListener("click",()=>{if(idx>0){idx--;render();}});
+  document.addEventListener("keydown",e=>{
+    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewSQ").classList.contains("hidden")){
+      if(e.key==="ArrowLeft"&&!sqPrev.disabled)sqPrev.click();
+      if(e.key==="ArrowRight")sqNext.click();
+    }
+  });
+  render();
+}
+
+
+/* ============================================================
+   JS § 8. INIT
+   ============================================================ */
+renderSubjects();
+showStep("subject");
+</script>
+</body>
+</html>
