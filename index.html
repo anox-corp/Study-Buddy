@@ -8,9 +8,8 @@
 
 <!--
 ============================================================
-  STUDY BUDDY — v2
-  Added: Mode picker (Teacher's Suggestions / Detailed Study)
-  Detailed content: Physics Ch 8 only (others show placeholder)
+  STUDY BUDDY — v5
+  All Bangla text removed.
 ============================================================
 -->
 
@@ -236,11 +235,34 @@ table th{font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:
 table tr:last-child td{border-bottom:0;}
 table tbody tr:hover td{background:var(--surface-2);}
 
-/* § 10. STUDY CARD */
+/* § 10. STUDY CARD — frozen-button layout */
 .study-card{
   background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:40px 44px;box-shadow:var(--shadow);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;
+  height:min(82vh, 700px);min-height:480px;
+  overflow:hidden;
+  padding:0;
 }
+.card-scroll{
+  flex:1 1 auto;
+  overflow-y:auto;overflow-x:hidden;
+  padding:36px 44px 12px;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.card-scroll::-webkit-scrollbar{width:6px;}
+.card-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+
+.study-card > .actions{
+  flex:0 0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;
+  padding:16px 44px 20px;
+  border-top:1px solid var(--line);
+  background:var(--surface);
+  margin-top:0;
+}
+
 .study-top{
   display:flex;justify-content:space-between;align-items:center;
   gap:12px;margin-bottom:20px;font-size:12.5px;color:var(--muted);font-weight:700;
@@ -389,6 +411,27 @@ table tbody tr:hover td{background:var(--surface-2);}
 }
 .creative-part.open .part-a{display:block;}
 
+/* § 13c. FIGURES */
+.q-figure{
+  display:block;
+  max-width:100%;height:auto;max-height:280px;
+  margin:0 0 18px;
+  border-radius:10px;border:1px solid var(--line);
+  background:var(--surface);object-fit:contain;
+}
+.note-figure{margin:20px auto;text-align:center;max-width:100%;}
+.note-figure img{
+  display:block;max-width:100%;height:auto;max-height:340px;
+  margin:0 auto;
+  border-radius:10px;border:1px solid var(--line);
+  background:var(--surface);object-fit:contain;
+}
+.note-figure figcaption{
+  margin-top:8px;font-size:12.5px;color:var(--muted);
+  font-style:italic;line-height:1.5;
+  max-width:520px;margin-left:auto;margin-right:auto;
+}
+
 /* § 14. WATERMARK */
 .wm{
   position:fixed;bottom:22px;right:26px;z-index:100;
@@ -401,14 +444,14 @@ table tbody tr:hover td{background:var(--surface-2);}
   pointer-events:none;user-select:none;
   box-shadow:0 4px 14px rgba(58,63,34,.12);opacity:.9;
 }
-.wm::before{content:"✦ ";color:var(--accent);font-weight:900;}
+.wm::before{content:"* ";color:var(--accent);font-weight:900;}
 
 .hidden{display:none !important;}
 
 /* § 15. RESPONSIVE */
 @media (max-width:1024px){
   .wrap{max-width:820px;padding:48px 32px 90px;}
-  .study-card{padding:34px 36px;}
+  .study-card{padding:0;}
   .note{padding:24px 28px;}
 }
 @media (max-width:640px){
@@ -421,7 +464,9 @@ table tbody tr:hover td{background:var(--surface-2);}
   .pomo select{padding:3px 18px 3px 6px;font-size:10px;background-size:8px;}
   .step-title{font-size:26px;}
   .step-sub{font-size:14px;}
-  .study-card{padding:22px 20px;}
+  .study-card{padding:0;height:calc(100vh - 110px);min-height:400px;}
+  .card-scroll{padding:22px 20px 10px;}
+  .study-card > .actions{padding:12px 20px 16px;flex-direction:column;align-items:stretch;}
   .study-top{font-size:11.5px;}
   .question{font-size:18px;}
   .opt{padding:13px 14px;font-size:14px;gap:12px;}
@@ -784,7 +829,47 @@ const chem7SQ=[
 {category:"Comprehension",question:"How can a reversible reaction be converted into an irreversible reaction?",answer:"By removing one of the products as fast as it forms: (1) Open Vessel System — if a gas escapes; (2) Precipitation — removing an ion by forming an insoluble precipitate; (3) Chemical Removal — neutralizing or tying up a product."}
 ];
 
-/* ---------- PHYSICS CH 8 — MCQ ---------- */
+/* ---------- PHYSICS CH 8 — DETAILED MCQ ---------- */
+const phy8DetailedMCQ=[
+{category:"Reflection Basics",question:"What type of reflection of light occurs on paper?",options:["Regular","Irregular","Both","None"],answer:1,explanation:"Paper has a rough surface, so irregular (diffused) reflection occurs."},
+{category:"Laws of Reflection",question:"If the angle of incidence is 30°, what is the angle of reflection?",options:["60°","30°","15°","None"],answer:1,explanation:"According to the 2nd law of reflection, angle of reflection = angle of incidence."},
+{category:"Light Sources",question:"Objects that emit light are called —",options:["Luminous","Non-luminous","Glass","All"],answer:0,explanation:"Objects that emit their own light are called luminous objects."},
+{category:"Light Sources",question:"Which one is a luminous object?",options:["Brick","Chalk","Table","Star"],answer:3,explanation:"A star emits its own light, so it is luminous."},
+{category:"Reflection Basics",question:"White light reflects all colours —",options:["Reflects","Refracts","Disperses","Becomes white"],answer:3,explanation:"A white surface reflects all colours of light, so it appears white."},
+{category:"Reflection Types",figure:"mcq-regular.png",question:"What type of reflection is shown in the figure?",options:["Regular reflection","Irregular reflection","Both","Converging reflection"],answer:0,explanation:"The reflecting surface is smooth, so regular reflection occurs."},
+{category:"Laws of Reflection",figure:"mcq-reflected-ray.png",question:"According to the figure, which ray is the reflected ray of PO?",options:["OQ","OR","OS","OT"],answer:0,explanation:"According to the law of reflection, angle of incidence = angle of reflection."},
+{category:"Reflection Types",figure:"mcq-irregular.png",question:"What type of reflection is shown in the figure?",options:["Regular reflection","Irregular reflection","Both","Converging reflection"],answer:1,explanation:"The reflecting surface is rough, so irregular reflection occurs."},
+{category:"Convex Mirror",question:"In a convex mirror, the image size compared to the object is —",options:["Equal","Magnified","Small","All"],answer:2,explanation:"A convex mirror always forms a virtual, erect, and diminished image."},
+{category:"Concave Mirror",question:"An object is placed between the principal focus and center of curvature of a concave mirror. Where is the image?",options:["Behind the mirror","Between center of curvature and infinity","At center of curvature","Between center of curvature and principal focus"],answer:1,explanation:"When the object is between F and C, the image forms beyond C, real, inverted, and magnified."},
+{category:"Concave Mirror",question:"In a concave mirror, the image formed is the same size as the object. Where is the object placed?",options:["At F","At C","At infinity","Between F and P"],answer:1,explanation:"Object at C → image at C, same size, real and inverted."},
+{category:"Radius of Curvature",question:"The radius of curvature of a mirror is 20 cm. What is the focal length?",options:["2 cm","10 cm","20 cm","40 cm"],answer:1,explanation:"f = r/2 = 20/2 = 10 cm."},
+{category:"Image Nature",question:"What type of image is formed by a plane mirror?",options:["Real and inverted","Virtual and erect","Real and erect","Virtual and inverted"],answer:1,explanation:"A plane mirror always forms a virtual, erect image of the same size as the object."},
+{category:"Linear Magnification",question:"If linear magnification is less than 1, the image is —",options:["Magnified","Diminished","Same size","Curved"],answer:1,explanation:"m < 1 means the image is smaller than the object."},
+{category:"Linear Magnification",question:"An object is 1 m tall and the linear magnification is 0.5. What is the image height?",options:["0.05 m","0.5 m","5 m","50 m"],answer:1,explanation:"Image height = m × object height = 0.5 × 1 = 0.5 m."},
+{category:"Linear Magnification",question:"At which position should the object be placed to get magnification exactly 1?",options:["At C","At F","At P","At 2F"],answer:0,explanation:"Object at C → image at C, same size → m = 1."},
+{category:"Convex Mirror",question:"What is the magnification of a convex mirror?",options:["m > 1","m = 1","m < 1","m ≤ 1"],answer:2,explanation:"A convex mirror always gives a diminished virtual image, so m < 1."},
+{category:"Uses of Mirrors",question:"Which mirror is used in a laser?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:0,explanation:"Lasers use plane mirrors as the reflecting surfaces of the resonant cavity."},
+{category:"Uses of Mirrors",question:"Which mirror is used as a streetlight reflector?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:2,explanation:"Convex mirrors spread light rays over a wide area, so they are used in streetlights."},
+{category:"Uses of Mirrors",question:"In which device is a concave mirror used?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:1,explanation:"Concave mirrors are used in torches, searchlights, dentist's mirrors, etc."},
+{category:"Uses of Mirrors",question:"Which mirror is used in a telescope?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:1,explanation:"Concave mirrors are used as reflectors in telescopes."},
+{category:"Uses of Mirrors",question:"At what angle is a plane mirror placed at a mountain road bend?",options:["90°","45°","30°","50°"],answer:1,explanation:"Plane mirrors are typically placed at 45° at mountain road bends."},
+{category:"Uses of Mirrors",question:"A car has three mirrors. Which type are they?",options:["Two convex, one plane","Two concave, one convex","All concave","All convex"],answer:0,explanation:"Cars use two convex side mirrors and one plane/convex rear-view mirror."},
+{category:"Mirror Properties",question:"Which of the following works as a mirror?",options:["Rough ice","Silvered glass","Polished mercury","All of these"],answer:3,explanation:"Polished mercury, silvered glass, and still water all work as mirrors."},
+{category:"Mirror Properties",question:"The process of coating a metal on glass is called —",options:["Mercury coating","Silvering","Centering","Plating"],answer:1,explanation:"Coating glass with silver or mercury is called silvering."},
+{category:"Image Properties",question:"A real image —",options:["Can be seen on a screen","Can be photographed","Forms on concave mirrors","All of these"],answer:3,explanation:"A real image can be projected on a screen, photographed, and forms on concave mirrors."},
+{category:"Uses of Mirrors",question:"Which mirror is used in a laser safety line?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:1,explanation:"Concave mirrors are used to focus laser beams in safety-line devices."},
+{category:"Uses of Mirrors",question:"A periscope uses which type of mirror?",options:["Plane mirror","Concave mirror","Convex mirror","Prism"],answer:0,explanation:"Periscopes use two plane mirrors set at 45°."},
+{category:"Convex Mirror",question:"Which of the following is true for a convex mirror image?\n i. Erect\n ii. Magnified\n iii. Real",options:["i only","i and ii","ii and iii","i, ii and iii"],answer:0,explanation:"A convex mirror always gives an erect, diminished, virtual image."},
+{category:"Concave Mirror",question:"An object is placed at the center of curvature C of a concave mirror. Which of the following is true?\n i. Image is real and inverted\n ii. Image is located between C and infinity\n iii. Image is the same size as the object",options:["i only","i and iii","ii and iii","i, ii and iii"],answer:1,explanation:"At C, the image is at C, real, inverted, and same size. It is NOT between C and infinity."},
+{category:"Uses of Mirrors",question:"A concave mirror is used in —\n i. Telescope\n ii. Street light\n iii. Searchlight",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:1,explanation:"Concave mirrors are used in telescopes and searchlights. Street lights use convex mirrors."},
+{category:"Plane Mirror",question:"A person 1.44 m tall stands in front of a plane mirror. What is the minimum length of the mirror he needs to see his full image?",options:["0.72 m","1.44 m","2.88 m","14.4 m"],answer:0,explanation:"The minimum mirror length equals half the person's height: 1.44/2 = 0.72 m."},
+{category:"Plane Mirror",question:"A watch worn on the right hand appears on the left hand in a mirror. This is —\n i. Lateral inversion\n ii. Refraction\n iii. Lateral displacement",options:["i only","ii only","iii only","i and ii"],answer:0,explanation:"This is lateral inversion, a property of plane mirrors."},
+{category:"Concave Mirror",question:"An object is placed at C of a concave mirror with r = 40 cm. The image height will be —",options:["10 cm","3 cm","5 cm","4 cm"],answer:2,explanation:"Object at C → image at C, same size as object. If the object height is 5 cm, the image height is 5 cm."},
+{category:"Concave Mirror",question:"An object is placed at C of a concave mirror with r = 40 cm. The magnification is —",options:["0.1","10","1","1.5"],answer:2,explanation:"At C, m = 1 (same size)."},
+{category:"Concave Mirror",question:"An object is between F and C of a concave mirror. The image is —\n i. Real and inverted\n ii. Magnified\n iii. Real and erect",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:0,explanation:"Image is real, inverted, and magnified."}
+];
+
+/* ---------- PHYSICS CH 8 — MCQ (Teacher's Suggestions) ---------- */
 const phy8MCQ=[
 {category:"Reflection",question:"Which colour of light has the shortest wavelength?",options:["Red","Green","Violet","Yellow"],answer:2,explanation:"Violet has the shortest wavelength."},
 {category:"Spherical Mirrors",question:"Where is a concave mirror used?",options:["On the road","In the periscope","In the view mirror","In the treatment of teeth"],answer:3,explanation:"Concave mirrors give a magnified view in dental treatment."},
@@ -1202,70 +1287,81 @@ const SUBJECTS=[
 ];
 
 /* ============================================================
-   JS § 3b. DETAILED CONTENT — Physics Ch 8 only
+   JS § 3b. DETAILED CONTENT — Physics Ch 8
    ============================================================ */
 
 const PHY8_DETAILED_HTML = `
 <div class="detail-note">
-  <h3>📌 Chapter Concept Map</h3>
+  <h3>Chapter Concept Map</h3>
   <ul>
-    <li><strong>Light</strong> → Visible Light, Invisible Light</li>
-    <li><strong>Reflection of Light</strong> → Regular Reflection, Irregular Reflection</li>
-    <li><strong>Mirror</strong> → Plane Mirror, Spherical Mirror</li>
-    <li><strong>Spherical Mirror</strong> → Concave Mirror, Convex Mirror</li>
-    <li><strong>Magnification</strong> → Image Height, Object Height</li>
+    <li><strong>Light</strong> &rarr; Visible Light, Invisible Light</li>
+    <li><strong>Reflection of Light</strong> &rarr; Regular Reflection, Irregular Reflection</li>
+    <li><strong>Mirror</strong> &rarr; Plane Mirror, Spherical Mirror</li>
+    <li><strong>Spherical Mirror</strong> &rarr; Concave Mirror, Convex Mirror</li>
+    <li><strong>Magnification</strong> &rarr; Image Height, Object Height</li>
   </ul>
 </div>
 
 <div class="detail-note">
-  <h3>1 · Light</h3>
+  <h3>1 &middot; Light</h3>
   <p>Light is a form of energy that creates the sensation of sight. It depends on the medium for propagation.</p>
-  <p><strong>Speed of light in vacuum</strong> = 3×10⁸ m/s = 3×10¹⁰ cm/s</p>
+  <p><strong>Speed of light in vacuum</strong> = 3&times;10<sup>8</sup> m/s = 3&times;10<sup>10</sup> cm/s</p>
   <p>According to Maxwell, all light is an <span class="term">electromagnetic wave</span>.</p>
+  <h4>Properties of Light</h4>
+  <ul>
+    <li>In a homogeneous medium, light travels in a straight line.</li>
+    <li>In vacuum, light has a definite speed c = 3&times;10<sup>8</sup> m/s.</li>
+    <li>Light undergoes reflection, refraction, dispersion, scattering, and total internal reflection.</li>
+    <li>Light is a type of electromagnetic wave.</li>
+  </ul>
   <h4>Two types</h4>
   <ul>
-    <li><strong>Visible light:</strong> Light that illuminates other objects. Wavelength: 400–700 nm. Examples: sunlight, hydrogen lamp, sodium lamp.</li>
+    <li><strong>Visible light:</strong> Light that illuminates other objects. Wavelength: 400&ndash;700 nm. Examples: sunlight, hydrogen lamp, sodium lamp.</li>
     <li><strong>Invisible light:</strong> Does not illuminate other objects. Wavelength: below 400 nm and above 700 nm. Examples: ultraviolet, X-ray, gamma ray.</li>
   </ul>
   <h4>Reflection of Light</h4>
-  <p>When a ray of light traveling from one medium to another returns to the original medium, it is called <span class="term">reflection of light</span>. Two types: <strong>Regular</strong> and <strong>Irregular</strong>.</p>
+  <p>When a ray of light travelling from one medium returns to the first medium after striking the boundary of another, it is called <span class="term">reflection of light</span>. Two types: <strong>Regular</strong> and <strong>Irregular</strong>.</p>
   <h4>Reflecting Surface</h4>
   <p>The surface from which light reflects back is called a reflecting surface. Types: <strong>Smooth</strong> and <strong>Rough</strong>.</p>
 </div>
 
 <div class="detail-note">
-  <h3>2 · Regular vs Irregular Reflection</h3>
+  <h3>2 &middot; Regular vs Irregular Reflection</h3>
   <p><strong>Regular Reflection:</strong> When a beam of light falls on a smooth surface and after reflection the rays remain parallel, converge, or diverge.</p>
+  {{fig:mcq-regular.png|Regular reflection &mdash; parallel rays stay parallel after bouncing off a smooth surface}}
   <p><strong>Irregular Reflection:</strong> When a beam of light falls on a rough surface and after reflection the rays do not remain parallel, converge, or diverge.</p>
+  {{fig:mcq-irregular.png|Irregular (diffused) reflection &mdash; parallel rays scatter in all directions off a rough surface}}
   <p><strong>Converging:</strong> When a beam of parallel light rays falls on a surface and after reflection or refraction the rays meet at a definite point.</p>
   <p><strong>Diverging:</strong> When a beam of parallel light rays falls on a surface and after reflection or refraction the rays appear to come from or diverge from another point.</p>
 </div>
 
 <div class="detail-note">
-  <h3>3 · Terms & Laws of Reflection</h3>
+  <h3>3 &middot; Terms &amp; Laws of Reflection</h3>
   <ul>
     <li><strong>Normal:</strong> The perpendicular drawn at the point of incidence.</li>
     <li><strong>Angle of Incidence:</strong> The angle between the incident ray and the normal.</li>
     <li><strong>Reflected Ray:</strong> The ray that emerges from the point of incidence.</li>
     <li><strong>Angle of Reflection:</strong> The angle between the reflected ray and the normal.</li>
   </ul>
+  {{fig:mcq-reflected-ray.png|Ray PO strikes point O on mirror XY &mdash; the reflected ray makes an equal angle with the normal}}
   <h4>Two Laws of Reflection</h4>
   <ol>
     <li>The incident ray, the reflected ray, and the normal at the point of incidence all lie in the same plane.</li>
-    <li>The angle of incidence is equal to the angle of reflection. ∠i = ∠r</li>
+    <li>The angle of incidence is equal to the angle of reflection. &ang;i = &ang;r</li>
   </ol>
   <h4>Colour Questions</h4>
   <p><strong>Why does a red flower appear red in daylight?</strong> When sunlight falls on a red flower, the flower reflects the red colour and absorbs the other colours.</p>
-  <p><strong>Why does a red flower appear black in green light?</strong> The red flower absorbs the green light and reflects nothing, so it appears black.</p>
+  <p><strong>Why does a red flower appear black when red light falls on it at night?</strong> The red flower absorbs the light and reflects nothing, so it appears black.</p>
+  <p><strong>Why does a green leaf appear black under blue light?</strong> Chlorophyll absorbs blue light completely and has no green light to reflect, so it appears black.</p>
 </div>
 
 <div class="detail-note">
-  <h3>4 · Mirror Basics</h3>
-  <p>A <span class="term">mirror</span> is a surface where regular reflection of light occurs.</p>
+  <h3>4 &middot; Mirror Basics</h3>
+  <p>A <span class="term">mirror</span> is a surface where regular reflection of light occurs. Common mirrors: smooth glass, polished metal, still water surface, polished mercury.</p>
   <h4>How is a mirror made?</h4>
   <p>A silver coating is applied on one side of a glass. This process is called <span class="term">silvering</span>.</p>
   <h4>Plane Mirror</h4>
-  <p>A mirror whose reflecting surface is smooth and flat. Characteristics:</p>
+  <p>A mirror whose reflecting surface is smooth and flat and where regular reflection occurs. Characteristics:</p>
   <ul>
     <li>Image is formed as far behind as the object is in front.</li>
     <li>Image is erect and virtual.</li>
@@ -1280,7 +1376,7 @@ const PHY8_DETAILED_HTML = `
 </div>
 
 <div class="detail-note">
-  <h3>5 · Terminology of Spherical Mirrors</h3>
+  <h3>5 &middot; Terminology of Spherical Mirrors</h3>
   <ul>
     <li><strong>Pole (P):</strong> Midpoint of the reflecting surface.</li>
     <li><strong>Center of Curvature (C):</strong> Center of the sphere of which the mirror is a part.</li>
@@ -1288,6 +1384,7 @@ const PHY8_DETAILED_HTML = `
     <li><strong>Principal Axis:</strong> Straight line through the pole and center of curvature.</li>
     <li><strong>Principal Focus (F):</strong> Point where parallel rays meet after reflection (concave) or appear to diverge from (convex).</li>
     <li><strong>Focal Length (f):</strong> Distance from pole to F.</li>
+    <li><strong>Secondary Axis:</strong> Any straight line (other than the principal axis) passing through the center of curvature.</li>
   </ul>
   <div class="formula">f = r / 2</div>
   <h4>Why is a concave mirror called converging?</h4>
@@ -1297,7 +1394,7 @@ const PHY8_DETAILED_HTML = `
 </div>
 
 <div class="detail-note">
-  <h3>6 · Image Formation Rules</h3>
+  <h3>6 &middot; Image Formation Rules</h3>
   <ul>
     <li>A ray parallel to the principal axis passes through F after reflection.</li>
     <li>A ray through F becomes parallel to the principal axis after reflection.</li>
@@ -1308,153 +1405,188 @@ const PHY8_DETAILED_HTML = `
     <thead><tr><th>Object Position</th><th>Image Position</th><th>Size</th><th>Nature</th></tr></thead>
     <tbody>
       <tr><td>At infinity</td><td>At F</td><td>Very small</td><td>Real, inverted</td></tr>
-      <tr><td>Between ∞ and C</td><td>Between F and C</td><td>Small</td><td>Real, inverted</td></tr>
+      <tr><td>Between &infin; and C</td><td>Between F and C</td><td>Small</td><td>Real, inverted</td></tr>
       <tr><td>At C</td><td>At C</td><td>Same</td><td>Real, inverted</td></tr>
       <tr><td>Between C and F</td><td>Beyond C</td><td>Large</td><td>Real, inverted</td></tr>
       <tr><td>At F</td><td>At infinity</td><td>Very large</td><td>Real, inverted</td></tr>
       <tr><td>Between F and P</td><td>Behind mirror</td><td>Large</td><td>Virtual, erect</td></tr>
     </tbody>
   </table>
-  <p><strong>Convex mirror:</strong> Always virtual, erect, diminished.</p>
+  <p><strong>Convex mirror:</strong> Always virtual, erect, diminished, and located between P and F behind the mirror.</p>
 </div>
 
 <div class="detail-note">
-  <h3>7 · Magnification</h3>
+  <h3>7 &middot; Magnification</h3>
   <p>The ratio of image height to object height is called <span class="term">magnification</span> (m).</p>
   <div class="formula">m = image height / object height = l' / l</div>
-  <div class="formula">m = −v / u</div>
+  <div class="formula">m = &minus;v / u</div>
   <ul>
-    <li>m negative → real and inverted image.</li>
-    <li>m positive → virtual and erect image.</li>
+    <li>m negative &rarr; real and inverted image.</li>
+    <li>m positive &rarr; virtual and erect image.</li>
+    <li>m &gt; 1 &rarr; magnified; m &lt; 1 &rarr; diminished; m = 1 &rarr; same size.</li>
   </ul>
 </div>
 
 <div class="detail-note">
-  <h3>8 · Uses of Mirrors</h3>
+  <h3>8 &middot; Uses of Mirrors</h3>
   <h4>Plane Mirror</h4>
   <ul>
-    <li>Seeing our own face</li>
+    <li>Seeing our own face (dressing table, salon)</li>
     <li>Eye doctors testing eyesight</li>
     <li>Periscopes</li>
-    <li>Blind spots of hilly roads</li>
+    <li>Blind spots of hilly roads (usually at 45&deg;)</li>
     <li>Telescopes, overhead projectors, lasers</li>
+    <li>To increase the apparent height of a stage in theatres</li>
   </ul>
   <h4>Concave Mirror</h4>
   <ul>
+    <li>Shaving mirrors (erect, magnified image)</li>
     <li>Dentists examining teeth</li>
     <li>Torches, searchlights, vehicle headlights</li>
     <li>Reflectors in solar cookers, telescopes</li>
-    <li>Shaving mirrors</li>
-    <li>ENT doctors focusing light</li>
+    <li>ENT doctors focusing light on throat/ear/nose</li>
+    <li>Laser safety lines</li>
   </ul>
   <h4>Convex Mirror</h4>
   <ul>
-    <li>Vehicle rear-view mirrors</li>
-    <li>Shops to see a wide area</li>
+    <li>Vehicle rear-view mirrors (wide field of view)</li>
+    <li>Shops/security to see a wide area</li>
     <li>Reflector telescopes</li>
-    <li>Spreading light over wide areas</li>
+    <li>Street lights (to spread light over a wide area)</li>
   </ul>
+  <h4>Safe Driving</h4>
+  <p>Before driving, the driver must check that all lights are on. Beyond this, the driver must watch the mirrors on both sides and behind, and keep a spare mirror available. Mirrors are absolutely essential for driving.</p>
 </div>
 
 <div class="detail-note">
-  <h3>9 · Formula & Sign Conventions</h3>
+  <h3>9 &middot; Formula &amp; Sign Conventions</h3>
   <div class="formula">1/u + 1/v = 1/f</div>
+  <p><strong>Note:</strong> These sign conventions follow the textbook convention used in this chapter. Be careful when applying the mirror formula.</p>
   <table>
     <thead><tr><th>Quantity</th><th>Concave</th><th>Convex</th></tr></thead>
     <tbody>
       <tr><td>u (object distance)</td><td>Always positive</td><td>Always positive</td></tr>
-      <tr><td>v (image distance)</td><td>+ for real, − for virtual</td><td>− (virtual)</td></tr>
-      <tr><td>f (focal length)</td><td>+</td><td>−</td></tr>
+      <tr><td>v (image distance)</td><td>+ for real, &minus; for virtual</td><td>&minus; (virtual)</td></tr>
+      <tr><td>f (focal length)</td><td>+</td><td>&minus;</td></tr>
     </tbody>
   </table>
+</div>
+
+<div class="detail-note">
+  <h3>10 &middot; Definition Bank</h3>
+  <ul>
+    <li><strong>Light:</strong> A form of energy that creates the sensation of sight.</li>
+    <li><strong>Luminous object:</strong> An object that emits its own light (e.g., star, sun, burning candle).</li>
+    <li><strong>Non-luminous object:</strong> An object that does not emit light but reflects light from a source (e.g., brick, chalk, table).</li>
+    <li><strong>Reflection of light:</strong> The phenomenon where light travelling through one medium returns to the same medium after striking the boundary of another.</li>
+    <li><strong>Regular reflection:</strong> Reflection from a smooth surface, where parallel rays stay parallel, converge, or diverge.</li>
+    <li><strong>Irregular (diffused) reflection:</strong> Reflection from a rough surface, where parallel rays scatter.</li>
+    <li><strong>Mirror:</strong> A smooth surface where regular reflection occurs.</li>
+    <li><strong>Silvering:</strong> The process of coating silver or mercury on one side of a glass to make a mirror.</li>
+    <li><strong>Plane mirror:</strong> A mirror with a smooth, flat reflecting surface.</li>
+    <li><strong>Spherical mirror:</strong> A mirror that is part of a sphere.</li>
+    <li><strong>Concave mirror:</strong> A spherical mirror whose inner surface is the reflecting surface.</li>
+    <li><strong>Convex mirror:</strong> A spherical mirror whose outer surface is the reflecting surface.</li>
+    <li><strong>Pole (P):</strong> Midpoint of the reflecting surface of a spherical mirror.</li>
+    <li><strong>Center of Curvature (C):</strong> Center of the sphere of which the mirror is a part.</li>
+    <li><strong>Radius of Curvature (r):</strong> Distance from C to P; r = 2f.</li>
+    <li><strong>Principal Axis:</strong> The straight line through P and C.</li>
+    <li><strong>Secondary Axis:</strong> Any straight line (other than the principal axis) through the center of curvature.</li>
+    <li><strong>Principal Focus (F):</strong> Point on the principal axis where a parallel beam meets (concave) or appears to diverge from (convex) after reflection.</li>
+    <li><strong>Focal Length (f):</strong> Distance from pole to focus; f = r/2.</li>
+    <li><strong>Real image:</strong> An image formed when reflected/refracted rays actually meet; can be projected on a screen.</li>
+    <li><strong>Virtual image:</strong> An image formed when reflected/refracted rays appear to meet; cannot be projected on a screen.</li>
+    <li><strong>Magnification (m):</strong> Ratio of image height to object height; m = l'/l = &minus;v/u.</li>
+    <li><strong>Total internal reflection:</strong> Complete reflection of light back into a denser medium when the angle of incidence exceeds the critical angle.</li>
+  </ul>
 </div>
 `;
 
 const PHY8_NUMERICALS = [
   {q:"A concave mirror has a focal length of 15 cm. At what distance should an object be placed so that a virtual image three times the size of the object is formed?",
-   a:"Given: f = 15 cm = 0.15 m, m = 3 (virtual).\n\nm = −v/u = 3 → v = −3u\n\n1/u + 1/v = 1/f\n1/u + 1/(−3u) = 1/0.15\n(3 − 1)/3u = 1/0.15\n2/3u = 1/0.15\nu = 2/3 × 0.15 = 0.10 m = 10 cm\n\nAnswer: 10 cm in front of the mirror."},
+   a:"Given: f = 15 cm = 0.15 m, m = 3 (virtual).\n\nm = -v/u = 3 -> v = -3u\n\n1/u + 1/v = 1/f\n1/u + 1/(-3u) = 1/0.15\n(3 - 1)/3u = 1/0.15\n2/3u = 1/0.15\nu = 2/3 x 0.15 = 0.10 m = 10 cm\n\nAnswer: 10 cm in front of the mirror."},
   {q:"A concave mirror has a focal length of 0.2 m. At what distance should an object be placed so that a real image one-fourth the size of the object is formed?",
-   a:"Given: f = 0.2 m, m = −1/4 (real image, m negative).\n\n−1/4 = −v/u → v = u/4\n\n1/v + 1/u = 1/f\n1/(u/4) + 1/u = 1/0.2\n4/u + 1/u = 1/0.2\n5/u = 1/0.2\nu = 1 m\n\nAnswer: 1.0 m"},
-  {q:"An object is placed 0.27 m from a concave mirror with focal length 0.015 m. If the object height is 2×10⁻³ m, find the image height.",
-   a:"f = 0.015 m, u = 0.27 m, l = 2×10⁻³ m\n\n1/v = 1/f − 1/u = 1/0.015 − 1/0.27\nv = (0.015 × 0.27)/(0.27 − 0.015) = 0.0159 m\n\nSince v is positive, image is real.\nm = −v/u = −0.0159/0.27 = −0.059\nl' = |m| · l = 0.059 × 2×10⁻³ = 0.708×10⁻³ m\n\nAnswer: 0.708×10⁻³ m"},
+   a:"Given: f = 0.2 m, m = -1/4 (real image, m negative).\n\n-1/4 = -v/u -> v = u/4\n\n1/v + 1/u = 1/f\n1/(u/4) + 1/u = 1/0.2\n4/u + 1/u = 1/0.2\n5/u = 1/0.2\nu = 1 m\n\nAnswer: 1.0 m"},
+  {q:"An object is placed 0.27 m from a concave mirror with focal length 0.015 m. If the object height is 2x10^-3 m, find the image height.",
+   a:"f = 0.015 m, u = 0.27 m, l = 2x10^-3 m\n\n1/v = 1/f - 1/u = 1/0.015 - 1/0.27\nv = (0.015 x 0.27)/(0.27 - 0.015) = 0.0159 m\n\nSince v is positive, image is real.\nm = -v/u = -0.0159/0.27 = -0.059\nl' = |m| x l = 0.059 x 2x10^-3 = 0.708x10^-3 m\n\nAnswer: 0.708x10^-3 m"},
   {q:"A concave mirror has a radius of curvature of 30 cm. An object is placed 20 cm from the mirror. Determine the position, nature, and magnification of the image.",
-   a:"1/v + 1/u = 2/r\n1/v = 2/30 − 1/20 = (4−3)/60 = 1/60\nv = 60 cm (positive → real image)\n\nImage is in front of the mirror. Real and inverted.\nm = −v/u = −60/20 = −3\n\nAnswer: Position: in front of mirror; Nature: real and inverted; Size: magnified."},
+   a:"1/v + 1/u = 2/r\n1/v = 2/30 - 1/20 = (4-3)/60 = 1/60\nv = 60 cm (positive -> real image)\n\nImage is in front of the mirror. Real and inverted.\nm = -v/u = -60/20 = -3\n\nAnswer: Position: in front of mirror; Nature: real and inverted; Size: magnified."},
   {q:"An object is placed 1 m from the pole of a concave mirror with radius of curvature 1 m. Find the position and nature of the image.",
-   a:"1/v + 1/u = 2/r  (r = 1, u = 1)\n1/v + 1/1 = 2/1 = 2\n1/v = 2 − 1 = 1\nv = 1 m (positive)\n\nImage distance = 1 m.\nSince v is positive, image is real and inverted."},
-  {q:"A convex mirror forms an image 1/x times the size of the object. If the focal length is f, show that the object is at a distance (x−1)f from the mirror.",
-   a:"Given: f = −f, m = 1/x = v/u → v = u/x = −u/x\n(Convex mirror always forms virtual images, so v is negative.)\n\n1/v + 1/u = 1/f\n−x/u + 1/u = −1/f\n(−x+1)/u = −1/f\n−(x−1)/u = −1/f\nu = (x−1)f  (shown)"},
+   a:"1/v + 1/u = 2/r  (r = 1, u = 1)\n1/v + 1/1 = 2/1 = 2\n1/v = 2 - 1 = 1\nv = 1 m (positive)\n\nImage distance = 1 m.\nSince v is positive, image is real and inverted."},
+  {q:"A convex mirror forms an image 1/x times the size of the object. If the focal length is f, show that the object is at a distance (x-1)f from the mirror.",
+   a:"Given: f = -f, m = 1/x = v/u -> v = u/x = -u/x\n(Convex mirror always forms virtual images, so v is negative.)\n\n1/v + 1/u = 1/f\n-x/u + 1/u = -1/f\n(-x+1)/u = -1/f\n-(x-1)/u = -1/f\nu = (x-1)f  (shown)"},
   {q:"A concave mirror has a focal length of 5 cm. At what distance should an object be placed so that the image is 2 times the size of the object?",
-   a:"f = 5 cm\n\nFor real image: m = v/u = 2 → v = 2u\n1/2u + 1/u = 1/5\n3/2u = 1/5\nu = 15/2 = 7.5 cm\n\nFor virtual image: m = 2, v = −2u\n1/(−2u) + 1/u = 1/5\n(−1+2)/2u = 1/5\nu = 5/2 = 2.5 cm\n\nAnswer: 7.5 cm (real) or 2.5 cm (virtual)."},
+   a:"f = 5 cm\n\nFor real image: m = v/u = 2 -> v = 2u\n1/2u + 1/u = 1/5\n3/2u = 1/5\nu = 15/2 = 7.5 cm\n\nFor virtual image: m = 2, v = -2u\n1/(-2u) + 1/u = 1/5\n(-1+2)/2u = 1/5\nu = 5/2 = 2.5 cm\n\nAnswer: 7.5 cm (real) or 2.5 cm (virtual)."},
   {q:"A concave mirror has a focal length of 10 cm. At what distance should an object be placed so that a real image 4 times the size is formed?",
-   a:"m = v/u = 4 → v = 4u (real image, v positive)\n\n1/4u + 1/u = 1/10\n(1+4)/4u = 1/10\n5/4u = 1/10\nu = 50/4 = 12.5 cm\n\nAnswer: 12.5 cm"},
+   a:"m = v/u = 4 -> v = 4u (real image, v positive)\n\n1/4u + 1/u = 1/10\n(1+4)/4u = 1/10\n5/4u = 1/10\nu = 50/4 = 12.5 cm\n\nAnswer: 12.5 cm"},
   {q:"A concave mirror has a focal length of 0.1 mm. At what distance should an object be placed so that the real image is one-fifth the size of the object?",
-   a:"m = v/u = 1/5 → v = u/5\nf = 0.1 mm = 0.1×10⁻³ m\n\n5/u + 1/u = 1/(0.1×10⁻³)\n6/u = 1/(0.1×10⁻³)\nu = 6×10⁻³ m\n\nAnswer: 6×10⁻³ m"}
+   a:"m = v/u = 1/5 -> v = u/5\nf = 0.1 mm = 0.1x10^-3 m\n\n5/u + 1/u = 1/(0.1x10^-3)\n6/u = 1/(0.1x10^-3)\nu = 6x10^-3 m\n\nAnswer: 6x10^-3 m"}
 ];
 
 const PHY8_CREATIVE = [
-  {title:"Creative Question 1 — Object 10 cm from a mirror",
+  {title:"Creative Question 1 - Object 10 cm from a mirror (r = 14 cm)",
    parts:[
      {q:"(a) What is an optical fiber?",
       a:"An optical fiber is a long, flexible, thin fiber made of glass or plastic through which total internal reflection of light occurs."},
      {q:"(b) What does a power of 3D mean?",
-      a:"• The lens is convex.\n• Focal length of the lens is 1/3 m.\n• The lens converges a beam of parallel light rays at 1/3 m."},
+      a:"- The lens is convex.\n- Focal length of the lens is 1/3 m.\n- The lens converges a beam of parallel light rays at 1/3 m."},
      {q:"(c) Determine the image distance. (r = 14 cm, u = 10 cm)",
-      a:"r = 14 cm → f = 7 cm\nu = 10 cm\n\n1/u + 1/v = 1/f\n1/v = 1/7 − 1/10 = (10−7)/70 = 3/70\nv = 70/3 = 23.33 cm\n\nAnswer: 23.33 cm"},
+      a:"r = 14 cm -> f = 7 cm\nu = 10 cm\n\n1/u + 1/v = 1/f\n1/v = 1/7 - 1/10 = (10-7)/70 = 3/70\nv = 70/3 = 23.33 cm\n\nAnswer: 23.33 cm"},
      {q:"(d) If the object is placed 5 cm in front of the mirror, analyze the image with a ray diagram.",
-      a:"Object is between pole and focus (u = 5 cm < f = 7 cm).\n\nImage:\n• Position: Behind the mirror\n• Nature: Virtual and erect\n• Size: Magnified"}
+      a:"Object is between pole and focus (u = 5 cm < f = 7 cm).\n\nImage:\n- Position: Behind the mirror\n- Nature: Virtual and erect\n- Size: Magnified"}
    ]},
-  {title:"Creative Question 2 — u = 30 cm, r = 20 cm",
+  {title:"Creative Question 2 - u = 30 cm, r = 20 cm",
    parts:[
      {q:"(a) What is an optical fiber?",
       a:"An optical fiber is a long, flexible, thin fiber made of glass or plastic."},
      {q:"(b) What does refractive index of water with respect to air 1.33 mean?",
-      a:"• Light bends towards the normal when entering water from air.\n• The ratio of sine of angle of incidence to sine of angle of refraction is 1.33."},
+      a:"- Light bends towards the normal when entering water from air.\n- The ratio of sine of angle of incidence to sine of angle of refraction is 1.33."},
      {q:"(c) Determine the image distance.",
-      a:"u = 30 cm, r = 20 cm → f = r/2 = 10 cm\n\n1/v = 1/f − 1/u = 1/10 − 1/30 = (3−1)/30 = 2/30\nv = 30/2 = 15 cm\n\nAnswer: 15 cm"},
-     {q:"(d) If the object is between focus and center of curvature, the image is real and inverted — show with ray diagram.",
-      a:"Object between F and C.\n\nImage:\n• Position: Beyond C\n• Nature: Real and inverted\n• Size: Magnified"}
+      a:"u = 30 cm, r = 20 cm -> f = r/2 = 10 cm\n\n1/v = 1/f - 1/u = 1/10 - 1/30 = (3-1)/30 = 2/30\nv = 30/2 = 15 cm\n\nAnswer: 15 cm"},
+     {q:"(d) If the object is between focus and center of curvature, the image is real and inverted - show with ray diagram.",
+      a:"Object between F and C.\n\nImage:\n- Position: Beyond C\n- Nature: Real and inverted\n- Size: Magnified"}
    ]},
-  {title:"Creative Question 3 — u = 30 cm, f = 6 cm",
+  {title:"Creative Question 3 - u = 30 cm, f = 6 cm",
    parts:[
      {q:"(a) What is regular reflection of light?",
       a:"When a beam of parallel light falls on a smooth surface and after reflection remains parallel, converges, or diverges, it is called regular reflection."},
      {q:"(b) What is principal focus?",
       a:"The point on the principal axis where a beam of parallel light rays meets after reflection (concave) or appears to diverge from (convex)."},
      {q:"(c) Determine the image distance.",
-      a:"u = 30 cm, f = 6 cm\n\nv = (u × f)/(u − f) = (30 × 6)/(30 − 6) = 180/24 = 7.5 cm\n\nAnswer: 7.5 cm"},
+      a:"u = 30 cm, f = 6 cm\n\nv = (u x f)/(u - f) = (30 x 6)/(30 - 6) = 180/24 = 7.5 cm\n\nAnswer: 7.5 cm"},
      {q:"(d) Determine magnification, power, and radius of curvature.",
-      a:"m = −v/u = −7.5/30 = −0.25\nP = 1/f = 1/(6×10⁻²) = 16.67 D\nr = 2f = 2×6 = 12 cm\n\nAnswer: m = −0.25, P = 16.67 D, r = 12 cm"}
+      a:"m = -v/u = -7.5/30 = -0.25\nP = 1/f = 1/(6x10^-2) = 16.67 D\nr = 2f = 2x6 = 12 cm\n\nAnswer: m = -0.25, P = 16.67 D, r = 12 cm"}
    ]},
-  {title:"Creative Question 4 — Mirror 'b' r = 24 cm",
+  {title:"Creative Question 4 - Mirror 'b' r = 24 cm",
    parts:[
      {q:"(a) What is 1 diopter?",
       a:"The power of a lens with focal length 1 meter is called 1 diopter."},
      {q:"(b) How do we get the optical perception of a colored object?",
       a:"When we see an object, light from the object enters our eyes. The lens refracts this light and forms an image on the retina. The retina sends the sensation to the brain. Rods and cones in the retina detect colour: three types of cones (blue, red, green sensitive). The brain processes all colours. Thus we get the perception of coloured objects."},
-     {q:"(c) Where should the object be placed in mirror 'b' to get magnification −2?",
-      a:"r = 24 cm → f = r/2 = 12 cm\nm = −2 → −2 = −v/u → v = 2u\n\n1/u + 1/2u = 1/12\n(2+1)/2u = 1/12\n3/2u = 1/12\nu = 3×12/2 = 18 cm\n\nAnswer: 18 cm from the mirror"},
+     {q:"(c) Where should the object be placed in mirror 'b' to get magnification -2?",
+      a:"r = 24 cm -> f = r/2 = 12 cm\nm = -2 -> -2 = -v/u -> v = 2u\n\n1/u + 1/2u = 1/12\n(2+1)/2u = 1/12\n3/2u = 1/12\nu = 3x12/2 = 18 cm\n\nAnswer: 18 cm from the mirror"},
      {q:"(d) 'It is possible to get the same type of image from both mirrors.' Explain with diagrams.",
-      a:"Mirror 'a' is a plane mirror — always forms a virtual image. For mirror 'b' (concave) to match, the object must be between pole and focus so it forms a virtual image. So both can form virtual images."}
+      a:"Mirror 'a' is a plane mirror - always forms a virtual image. For mirror 'b' (concave) to match, the object must be between pole and focus so it forms a virtual image. So both can form virtual images."}
    ]},
-  {title:"Creative Question 5 — Concave mirror f = 20 cm, u = 10 cm, object 5 cm tall",
+  {title:"Creative Question 5 - Concave mirror f = 20 cm, u = 10 cm, object 5 cm tall",
    parts:[
      {q:"(a) What is a p-n junction?",
       a:"When a p-type semiconductor is joined with an n-type semiconductor, the device formed is called a p-n junction diode."},
      {q:"(b) Write differences between p-n junction and transistor.",
       a:"A p-n junction works as a rectifier (current flows during forward bias). A transistor is used as an amplifier."},
      {q:"(c) Determine the position, nature, and size of the image.",
-      a:"f = 20 cm, u = 10 cm, l = 5 cm\n\n1/v = 1/20 − 1/10 = −1/20\nv = −20 cm (behind the mirror)\n\nm = |v/u| = l'/l\n20/10 = l'/5\nl' = 10 cm\n\nAnswer: Image is 10 cm tall and virtual."},
+      a:"f = 20 cm, u = 10 cm, l = 5 cm\n\n1/v = 1/20 - 1/10 = -1/20\nv = -20 cm (behind the mirror)\n\nm = |v/u| = l'/l\n20/10 = l'/5\nl' = 10 cm\n\nAnswer: Image is 10 cm tall and virtual."},
      {q:"(d) What is the image height and the surface area of the sphere of which the mirror is a part?",
-      a:"Image height = 10 cm\nf = 20 cm → r = 2f = 40 cm = 0.4 m\n\nSurface area = 4πr² = 4 × 3.1416 × (0.4)² = 2.012 m²\n\nAnswer: Image height = 10 cm, Surface area = 2.012 m²"}
+      a:"Image height = 10 cm\nf = 20 cm -> r = 2f = 40 cm = 0.4 m\n\nSurface area = 4*pi*r^2 = 4 x 3.1416 x (0.4)^2 = 2.012 m^2\n\nAnswer: Image height = 10 cm, Surface area = 2.012 m^2"}
    ]},
-  {title:"Creative Question 6 — Concave mirror r = 24 cm, u = 12 cm",
+  {title:"Creative Question 6 - Concave mirror r = 24 cm, u = 12 cm",
    parts:[
      {q:"(a) Write the formula of reflection.",
       a:"1/f = 1/u + 1/v"},
      {q:"(b) Explain what type of mirror a car's view mirror is.",
       a:"A car's view mirror is a convex mirror. It always forms a virtual, erect, small image, so it shows a wide area in a small space."},
      {q:"(c) Determine the image distance.",
-      a:"r = 24 cm → f = r/2 = 12 cm\nu = 12 cm\n\n1/v = 1/12 − 1/12 = 0\nv = ∞\n\nAnswer: The image is at infinity."},
+      a:"r = 24 cm -> f = r/2 = 12 cm\nu = 12 cm\n\n1/v = 1/12 - 1/12 = 0\nv = infinity\n\nAnswer: The image is at infinity."},
      {q:"(d) Can a concave mirror be used in dentistry? Analyze with a ray diagram.",
       a:"When an object is placed between pole and focus of a concave mirror, it forms an erect and magnified image. So a concave mirror can be used to see enlarged images of teeth."}
    ]}
@@ -1708,14 +1840,16 @@ function renderMCQ(root,ch){
       <button class="shuffle" id="shuffleBtn" type="button">🔄 Shuffle</button>
     </div>
     <div class="study-card">
-      <div class="study-top">
-        <span id="qProgress">Question 1 / ${ch.mcq.length}</span>
-        <span class="cat" id="qCat">—</span>
+      <div class="card-scroll">
+        <div class="study-top">
+          <span id="qProgress">Question 1 / ${ch.mcq.length}</span>
+          <span class="cat" id="qCat">—</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="qBar"></div></div>
+        <h2 class="question" id="qText"></h2>
+        <div class="opts" id="qOpts"></div>
+        <div class="fb" id="qFb"></div>
       </div>
-      <div class="bar"><div class="bar-fill" id="qBar"></div></div>
-      <h2 class="question" id="qText"></h2>
-      <div class="opts" id="qOpts"></div>
-      <div class="fb" id="qFb"></div>
       <div class="actions">
         <span class="hint" id="qHint">Press 1–4 to pick · Enter to submit · ← → to navigate</span>
         <div class="actions-right">
@@ -1744,6 +1878,7 @@ function renderMCQ(root,ch){
   const prevBtn=document.getElementById("prevBtn");
   const qResults=document.getElementById("qResults");
   const shuffleBtn=document.getElementById("shuffleBtn");
+  const cardScroll = root.querySelector(".card-scroll");
 
   function render(){
     if(state.idx>=state.list.length)return showResults();
@@ -1754,7 +1889,11 @@ function renderMCQ(root,ch){
     qCat.textContent=q.category;
     qProgress.textContent=`Question ${state.idx+1} / ${state.list.length}`;
     qBar.style.width=`${(state.idx/state.list.length)*100}%`;
-    qText.textContent=q.question;
+    if(q.figure){
+      qText.innerHTML=`<img class="q-figure" src="figures/${esc(q.figure)}" alt="Question figure">${esc(q.question)}`;
+    } else {
+      qText.textContent=q.question;
+    }
     qFb.className="fb"; qFb.innerHTML="";
     qOpts.innerHTML="";
     q.options.forEach((opt,i)=>{
@@ -1786,6 +1925,7 @@ function renderMCQ(root,ch){
     }
     checkBtn.disabled=!state.checked&&state.sel===null;
     prevBtn.disabled=state.idx===0;
+    cardScroll.scrollTop=0;
   }
 
   function check(){
@@ -1873,13 +2013,15 @@ function renderMCQ(root,ch){
 function renderSQ(root,ch){
   root.innerHTML=`
     <div class="study-card">
-      <div class="study-top">
-        <span id="sqProgress">Question 1 / ${ch.sq.length}</span>
-        <span class="cat" id="sqCat">—</span>
+      <div class="card-scroll">
+        <div class="study-top">
+          <span id="sqProgress">Question 1 / ${ch.sq.length}</span>
+          <span class="cat" id="sqCat">—</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="sqBar"></div></div>
+        <h2 class="question" id="sqText"></h2>
+        <div class="sq-answer" id="sqAnswer"></div>
       </div>
-      <div class="bar"><div class="bar-fill" id="sqBar"></div></div>
-      <h2 class="question" id="sqText"></h2>
-      <div class="sq-answer" id="sqAnswer"></div>
       <div class="actions">
         <span class="hint">← → to navigate</span>
         <div class="actions-right">
@@ -1899,18 +2041,24 @@ function renderSQ(root,ch){
   const sqShow=document.getElementById("sqShow");
   const sqNext=document.getElementById("sqNext");
   const sqPrev=document.getElementById("sqPrev");
+  const cardScroll = root.querySelector(".card-scroll");
 
   function render(){
     const sq=ch.sq[idx];
     sqCat.textContent=sq.category;
     sqProgress.textContent=`Question ${idx+1} / ${ch.sq.length}`;
     sqBar.style.width=`${((idx+1)/ch.sq.length)*100}%`;
-    sqText.textContent=sq.question;
+    if(sq.figure){
+      sqText.innerHTML=`<img class="q-figure" src="figures/${esc(sq.figure)}" alt="Question figure">${esc(sq.question)}`;
+    } else {
+      sqText.textContent=sq.question;
+    }
     sqAnswer.textContent=sq.answer;
     sqAnswer.classList.remove("show");
     revealed=false;
     sqShow.textContent="Show answer";
     sqPrev.disabled=idx===0;
+    cardScroll.scrollTop=0;
   }
 
   sqShow.addEventListener("click",()=>{
@@ -1976,8 +2124,12 @@ function openDetailed(cid){
     <div id="dviewAllMCQ" class="hidden"></div>
   `;
 
-  // Notes tab
-  document.getElementById("dviewNotes").innerHTML = PHY8_DETAILED_HTML;
+  // Notes tab — with figure marker replacement
+  let notesHTML = PHY8_DETAILED_HTML.replace(
+    /\{\{fig:([^|]+)\|([^}]+)\}\}/g,
+    (_, filename, caption) => `<figure class="note-figure"><img src="figures/${filename.trim()}" alt="${caption.trim()}"><figcaption>${caption.trim()}</figcaption></figure>`
+  );
+  document.getElementById("dviewNotes").innerHTML = notesHTML;
 
   // Numericals tab
   const numRoot = document.getElementById("dviewNumericals");
@@ -2021,8 +2173,8 @@ function openDetailed(cid){
     });
   });
 
-  // All MCQs tab — reuse renderMCQ
-  renderMCQ(document.getElementById("dviewAllMCQ"), ch);
+  // All MCQs tab — use the detailed MCQ set
+  renderMCQ(document.getElementById("dviewAllMCQ"), { mcq: phy8DetailedMCQ });
 
   // Tab switching
   const dtabs = studyBody.querySelectorAll(".tab");
