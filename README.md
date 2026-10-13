@@ -3,7 +3,7 @@
 A single-file study companion for **Chemistry & Physics Chapter 7–8**.
 
 ## Features
-- 📓 Notes for all 4 chapters
+- 📓 Notes for Chem. Phy. Ch 7 & 8
 - 📝 MCQ quizzes with explanations and shuffle
 - 📖 Short questions with reveal answers
 - ⏱ Pomodoro timer with sound alerts
