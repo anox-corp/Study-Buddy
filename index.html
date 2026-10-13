@@ -8,87 +8,29 @@
 
 <!--
 ============================================================
-  STUDY BUDDY — ORGANIZED STRUCTURE
-============================================================
-  This file is divided into clearly labeled sections:
-
-  CSS (in <style>):
-    § 1. THEME VARIABLES   ← colors, spacing, radii
-    § 2. BASE              ← body, resets
-    § 3. TOPBAR            ← header, brand
-    § 4. POMODORO          ← timer widget
-    § 5. LAYOUT            ← wrapper, step screens
-    § 6. CARDS             ← subject & chapter cards
-    § 7. BREADCRUMB        ← navigation
-    § 8. TABS              ← Notes/MCQ/SQ tabs
-    § 9. NOTES             ← note cards, tables, formulas
-    § 10. STUDY CARD       ← MCQ & SQ container
-    § 11. MCQ OPTIONS      ← answer buttons, feedback
-    § 12. SQ ANSWER        ← short question reveal
-    § 13. RESULTS          ← score screen
-    § 14. WATERMARK
-    § 15. RESPONSIVE
-
-  JAVASCRIPT (in <script>):
-    § 1. AUDIO             ← chime sounds
-    § 2. DATA              ← all questions & notes
-    § 3. REGISTRY          ← subjects & chapters
-    § 4. POMODORO LOGIC
-    § 5. HELPERS           ← utils
-    § 6. NAVIGATION        ← step switching
-    § 7. RENDERERS         ← MCQ, SQ, chapter view
-    § 8. INIT
+  STUDY BUDDY — v2
+  Added: Mode picker (Teacher's Suggestions / Detailed Study)
+  Detailed content: Physics Ch 8 only (others show placeholder)
 ============================================================
 -->
 
 <style>
-/* ============================================================
-   § 1. THEME VARIABLES — change colors here
-   ============================================================ */
+/* § 1. THEME */
 :root{
-  /* Base */
-  --bg:#e8e2cd;
-  --surface:#f2ecda;
-  --surface-2:#e5dfc8;
-  --surface-3:#dcd5b9;
-
-  /* Text */
-  --ink:#2c2c1e;
-  --ink-soft:#4a4a32;
-  --muted:#736d52;
-
-  /* Lines */
-  --line:#cfc8ab;
-  --line-strong:#b8b090;
-
-  /* Accent (olive) */
-  --accent:#6d7c38;
-  --accent-hover:#7c8a44;
-  --accent-soft:#a3b968;
-  --accent-tint:#dde4c4;
-
-  /* Dark (topbar, buttons) */
-  --dark:#3a3f22;
-  --dark-2:#4a5030;
-
-  /* Feedback */
-  --correct:#3d5a24;
-  --correct-bg:#e2e9cf;
-  --correct-line:#8fa860;
-  --incorrect:#8a382a;
-  --incorrect-bg:#eed8cc;
-  --incorrect-line:#bc8270;
-
-  /* Shape */
+  --bg:#e8e2cd;--surface:#f2ecda;--surface-2:#e5dfc8;--surface-3:#dcd5b9;
+  --ink:#2c2c1e;--ink-soft:#4a4a32;--muted:#736d52;
+  --line:#cfc8ab;--line-strong:#b8b090;
+  --accent:#6d7c38;--accent-hover:#7c8a44;--accent-soft:#a3b968;--accent-tint:#dde4c4;
+  --dark:#3a3f22;--dark-2:#4a5030;
+  --correct:#3d5a24;--correct-bg:#e2e9cf;--correct-line:#8fa860;
+  --incorrect:#8a382a;--incorrect-bg:#eed8cc;--incorrect-line:#bc8270;
   --radius:14px;
   --shadow-sm:0 1px 2px rgba(58,63,34,.05);
   --shadow:0 2px 8px rgba(58,63,34,.07);
   --shadow-lg:0 8px 24px rgba(58,63,34,.1);
 }
 
-/* ============================================================
-   § 2. BASE — resets and body
-   ============================================================ */
+/* § 2. BASE */
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
@@ -99,29 +41,18 @@ body{
   background-attachment:fixed;
   color:var(--ink);
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15px;
-  line-height:1.6;
-  min-height:100vh;
+  font-size:15px;line-height:1.6;min-height:100vh;
   -webkit-font-smoothing:antialiased;
 }
 button{font:inherit;color:inherit;}
 
-/* ============================================================
-   § 3. TOPBAR — header and brand
-   ============================================================ */
+/* § 3. TOPBAR */
 .topbar{
-  background:var(--dark);
-  color:#f0ebd8;
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
-  gap:16px;
+  background:var(--dark);color:#f0ebd8;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;gap:16px;
   box-shadow:0 2px 12px rgba(0,0,0,.15);
-  position:sticky;
-  top:0;
-  z-index:50;
+  position:sticky;top:0;z-index:50;
 }
 .brand{
   display:flex;align-items:center;gap:10px;
@@ -137,9 +68,7 @@ button{font:inherit;color:inherit;}
 }
 .topbar-right{display:flex;align-items:center;gap:14px;}
 
-/* ============================================================
-   § 4. POMODORO — timer widget
-   ============================================================ */
+/* § 4. POMODORO */
 .pomo{
   display:flex;align-items:center;gap:10px;
   background:rgba(255,255,255,.07);
@@ -151,24 +80,15 @@ button{font:inherit;color:inherit;}
 .pomo.break-mode{border-color:#a3b968;background:rgba(163,185,104,.15);}
 .pomo.warning{border-color:#d4a860;background:rgba(212,168,96,.12);}
 .pomo.warning .pomo-time{color:#e8b878;}
-.pomo-time{
-  font-variant-numeric:tabular-nums;font-weight:700;
-  font-size:13px;min-width:46px;color:#fff;
-}
-.pomo-mode{
-  font-size:10px;text-transform:uppercase;
-  letter-spacing:.1em;opacity:.75;font-weight:700;
-}
+.pomo-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;min-width:46px;color:#fff;}
+.pomo-mode{font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.75;font-weight:700;}
 .pomo button{
   background:transparent;border:1px solid rgba(255,255,255,.18);
   color:#f0ebd8;border-radius:7px;padding:4px 11px;
   font-size:11px;font-weight:600;cursor:pointer;transition:.15s ease;
 }
 .pomo button:hover{border-color:var(--accent-soft);background:rgba(255,255,255,.05);}
-.pomo button.primary{
-  background:var(--accent-soft);color:var(--dark);
-  border-color:var(--accent-soft);font-weight:700;
-}
+.pomo button.primary{background:var(--accent-soft);color:var(--dark);border-color:var(--accent-soft);font-weight:700;}
 .pomo button.primary:hover{background:#b5cc80;}
 .pomo select{
   background:rgba(255,255,255,.08);color:#f0ebd8;
@@ -181,32 +101,19 @@ button{font:inherit;color:inherit;}
 }
 .pomo select option{background:var(--dark);color:#f0ebd8;}
 
-/* ============================================================
-   § 5. LAYOUT — main wrapper and step screens
-   ============================================================ */
-.wrap{
-  width:100%;max-width:1200px;
-  margin:0 auto;padding:56px 40px 100px;
-}
+/* § 5. LAYOUT */
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:56px 40px 100px;}
 .step-head{text-align:center;margin-bottom:52px;}
 .step-eyebrow{
   color:var(--accent);text-transform:uppercase;
   font-size:11px;letter-spacing:.18em;font-weight:800;margin:0 0 14px;
 }
-.step-title{
-  margin:0;font-size:clamp(30px,4vw,42px);
-  font-weight:800;letter-spacing:-.04em;line-height:1.15;color:var(--ink);
-}
-.step-sub{
-  color:var(--muted);font-size:15px;
-  margin:14px auto 0;max-width:560px;line-height:1.65;
-}
+.step-title{margin:0;font-size:clamp(30px,4vw,42px);font-weight:800;letter-spacing:-.04em;line-height:1.15;color:var(--ink);}
+.step-sub{color:var(--muted);font-size:15px;margin:14px auto 0;max-width:560px;line-height:1.65;}
 .grid{display:grid;gap:20px;}
 .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
 
-/* ============================================================
-   § 6. CARDS — subject & chapter cards
-   ============================================================ */
+/* § 6. CARDS */
 .card-btn{
   display:block;width:100%;text-align:left;
   background:var(--surface);border:1px solid var(--line);
@@ -219,25 +126,15 @@ button{font:inherit;color:inherit;}
   background:radial-gradient(circle at 100% 0%, rgba(163,185,104,.14), transparent 60%);
   opacity:0;transition:opacity .25s ease;pointer-events:none;
 }
-.card-btn:hover{
-  border-color:var(--accent-soft);
-  transform:translateY(-3px);
-  box-shadow:var(--shadow-lg);
-}
+.card-btn:hover{border-color:var(--accent-soft);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
 .card-btn:hover::before{opacity:1;}
 .card-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .card-emoji{font-size:44px;line-height:1;margin-bottom:16px;display:block;}
 .card-title{margin:0 0 6px;font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);}
 .card-meta{color:var(--muted);font-size:13.5px;font-weight:500;}
-.card-num{
-  font-size:11px;text-transform:uppercase;letter-spacing:.14em;
-  font-weight:800;color:var(--accent);margin-bottom:12px;
-}
+.card-num{font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--accent);margin-bottom:12px;}
 .card-desc{color:var(--ink-soft);font-size:14px;line-height:1.65;margin:10px 0 18px;}
-.card-stats{
-  display:flex;gap:18px;color:var(--muted);font-size:13px;
-  font-weight:600;padding-top:16px;border-top:1px solid var(--line);
-}
+.card-stats{display:flex;gap:18px;color:var(--muted);font-size:13px;font-weight:600;padding-top:16px;border-top:1px solid var(--line);}
 .back{
   display:inline-flex;align-items:center;gap:6px;
   background:transparent;border:0;color:var(--muted);
@@ -245,18 +142,48 @@ button{font:inherit;color:inherit;}
   padding:6px 10px;margin-bottom:22px;border-radius:8px;transition:.15s ease;
 }
 .back:hover{color:var(--ink);background:var(--surface-2);}
-.subject-title{
-  font-size:28px;font-weight:800;letter-spacing:-.03em;
-  margin:0 0 30px;color:var(--ink);
-}
+.subject-title{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:0 0 30px;color:var(--ink);}
 
-/* ============================================================
-   § 7. BREADCRUMB — navigation
-   ============================================================ */
-.crumbs{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  font-size:13px;color:var(--muted);margin-bottom:26px;
+/* § 6b. MODE PICKER */
+.mode-head{text-align:center;margin-bottom:44px;}
+.mode-chip{
+  display:inline-block;background:var(--accent-tint);color:var(--accent);
+  padding:5px 14px;border-radius:999px;font-size:11.5px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;
 }
+.mode-title{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:0 0 8px;color:var(--ink);}
+.mode-sub{color:var(--muted);font-size:14.5px;margin:0 auto;max-width:560px;line-height:1.6;}
+.mode-grid{
+  display:grid;gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  max-width:820px;margin:0 auto;
+}
+.mode-card{
+  display:block;text-align:left;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:30px;
+  cursor:pointer;transition:.2s ease;font-family:inherit;
+  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.mode-card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 100% 0%, rgba(163,185,104,.16), transparent 65%);
+  opacity:0;transition:opacity .25s ease;pointer-events:none;
+}
+.mode-card:hover{border-color:var(--accent-soft);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.mode-card:hover::before{opacity:1;}
+.mode-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.mode-card .mode-emoji{font-size:40px;line-height:1;display:block;margin-bottom:14px;}
+.mode-card h3{margin:0 0 8px;font-size:19px;font-weight:700;letter-spacing:-.02em;color:var(--ink);}
+.mode-card p{color:var(--ink-soft);font-size:13.5px;line-height:1.65;margin:0 0 14px;}
+.mode-card .mode-tag{
+  display:inline-block;background:var(--surface-2);color:var(--muted);
+  padding:4px 11px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.04em;
+}
+.mode-card.primary{background:linear-gradient(180deg,var(--surface) 0%, #f8f4e5 100%);border-color:var(--accent-soft);}
+
+/* § 7. BREADCRUMB */
+.crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:26px;}
 .crumbs button{
   background:transparent;border:0;padding:3px 8px;
   border-radius:6px;color:var(--accent);font-weight:700;
@@ -274,10 +201,8 @@ button{font:inherit;color:inherit;}
 }
 .crumbs .switch:hover{color:var(--ink);border-color:var(--accent-soft);}
 
-/* ============================================================
-   § 8. TABS — Notes/MCQ/SQ switcher
-   ============================================================ */
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+/* § 8. TABS */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap;}
 .tab{
   background:transparent;border:0;padding:12px 22px;
   cursor:pointer;font-size:14px;font-weight:700;
@@ -287,60 +212,38 @@ button{font:inherit;color:inherit;}
 .tab:hover{color:var(--ink);}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 
-/* ============================================================
-   § 9. NOTES — note cards, tables, formulas
-   ============================================================ */
+/* § 9. NOTES */
 .notes{display:grid;gap:18px;}
 .note{
   background:var(--surface);border:1px solid var(--line);
   border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-sm);
 }
 .note h3{margin:0 0 16px;font-size:18px;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
-.note h4{
-  margin:20px 0 8px;font-size:12px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-}
+.note h4{margin:20px 0 8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 .note p,.note li{font-size:14.5px;line-height:1.8;color:var(--ink-soft);}
 .note ul,.note ol{padding-left:24px;margin:12px 0;}
 .note li{margin-bottom:5px;}
-.term{
-  color:var(--accent);font-weight:700;background:var(--accent-tint);
-  padding:1px 7px;border-radius:5px;font-size:13px;
-}
+.term{color:var(--accent);font-weight:700;background:var(--accent-tint);padding:1px 7px;border-radius:5px;font-size:13px;}
 .formula{
   background:var(--surface-2);border-left:3px solid var(--accent);
   padding:14px 20px;border-radius:0 10px 10px 0;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:14px;line-height:1.8;margin:14px 0;
-  color:var(--ink);overflow-x:auto;
+  font-size:14px;line-height:1.8;margin:14px 0;color:var(--ink);overflow-x:auto;
 }
-table{
-  width:100%;border-collapse:collapse;margin:16px 0 4px;
-  font-size:14px;background:var(--surface);
-  border:1px solid var(--line);border-radius:10px;overflow:hidden;
-}
-table th,table td{
-  border-bottom:1px solid var(--line);padding:12px 16px;
-  text-align:left;line-height:1.6;
-}
-table th{
-  font-weight:800;font-size:12px;text-transform:uppercase;
-  letter-spacing:.06em;color:var(--muted);background:var(--surface-2);
-}
+table{width:100%;border-collapse:collapse;margin:16px 0 4px;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+table th,table td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;line-height:1.6;}
+table th{font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface-2);}
 table tr:last-child td{border-bottom:0;}
 table tbody tr:hover td{background:var(--surface-2);}
 
-/* ============================================================
-   § 10. STUDY CARD — MCQ & SQ container
-   ============================================================ */
+/* § 10. STUDY CARD */
 .study-card{
   background:var(--surface);border:1px solid var(--line);
   border-radius:var(--radius);padding:40px 44px;box-shadow:var(--shadow);
 }
 .study-top{
   display:flex;justify-content:space-between;align-items:center;
-  gap:12px;margin-bottom:20px;font-size:12.5px;
-  color:var(--muted);font-weight:700;
+  gap:12px;margin-bottom:20px;font-size:12.5px;color:var(--muted);font-weight:700;
 }
 .study-top .cat{
   background:var(--accent-tint);padding:6px 14px;border-radius:999px;
@@ -348,18 +251,10 @@ table tbody tr:hover td{background:var(--surface-2);}
   letter-spacing:.04em;text-transform:uppercase;
 }
 .bar{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-bottom:32px;}
-.bar-fill{
-  height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-soft));
-  width:0;transition:width .3s ease;border-radius:3px;
-}
-.question{
-  font-size:22px;line-height:1.5;letter-spacing:-.015em;
-  font-weight:700;margin:0 0 26px;color:var(--ink);
-}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-soft));width:0;transition:width .3s ease;border-radius:3px;}
+.question{font-size:22px;line-height:1.5;letter-spacing:-.015em;font-weight:700;margin:0 0 26px;color:var(--ink);}
 
-/* ============================================================
-   § 11. MCQ OPTIONS — answer buttons, feedback
-   ============================================================ */
+/* § 11. MCQ */
 .opts{display:grid;gap:10px;}
 .opt{
   display:flex;align-items:center;gap:14px;padding:16px 18px;
@@ -386,10 +281,7 @@ table tbody tr:hover td{background:var(--surface-2);}
 .fb.good{background:var(--correct-bg);color:var(--correct);border-left:3px solid var(--correct-line);}
 .fb.bad{background:var(--incorrect-bg);color:var(--incorrect);border-left:3px solid var(--incorrect-line);}
 .fb strong{display:block;margin-bottom:5px;font-size:14px;font-weight:800;}
-.actions{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;margin-top:28px;flex-wrap:wrap;
-}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px;flex-wrap:wrap;}
 .actions-right{display:flex;gap:10px;margin-left:auto;}
 .btn{
   background:var(--dark);color:#f0ebd8;border:0;border-radius:10px;
@@ -420,9 +312,7 @@ table tbody tr:hover td{background:var(--surface-2);}
 }
 .filters .shuffle:hover{color:var(--ink);border-color:var(--accent-soft);}
 
-/* ============================================================
-   § 12. SQ ANSWER — short question reveal
-   ============================================================ */
+/* § 12. SQ */
 .sq-answer{
   display:none;margin-top:18px;padding:20px 24px;
   background:var(--surface-2);border-radius:12px;
@@ -431,9 +321,7 @@ table tbody tr:hover td{background:var(--surface-2);}
 }
 .sq-answer.show{display:block;}
 
-/* ============================================================
-   § 13. RESULTS — score screen
-   ============================================================ */
+/* § 13. RESULTS */
 .results{
   text-align:center;padding:52px 40px;background:var(--surface);
   border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
@@ -443,21 +331,65 @@ table tbody tr:hover td{background:var(--surface-2);}
 .results .sub{color:var(--muted);font-size:15px;margin:12px 0 30px;font-weight:500;}
 .results .row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 .missed{text-align:left;margin-top:36px;padding-top:26px;border-top:1px solid var(--line);}
-.missed h4{
-  margin:0 0 16px;font-size:12px;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--muted);font-weight:800;
-}
-.missed-item{
-  padding:14px 0;border-bottom:1px solid var(--line);
-  font-size:14px;line-height:1.6;
-}
+.missed h4{margin:0 0 16px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;}
+.missed-item{padding:14px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.6;}
 .missed-item:last-child{border-bottom:0;}
 .missed-item strong{display:block;font-weight:700;margin-bottom:4px;color:var(--ink);}
 .missed-item span{color:var(--muted);font-size:13px;}
 
-/* ============================================================
-   § 14. WATERMARK
-   ============================================================ */
+/* § 13b. DETAILED VIEW */
+.detail-note{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:32px 36px;box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+.detail-note h3{margin:0 0 16px;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--ink);}
+.detail-note h4{margin:22px 0 10px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.detail-note p,.detail-note li{font-size:14.5px;line-height:1.85;color:var(--ink-soft);}
+.detail-note ul,.detail-note ol{padding-left:24px;margin:10px 0;}
+.detail-note li{margin-bottom:6px;}
+
+.problem-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-sm);
+  margin-bottom:18px;
+}
+.problem-card .problem-num{
+  display:inline-block;background:var(--accent-tint);color:var(--accent);
+  padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;
+}
+.problem-card .problem-q{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.7;margin:0 0 14px;}
+
+.creative-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-sm);
+  margin-bottom:20px;
+}
+.creative-card h3{margin:0 0 18px;font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--ink);}
+.creative-part{
+  border-top:1px solid var(--line);padding:16px 0;
+}
+.creative-part:first-of-type{border-top:0;padding-top:0;}
+.creative-part .part-q{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+  cursor:pointer;user-select:none;
+}
+.creative-part .part-q strong{font-weight:700;color:var(--ink);font-size:14.5px;line-height:1.7;flex:1;}
+.creative-part .part-toggle{
+  flex:0 0 auto;color:var(--accent);font-weight:800;font-size:18px;line-height:1;
+  transition:transform .2s ease;
+}
+.creative-part.open .part-toggle{transform:rotate(45deg);}
+.creative-part .part-a{
+  display:none;margin-top:14px;padding:16px 20px;
+  background:var(--surface-2);border-radius:10px;
+  border-left:3px solid var(--accent);
+  font-size:14px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;
+}
+.creative-part.open .part-a{display:block;}
+
+/* § 14. WATERMARK */
 .wm{
   position:fixed;bottom:22px;right:26px;z-index:100;
   font-size:12px;font-weight:700;letter-spacing:.14em;
@@ -473,15 +405,12 @@ table tbody tr:hover td{background:var(--surface-2);}
 
 .hidden{display:none !important;}
 
-/* ============================================================
-   § 15. RESPONSIVE
-   ============================================================ */
+/* § 15. RESPONSIVE */
 @media (max-width:1024px){
   .wrap{max-width:820px;padding:48px 32px 90px;}
   .study-card{padding:34px 36px;}
   .note{padding:24px 28px;}
 }
-
 @media (max-width:640px){
   .wrap{max-width:100%;padding:32px 18px 70px;}
   .topbar{padding:0 12px;height:58px;font-size:12px;gap:10px;}
@@ -515,8 +444,9 @@ table tbody tr:hover td{background:var(--surface-2);}
   .results{padding:36px 22px;}
   .results .big{font-size:44px;}
   .wm{bottom:14px;right:14px;font-size:10.5px;padding:7px 14px;letter-spacing:.1em;}
+  .mode-title{font-size:22px;}
+  .detail-note,.problem-card,.creative-card{padding:22px 20px;}
 }
-
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none !important;animation:none !important;}
 }
@@ -525,9 +455,7 @@ table tbody tr:hover td{background:var(--surface-2);}
 
 <body>
 
-<!-- ============================================================
-     HTML — TOPBAR
-     ============================================================ -->
+<!-- TOPBAR -->
 <header class="topbar">
   <div class="brand" id="brand">
     <div class="brand-dot"></div>
@@ -548,9 +476,6 @@ table tbody tr:hover td{background:var(--surface-2);}
   </div>
 </header>
 
-<!-- ============================================================
-     HTML — MAIN WRAPPER
-     ============================================================ -->
 <div class="wrap">
 
   <!-- STEP 1: SUBJECT PICKER -->
@@ -570,6 +495,17 @@ table tbody tr:hover td{background:var(--surface-2);}
     <div class="grid grid-2" id="chapterList"></div>
   </section>
 
+  <!-- STEP 2.5: MODE PICKER -->
+  <section id="stepMode" class="hidden">
+    <button class="back" id="backToChapters">← Chapters</button>
+    <div class="mode-head">
+      <span class="mode-chip" id="modeChapterTag">Chapter 08</span>
+      <h2 class="mode-title" id="modeChapterTitle">Reflection of Light</h2>
+      <p class="mode-sub">Choose how you want to study this chapter.</p>
+    </div>
+    <div class="mode-grid" id="modeList"></div>
+  </section>
+
   <!-- STEP 3: STUDY VIEW -->
   <section id="stepStudy" class="hidden">
     <nav class="crumbs">
@@ -577,20 +513,19 @@ table tbody tr:hover td{background:var(--surface-2);}
       <span class="sep">›</span>
       <span class="current" id="crumbChapter">Chapter</span>
       <span class="spacer"></span>
-      <button class="switch" id="switchChapter">Chapter</button>
-      <button class="switch" id="switchSubject">Subject</button>
+      <button class="switch" id="switchChapter">Chapters</button>
+      <button class="switch" id="switchSubject">Subjects</button>
     </nav>
     <div id="studyBody"></div>
   </section>
 
 </div>
 
-<!-- Watermark -->
 <div class="wm">Made by Maruf</div>
 
 <script>
 /* ============================================================
-   JS § 1. AUDIO — chime sounds
+   JS § 1. AUDIO
    ============================================================ */
 const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -628,12 +563,8 @@ const playChime     = () => playTones([880, 1174.66]);
 const playWarning   = () => playTones([1318.51]);
 const playBreakEnd  = () => playTones([659.25, 783.99, 1046.5]);
 
-
 /* ============================================================
-   JS § 2. DATA — all questions & notes
-   ------------------------------------------------------------
-   To add/edit questions, change the arrays below.
-   To add/edit notes, change the NOTES object below.
+   JS § 2. DATA — questions & notes
    ============================================================ */
 
 /* ---------- CHEMISTRY CH 8 — MCQ ---------- */
@@ -1090,7 +1021,7 @@ const phy7SQ=[
 {category:"Pollution",question:"What is sound pollution and how can it be reduced?",answer:"Excessive or unwanted sound that disrupts normal activities, measured in decibels (dB). Mitigation: factories away from residential areas, tree planting, sound absorbers, limiting horns/loudspeakers."}
 ];
 
-/* ---------- NOTES ---------- */
+/* ---------- NOTES (Suggested-view summary) ---------- */
 const NOTES={
 chem8:`<div class="notes">
 <article class="note"><h3>1 · Energy Basics</h3>
@@ -1231,12 +1162,8 @@ phy7:`<div class="notes">
 </div>`
 };
 
-
 /* ============================================================
-   JS § 3. REGISTRY — subjects & chapters
-   ------------------------------------------------------------
-   To add a subject: add an entry to SUBJECTS.
-   To add a chapter: add an entry to REGISTRY and list its id in SUBJECTS.
+   JS § 3. REGISTRY
    ============================================================ */
 const REGISTRY={
   chem8:{
@@ -1274,9 +1201,267 @@ const SUBJECTS=[
   {id:"physics",name:"Physics",icon:"⚛",tagline:"Light, waves, and optics",chapters:["phy8","phy7"]}
 ];
 
+/* ============================================================
+   JS § 3b. DETAILED CONTENT — Physics Ch 8 only
+   ============================================================ */
+
+const PHY8_DETAILED_HTML = `
+<div class="detail-note">
+  <h3>📌 Chapter Concept Map</h3>
+  <ul>
+    <li><strong>Light</strong> → Visible Light, Invisible Light</li>
+    <li><strong>Reflection of Light</strong> → Regular Reflection, Irregular Reflection</li>
+    <li><strong>Mirror</strong> → Plane Mirror, Spherical Mirror</li>
+    <li><strong>Spherical Mirror</strong> → Concave Mirror, Convex Mirror</li>
+    <li><strong>Magnification</strong> → Image Height, Object Height</li>
+  </ul>
+</div>
+
+<div class="detail-note">
+  <h3>1 · Light</h3>
+  <p>Light is a form of energy that creates the sensation of sight. It depends on the medium for propagation.</p>
+  <p><strong>Speed of light in vacuum</strong> = 3×10⁸ m/s = 3×10¹⁰ cm/s</p>
+  <p>According to Maxwell, all light is an <span class="term">electromagnetic wave</span>.</p>
+  <h4>Two types</h4>
+  <ul>
+    <li><strong>Visible light:</strong> Light that illuminates other objects. Wavelength: 400–700 nm. Examples: sunlight, hydrogen lamp, sodium lamp.</li>
+    <li><strong>Invisible light:</strong> Does not illuminate other objects. Wavelength: below 400 nm and above 700 nm. Examples: ultraviolet, X-ray, gamma ray.</li>
+  </ul>
+  <h4>Reflection of Light</h4>
+  <p>When a ray of light traveling from one medium to another returns to the original medium, it is called <span class="term">reflection of light</span>. Two types: <strong>Regular</strong> and <strong>Irregular</strong>.</p>
+  <h4>Reflecting Surface</h4>
+  <p>The surface from which light reflects back is called a reflecting surface. Types: <strong>Smooth</strong> and <strong>Rough</strong>.</p>
+</div>
+
+<div class="detail-note">
+  <h3>2 · Regular vs Irregular Reflection</h3>
+  <p><strong>Regular Reflection:</strong> When a beam of light falls on a smooth surface and after reflection the rays remain parallel, converge, or diverge.</p>
+  <p><strong>Irregular Reflection:</strong> When a beam of light falls on a rough surface and after reflection the rays do not remain parallel, converge, or diverge.</p>
+  <p><strong>Converging:</strong> When a beam of parallel light rays falls on a surface and after reflection or refraction the rays meet at a definite point.</p>
+  <p><strong>Diverging:</strong> When a beam of parallel light rays falls on a surface and after reflection or refraction the rays appear to come from or diverge from another point.</p>
+</div>
+
+<div class="detail-note">
+  <h3>3 · Terms & Laws of Reflection</h3>
+  <ul>
+    <li><strong>Normal:</strong> The perpendicular drawn at the point of incidence.</li>
+    <li><strong>Angle of Incidence:</strong> The angle between the incident ray and the normal.</li>
+    <li><strong>Reflected Ray:</strong> The ray that emerges from the point of incidence.</li>
+    <li><strong>Angle of Reflection:</strong> The angle between the reflected ray and the normal.</li>
+  </ul>
+  <h4>Two Laws of Reflection</h4>
+  <ol>
+    <li>The incident ray, the reflected ray, and the normal at the point of incidence all lie in the same plane.</li>
+    <li>The angle of incidence is equal to the angle of reflection. ∠i = ∠r</li>
+  </ol>
+  <h4>Colour Questions</h4>
+  <p><strong>Why does a red flower appear red in daylight?</strong> When sunlight falls on a red flower, the flower reflects the red colour and absorbs the other colours.</p>
+  <p><strong>Why does a red flower appear black in green light?</strong> The red flower absorbs the green light and reflects nothing, so it appears black.</p>
+</div>
+
+<div class="detail-note">
+  <h3>4 · Mirror Basics</h3>
+  <p>A <span class="term">mirror</span> is a surface where regular reflection of light occurs.</p>
+  <h4>How is a mirror made?</h4>
+  <p>A silver coating is applied on one side of a glass. This process is called <span class="term">silvering</span>.</p>
+  <h4>Plane Mirror</h4>
+  <p>A mirror whose reflecting surface is smooth and flat. Characteristics:</p>
+  <ul>
+    <li>Image is formed as far behind as the object is in front.</li>
+    <li>Image is erect and virtual.</li>
+    <li>It changes the sides of the image (lateral inversion).</li>
+  </ul>
+  <h4>Spherical Mirror</h4>
+  <p>A mirror that is part of a sphere. Two types:</p>
+  <ul>
+    <li><strong>Concave mirror:</strong> inner surface is the reflecting surface.</li>
+    <li><strong>Convex mirror:</strong> outer surface is the reflecting surface.</li>
+  </ul>
+</div>
+
+<div class="detail-note">
+  <h3>5 · Terminology of Spherical Mirrors</h3>
+  <ul>
+    <li><strong>Pole (P):</strong> Midpoint of the reflecting surface.</li>
+    <li><strong>Center of Curvature (C):</strong> Center of the sphere of which the mirror is a part.</li>
+    <li><strong>Radius of Curvature (r):</strong> Distance from C to P.</li>
+    <li><strong>Principal Axis:</strong> Straight line through the pole and center of curvature.</li>
+    <li><strong>Principal Focus (F):</strong> Point where parallel rays meet after reflection (concave) or appear to diverge from (convex).</li>
+    <li><strong>Focal Length (f):</strong> Distance from pole to F.</li>
+  </ul>
+  <div class="formula">f = r / 2</div>
+  <h4>Why is a concave mirror called converging?</h4>
+  <p>Parallel light rays converge at a point after reflection due to its shape.</p>
+  <h4>Why is a convex mirror called diverging?</h4>
+  <p>Parallel rays appear to diverge from a point after reflection.</p>
+</div>
+
+<div class="detail-note">
+  <h3>6 · Image Formation Rules</h3>
+  <ul>
+    <li>A ray parallel to the principal axis passes through F after reflection.</li>
+    <li>A ray through F becomes parallel to the principal axis after reflection.</li>
+    <li>A ray through C returns along the same path.</li>
+  </ul>
+  <h4>Concave Mirror Image Table</h4>
+  <table>
+    <thead><tr><th>Object Position</th><th>Image Position</th><th>Size</th><th>Nature</th></tr></thead>
+    <tbody>
+      <tr><td>At infinity</td><td>At F</td><td>Very small</td><td>Real, inverted</td></tr>
+      <tr><td>Between ∞ and C</td><td>Between F and C</td><td>Small</td><td>Real, inverted</td></tr>
+      <tr><td>At C</td><td>At C</td><td>Same</td><td>Real, inverted</td></tr>
+      <tr><td>Between C and F</td><td>Beyond C</td><td>Large</td><td>Real, inverted</td></tr>
+      <tr><td>At F</td><td>At infinity</td><td>Very large</td><td>Real, inverted</td></tr>
+      <tr><td>Between F and P</td><td>Behind mirror</td><td>Large</td><td>Virtual, erect</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Convex mirror:</strong> Always virtual, erect, diminished.</p>
+</div>
+
+<div class="detail-note">
+  <h3>7 · Magnification</h3>
+  <p>The ratio of image height to object height is called <span class="term">magnification</span> (m).</p>
+  <div class="formula">m = image height / object height = l' / l</div>
+  <div class="formula">m = −v / u</div>
+  <ul>
+    <li>m negative → real and inverted image.</li>
+    <li>m positive → virtual and erect image.</li>
+  </ul>
+</div>
+
+<div class="detail-note">
+  <h3>8 · Uses of Mirrors</h3>
+  <h4>Plane Mirror</h4>
+  <ul>
+    <li>Seeing our own face</li>
+    <li>Eye doctors testing eyesight</li>
+    <li>Periscopes</li>
+    <li>Blind spots of hilly roads</li>
+    <li>Telescopes, overhead projectors, lasers</li>
+  </ul>
+  <h4>Concave Mirror</h4>
+  <ul>
+    <li>Dentists examining teeth</li>
+    <li>Torches, searchlights, vehicle headlights</li>
+    <li>Reflectors in solar cookers, telescopes</li>
+    <li>Shaving mirrors</li>
+    <li>ENT doctors focusing light</li>
+  </ul>
+  <h4>Convex Mirror</h4>
+  <ul>
+    <li>Vehicle rear-view mirrors</li>
+    <li>Shops to see a wide area</li>
+    <li>Reflector telescopes</li>
+    <li>Spreading light over wide areas</li>
+  </ul>
+</div>
+
+<div class="detail-note">
+  <h3>9 · Formula & Sign Conventions</h3>
+  <div class="formula">1/u + 1/v = 1/f</div>
+  <table>
+    <thead><tr><th>Quantity</th><th>Concave</th><th>Convex</th></tr></thead>
+    <tbody>
+      <tr><td>u (object distance)</td><td>Always positive</td><td>Always positive</td></tr>
+      <tr><td>v (image distance)</td><td>+ for real, − for virtual</td><td>− (virtual)</td></tr>
+      <tr><td>f (focal length)</td><td>+</td><td>−</td></tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+const PHY8_NUMERICALS = [
+  {q:"A concave mirror has a focal length of 15 cm. At what distance should an object be placed so that a virtual image three times the size of the object is formed?",
+   a:"Given: f = 15 cm = 0.15 m, m = 3 (virtual).\n\nm = −v/u = 3 → v = −3u\n\n1/u + 1/v = 1/f\n1/u + 1/(−3u) = 1/0.15\n(3 − 1)/3u = 1/0.15\n2/3u = 1/0.15\nu = 2/3 × 0.15 = 0.10 m = 10 cm\n\nAnswer: 10 cm in front of the mirror."},
+  {q:"A concave mirror has a focal length of 0.2 m. At what distance should an object be placed so that a real image one-fourth the size of the object is formed?",
+   a:"Given: f = 0.2 m, m = −1/4 (real image, m negative).\n\n−1/4 = −v/u → v = u/4\n\n1/v + 1/u = 1/f\n1/(u/4) + 1/u = 1/0.2\n4/u + 1/u = 1/0.2\n5/u = 1/0.2\nu = 1 m\n\nAnswer: 1.0 m"},
+  {q:"An object is placed 0.27 m from a concave mirror with focal length 0.015 m. If the object height is 2×10⁻³ m, find the image height.",
+   a:"f = 0.015 m, u = 0.27 m, l = 2×10⁻³ m\n\n1/v = 1/f − 1/u = 1/0.015 − 1/0.27\nv = (0.015 × 0.27)/(0.27 − 0.015) = 0.0159 m\n\nSince v is positive, image is real.\nm = −v/u = −0.0159/0.27 = −0.059\nl' = |m| · l = 0.059 × 2×10⁻³ = 0.708×10⁻³ m\n\nAnswer: 0.708×10⁻³ m"},
+  {q:"A concave mirror has a radius of curvature of 30 cm. An object is placed 20 cm from the mirror. Determine the position, nature, and magnification of the image.",
+   a:"1/v + 1/u = 2/r\n1/v = 2/30 − 1/20 = (4−3)/60 = 1/60\nv = 60 cm (positive → real image)\n\nImage is in front of the mirror. Real and inverted.\nm = −v/u = −60/20 = −3\n\nAnswer: Position: in front of mirror; Nature: real and inverted; Size: magnified."},
+  {q:"An object is placed 1 m from the pole of a concave mirror with radius of curvature 1 m. Find the position and nature of the image.",
+   a:"1/v + 1/u = 2/r  (r = 1, u = 1)\n1/v + 1/1 = 2/1 = 2\n1/v = 2 − 1 = 1\nv = 1 m (positive)\n\nImage distance = 1 m.\nSince v is positive, image is real and inverted."},
+  {q:"A convex mirror forms an image 1/x times the size of the object. If the focal length is f, show that the object is at a distance (x−1)f from the mirror.",
+   a:"Given: f = −f, m = 1/x = v/u → v = u/x = −u/x\n(Convex mirror always forms virtual images, so v is negative.)\n\n1/v + 1/u = 1/f\n−x/u + 1/u = −1/f\n(−x+1)/u = −1/f\n−(x−1)/u = −1/f\nu = (x−1)f  (shown)"},
+  {q:"A concave mirror has a focal length of 5 cm. At what distance should an object be placed so that the image is 2 times the size of the object?",
+   a:"f = 5 cm\n\nFor real image: m = v/u = 2 → v = 2u\n1/2u + 1/u = 1/5\n3/2u = 1/5\nu = 15/2 = 7.5 cm\n\nFor virtual image: m = 2, v = −2u\n1/(−2u) + 1/u = 1/5\n(−1+2)/2u = 1/5\nu = 5/2 = 2.5 cm\n\nAnswer: 7.5 cm (real) or 2.5 cm (virtual)."},
+  {q:"A concave mirror has a focal length of 10 cm. At what distance should an object be placed so that a real image 4 times the size is formed?",
+   a:"m = v/u = 4 → v = 4u (real image, v positive)\n\n1/4u + 1/u = 1/10\n(1+4)/4u = 1/10\n5/4u = 1/10\nu = 50/4 = 12.5 cm\n\nAnswer: 12.5 cm"},
+  {q:"A concave mirror has a focal length of 0.1 mm. At what distance should an object be placed so that the real image is one-fifth the size of the object?",
+   a:"m = v/u = 1/5 → v = u/5\nf = 0.1 mm = 0.1×10⁻³ m\n\n5/u + 1/u = 1/(0.1×10⁻³)\n6/u = 1/(0.1×10⁻³)\nu = 6×10⁻³ m\n\nAnswer: 6×10⁻³ m"}
+];
+
+const PHY8_CREATIVE = [
+  {title:"Creative Question 1 — Object 10 cm from a mirror",
+   parts:[
+     {q:"(a) What is an optical fiber?",
+      a:"An optical fiber is a long, flexible, thin fiber made of glass or plastic through which total internal reflection of light occurs."},
+     {q:"(b) What does a power of 3D mean?",
+      a:"• The lens is convex.\n• Focal length of the lens is 1/3 m.\n• The lens converges a beam of parallel light rays at 1/3 m."},
+     {q:"(c) Determine the image distance. (r = 14 cm, u = 10 cm)",
+      a:"r = 14 cm → f = 7 cm\nu = 10 cm\n\n1/u + 1/v = 1/f\n1/v = 1/7 − 1/10 = (10−7)/70 = 3/70\nv = 70/3 = 23.33 cm\n\nAnswer: 23.33 cm"},
+     {q:"(d) If the object is placed 5 cm in front of the mirror, analyze the image with a ray diagram.",
+      a:"Object is between pole and focus (u = 5 cm < f = 7 cm).\n\nImage:\n• Position: Behind the mirror\n• Nature: Virtual and erect\n• Size: Magnified"}
+   ]},
+  {title:"Creative Question 2 — u = 30 cm, r = 20 cm",
+   parts:[
+     {q:"(a) What is an optical fiber?",
+      a:"An optical fiber is a long, flexible, thin fiber made of glass or plastic."},
+     {q:"(b) What does refractive index of water with respect to air 1.33 mean?",
+      a:"• Light bends towards the normal when entering water from air.\n• The ratio of sine of angle of incidence to sine of angle of refraction is 1.33."},
+     {q:"(c) Determine the image distance.",
+      a:"u = 30 cm, r = 20 cm → f = r/2 = 10 cm\n\n1/v = 1/f − 1/u = 1/10 − 1/30 = (3−1)/30 = 2/30\nv = 30/2 = 15 cm\n\nAnswer: 15 cm"},
+     {q:"(d) If the object is between focus and center of curvature, the image is real and inverted — show with ray diagram.",
+      a:"Object between F and C.\n\nImage:\n• Position: Beyond C\n• Nature: Real and inverted\n• Size: Magnified"}
+   ]},
+  {title:"Creative Question 3 — u = 30 cm, f = 6 cm",
+   parts:[
+     {q:"(a) What is regular reflection of light?",
+      a:"When a beam of parallel light falls on a smooth surface and after reflection remains parallel, converges, or diverges, it is called regular reflection."},
+     {q:"(b) What is principal focus?",
+      a:"The point on the principal axis where a beam of parallel light rays meets after reflection (concave) or appears to diverge from (convex)."},
+     {q:"(c) Determine the image distance.",
+      a:"u = 30 cm, f = 6 cm\n\nv = (u × f)/(u − f) = (30 × 6)/(30 − 6) = 180/24 = 7.5 cm\n\nAnswer: 7.5 cm"},
+     {q:"(d) Determine magnification, power, and radius of curvature.",
+      a:"m = −v/u = −7.5/30 = −0.25\nP = 1/f = 1/(6×10⁻²) = 16.67 D\nr = 2f = 2×6 = 12 cm\n\nAnswer: m = −0.25, P = 16.67 D, r = 12 cm"}
+   ]},
+  {title:"Creative Question 4 — Mirror 'b' r = 24 cm",
+   parts:[
+     {q:"(a) What is 1 diopter?",
+      a:"The power of a lens with focal length 1 meter is called 1 diopter."},
+     {q:"(b) How do we get the optical perception of a colored object?",
+      a:"When we see an object, light from the object enters our eyes. The lens refracts this light and forms an image on the retina. The retina sends the sensation to the brain. Rods and cones in the retina detect colour: three types of cones (blue, red, green sensitive). The brain processes all colours. Thus we get the perception of coloured objects."},
+     {q:"(c) Where should the object be placed in mirror 'b' to get magnification −2?",
+      a:"r = 24 cm → f = r/2 = 12 cm\nm = −2 → −2 = −v/u → v = 2u\n\n1/u + 1/2u = 1/12\n(2+1)/2u = 1/12\n3/2u = 1/12\nu = 3×12/2 = 18 cm\n\nAnswer: 18 cm from the mirror"},
+     {q:"(d) 'It is possible to get the same type of image from both mirrors.' Explain with diagrams.",
+      a:"Mirror 'a' is a plane mirror — always forms a virtual image. For mirror 'b' (concave) to match, the object must be between pole and focus so it forms a virtual image. So both can form virtual images."}
+   ]},
+  {title:"Creative Question 5 — Concave mirror f = 20 cm, u = 10 cm, object 5 cm tall",
+   parts:[
+     {q:"(a) What is a p-n junction?",
+      a:"When a p-type semiconductor is joined with an n-type semiconductor, the device formed is called a p-n junction diode."},
+     {q:"(b) Write differences between p-n junction and transistor.",
+      a:"A p-n junction works as a rectifier (current flows during forward bias). A transistor is used as an amplifier."},
+     {q:"(c) Determine the position, nature, and size of the image.",
+      a:"f = 20 cm, u = 10 cm, l = 5 cm\n\n1/v = 1/20 − 1/10 = −1/20\nv = −20 cm (behind the mirror)\n\nm = |v/u| = l'/l\n20/10 = l'/5\nl' = 10 cm\n\nAnswer: Image is 10 cm tall and virtual."},
+     {q:"(d) What is the image height and the surface area of the sphere of which the mirror is a part?",
+      a:"Image height = 10 cm\nf = 20 cm → r = 2f = 40 cm = 0.4 m\n\nSurface area = 4πr² = 4 × 3.1416 × (0.4)² = 2.012 m²\n\nAnswer: Image height = 10 cm, Surface area = 2.012 m²"}
+   ]},
+  {title:"Creative Question 6 — Concave mirror r = 24 cm, u = 12 cm",
+   parts:[
+     {q:"(a) Write the formula of reflection.",
+      a:"1/f = 1/u + 1/v"},
+     {q:"(b) Explain what type of mirror a car's view mirror is.",
+      a:"A car's view mirror is a convex mirror. It always forms a virtual, erect, small image, so it shows a wide area in a small space."},
+     {q:"(c) Determine the image distance.",
+      a:"r = 24 cm → f = r/2 = 12 cm\nu = 12 cm\n\n1/v = 1/12 − 1/12 = 0\nv = ∞\n\nAnswer: The image is at infinity."},
+     {q:"(d) Can a concave mirror be used in dentistry? Analyze with a ray diagram.",
+      a:"When an object is placed between pole and focus of a concave mirror, it forms an erect and magnified image. So a concave mirror can be used to see enlarged images of teeth."}
+   ]}
+];
 
 /* ============================================================
-   JS § 4. POMODORO LOGIC
+   JS § 4. POMODORO
    ============================================================ */
 const pomo=document.getElementById("pomo");
 const pomoMode=document.getElementById("pomoMode");
@@ -1346,21 +1531,20 @@ pomoSelect.addEventListener("change",()=>{
 
 PS.total=focusSec();PS.remaining=PS.total;updPomo();
 
-
 /* ============================================================
    JS § 5. HELPERS
    ============================================================ */
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-
 /* ============================================================
-   JS § 6. NAVIGATION — step switching
+   JS § 6. NAVIGATION
    ============================================================ */
-let curSubject=null,curChapter=null;
+let curSubject=null,curChapter=null,curChapterId=null;
 
 const stepSubject=document.getElementById("stepSubject");
 const stepChapter=document.getElementById("stepChapter");
+const stepMode=document.getElementById("stepMode");
 const stepStudy=document.getElementById("stepStudy");
 const subjectList=document.getElementById("subjectList");
 const chapterList=document.getElementById("chapterList");
@@ -1370,6 +1554,7 @@ const studyBody=document.getElementById("studyBody");
 function showStep(step){
   stepSubject.classList.toggle("hidden",step!=="subject");
   stepChapter.classList.toggle("hidden",step!=="chapter");
+  stepMode.classList.toggle("hidden",step!=="mode");
   stepStudy.classList.toggle("hidden",step!=="study");
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -1410,26 +1595,78 @@ function renderChapters(){
         <span>📖 ${ch.sq.length} SQs</span>
       </div>
     `;
-    btn.addEventListener("click",()=>openChapter(cid));
+    btn.addEventListener("click",()=>openModePicker(cid));
     chapterList.appendChild(btn);
   });
+}
+
+/* ---------- MODE PICKER ---------- */
+const MODE_DEFS = {
+  suggested: {
+    id:"suggested", emoji:"📝",
+    title:"Teacher's Suggestions",
+    desc:"Curated exam-focused MCQs and short questions — the same set your teacher flagged as important.",
+    tag:"Exam Focused", primary:true
+  },
+  detailed: {
+    id:"detailed", emoji:"📖",
+    title:"Detailed Study",
+    desc:"Full chapter notes, worked numericals, solved creative questions, and every concept explained in depth.",
+    tag:"Deep Learning", primary:false
+  }
+};
+
+const DETAILED_BUILT = { phy8:true };
+
+function openModePicker(cid){
+  const ch = REGISTRY[cid];
+  if(!ch) return;
+  curChapterId = cid;
+  curChapter = cid;
+  document.getElementById("modeChapterTag").textContent = `Chapter ${ch.chapterNum}`;
+  document.getElementById("modeChapterTitle").textContent = ch.title;
+
+  const list = document.getElementById("modeList");
+  list.innerHTML = "";
+  Object.values(MODE_DEFS).forEach(m => {
+    const btn = document.createElement("button");
+    btn.className = "mode-card" + (m.primary?" primary":"");
+    btn.type = "button";
+    btn.innerHTML = `
+      <span class="mode-emoji">${m.emoji}</span>
+      <h3>${m.title}</h3>
+      <p>${m.desc}</p>
+      <span class="mode-tag">${m.tag}</span>
+    `;
+    btn.addEventListener("click", () => chooseMode(cid, m.id));
+    list.appendChild(btn);
+  });
+  showStep("mode");
+}
+
+function chooseMode(cid, mode){
+  if(mode === "suggested"){
+    openChapter(cid);
+  } else if(mode === "detailed"){
+    openDetailed(cid);
+  }
 }
 
 document.getElementById("backToSubjects").addEventListener("click",()=>showStep("subject"));
 document.getElementById("brand").addEventListener("click",()=>showStep("subject"));
 document.getElementById("switchSubject").addEventListener("click",()=>showStep("subject"));
-document.getElementById("switchChapter").addEventListener("click",()=>{renderChapters();showStep("chapter");});
-
+document.getElementById("backToChapters").addEventListener("click",()=>{renderChapters();showStep("chapter");});
 
 /* ============================================================
-   JS § 7. RENDERERS — chapter view, MCQ, SQ
+   JS § 7. RENDERERS
    ============================================================ */
 function openChapter(cid){
   const ch=REGISTRY[cid];if(!ch)return;
   curChapter=cid;
   document.getElementById("crumbSubject").textContent=ch.subjectLabel;
-  document.getElementById("crumbChapter").textContent=`Chapter ${ch.chapterNum} · ${ch.title}`;
+  document.getElementById("crumbChapter").textContent=`Chapter ${ch.chapterNum} · ${ch.title} · Teacher's Suggestions`;
   document.getElementById("crumbSubject").onclick=()=>{curSubject=ch.subject;renderChapters();showStep("chapter");};
+  document.getElementById("switchChapter").onclick=()=>{renderChapters();showStep("chapter");};
 
   studyBody.innerHTML=`
     <div class="tabs">
@@ -1461,7 +1698,7 @@ function openChapter(cid){
   showStep("study");
 }
 
-/* ---------- MCQ renderer ---------- */
+/* ---------- MCQ ---------- */
 function renderMCQ(root,ch){
   const cats=["All topics",...new Set(ch.mcq.map(q=>q.category))];
   root.innerHTML=`
@@ -1618,7 +1855,7 @@ function renderMCQ(root,ch){
   });
 
   document.addEventListener("keydown",e=>{
-    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewMCQ").classList.contains("hidden")){
+    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewMCQ")?.classList.contains("hidden")){
       if(["1","2","3","4"].includes(e.key)&&!state.checked){
         const i=Number(e.key)-1;
         const btn=qOpts.children[i];
@@ -1632,7 +1869,7 @@ function renderMCQ(root,ch){
   render();
 }
 
-/* ---------- SQ renderer ---------- */
+/* ---------- SQ ---------- */
 function renderSQ(root,ch){
   root.innerHTML=`
     <div class="study-card">
@@ -1684,7 +1921,7 @@ function renderSQ(root,ch){
   sqNext.addEventListener("click",()=>{idx=(idx+1)%ch.sq.length;render();});
   sqPrev.addEventListener("click",()=>{if(idx>0){idx--;render();}});
   document.addEventListener("keydown",e=>{
-    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewSQ").classList.contains("hidden")){
+    if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewSQ")?.classList.contains("hidden")){
       if(e.key==="ArrowLeft"&&!sqPrev.disabled)sqPrev.click();
       if(e.key==="ArrowRight")sqNext.click();
     }
@@ -1692,6 +1929,118 @@ function renderSQ(root,ch){
   render();
 }
 
+/* ---------- DETAILED VIEW ---------- */
+function openDetailed(cid){
+  const ch = REGISTRY[cid];
+  if(!ch) return;
+  curChapter = cid;
+
+  document.getElementById("crumbSubject").textContent = ch.subjectLabel;
+  document.getElementById("crumbChapter").textContent = `Chapter ${ch.chapterNum} · ${ch.title} · Detailed Study`;
+  document.getElementById("crumbSubject").onclick = () => {
+    curSubject = ch.subject; renderChapters(); showStep("chapter");
+  };
+  document.getElementById("switchChapter").onclick = () => {
+    renderChapters(); showStep("chapter");
+  };
+
+  if(!DETAILED_BUILT[cid]){
+    studyBody.innerHTML = `
+      <div class="study-card" style="text-align:center;padding:64px 40px;">
+        <div style="font-size:56px;line-height:1;margin-bottom:16px;">🚧</div>
+        <h2 style="margin:0 0 12px;font-size:22px;font-weight:800;letter-spacing:-.02em;">Not built yet</h2>
+        <p style="color:var(--muted);max-width:420px;margin:0 auto 28px;font-size:14.5px;line-height:1.7;">
+          Detailed Study for <strong>${esc(ch.title)}</strong> hasn't been written yet.
+          Use <em>Teacher's Suggestions</em> for now — new detailed content is coming soon.
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn accent" id="detailedBackMode">← Choose another mode</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("detailedBackMode").addEventListener("click", () => openModePicker(cid));
+    showStep("study");
+    return;
+  }
+
+  studyBody.innerHTML = `
+    <div class="tabs">
+      <button class="tab active" data-dtab="notes">📖 Notes</button>
+      <button class="tab" data-dtab="numericals">🧮 Numericals</button>
+      <button class="tab" data-dtab="creative">✍️ Creative Q</button>
+      <button class="tab" data-dtab="allmcq">📝 All MCQs</button>
+    </div>
+    <div id="dviewNotes"></div>
+    <div id="dviewNumericals" class="hidden"></div>
+    <div id="dviewCreative" class="hidden"></div>
+    <div id="dviewAllMCQ" class="hidden"></div>
+  `;
+
+  // Notes tab
+  document.getElementById("dviewNotes").innerHTML = PHY8_DETAILED_HTML;
+
+  // Numericals tab
+  const numRoot = document.getElementById("dviewNumericals");
+  numRoot.innerHTML = PHY8_NUMERICALS.map((n,i)=>`
+    <div class="problem-card">
+      <span class="problem-num">Problem ${i+1}</span>
+      <p class="problem-q">${esc(n.q)}</p>
+      <button class="btn accent" data-num="${i}">Show solution</button>
+      <div class="sq-answer" id="numAns${i}"></div>
+    </div>
+  `).join("");
+  numRoot.querySelectorAll("[data-num]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const i = btn.dataset.num;
+      const ans = document.getElementById("numAns"+i);
+      ans.textContent = PHY8_NUMERICALS[i].a;
+      ans.classList.toggle("show");
+      btn.textContent = ans.classList.contains("show") ? "Hide solution" : "Show solution";
+    });
+  });
+
+  // Creative tab
+  const crRoot = document.getElementById("dviewCreative");
+  crRoot.innerHTML = PHY8_CREATIVE.map((c,ci)=>`
+    <div class="creative-card">
+      <h3>${esc(c.title)}</h3>
+      ${c.parts.map((p,pi)=>`
+        <div class="creative-part" data-ci="${ci}" data-pi="${pi}">
+          <div class="part-q">
+            <strong>${esc(p.q)}</strong>
+            <span class="part-toggle">+</span>
+          </div>
+          <div class="part-a">${esc(p.a)}</div>
+        </div>
+      `).join("")}
+    </div>
+  `).join("");
+  crRoot.querySelectorAll(".creative-part").forEach(part=>{
+    part.querySelector(".part-q").addEventListener("click",()=>{
+      part.classList.toggle("open");
+    });
+  });
+
+  // All MCQs tab — reuse renderMCQ
+  renderMCQ(document.getElementById("dviewAllMCQ"), ch);
+
+  // Tab switching
+  const dtabs = studyBody.querySelectorAll(".tab");
+  const dviews = {
+    notes: document.getElementById("dviewNotes"),
+    numericals: document.getElementById("dviewNumericals"),
+    creative: document.getElementById("dviewCreative"),
+    allmcq: document.getElementById("dviewAllMCQ")
+  };
+  dtabs.forEach(t=>t.addEventListener("click",()=>{
+    dtabs.forEach(x=>x.classList.toggle("active",x===t));
+    const k = t.dataset.dtab;
+    Object.keys(dviews).forEach(key=>dviews[key].classList.toggle("hidden",key!==k));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }));
+
+  showStep("study");
+}
 
 /* ============================================================
    JS § 8. INIT
