@@ -6,6 +6,11 @@
 <meta name="theme-color" content="#3a3f22" />
 <title>Study Buddy</title>
 
+<!-- KaTeX CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
 <style>
 /* § 1. THEME */
 :root{
@@ -490,7 +495,6 @@ const playBreakEnd  = () => playTones([659.25, 783.99, 1046.5]);
    JS § 2. DATA — BGS
    ============================================================ */
 
-// BGS 8 MCQ (Based on the text)
 const bgs8MCQ = [
   {category:"Democracy",question:"Who defined democracy as 'Government of the people, by the people, for the people'?",options:["Professor Getel","Abraham Lincoln","MacIver","Plato"],answer:1,explanation:"Abraham Lincoln defined democracy this way."},
   {category:"Democracy",question:"Which type of democracy exists in modern states?",options:["Direct Democracy","Pure Democracy","Indirect Democracy","Absolute Democracy"],answer:2,explanation:"Modern states with large populations use Indirect (Representative) Democracy."},
@@ -543,7 +547,6 @@ const NOTES_bgs8 = `
   </article>
 </div>`;
 
-// BGS 9 Data
 const bgs9MCQ = [
   {category:"UN Structure",question:"Which is the principal judicial organ of the UN?",options:["General Assembly","Security Council","International Court of Justice","Secretariat"],answer:2,explanation:"The ICJ is the principal judicial organ."},
   {category:"UN Roles",question:"What is the name of the convention for eliminating discrimination against women?",options:["CEDAW","UNICEF","UNDP","UN Women"],answer:0,explanation:"CEDAW (Convention on the Elimination of All Forms of Discrimination Against Women)."},
@@ -585,7 +588,6 @@ const NOTES_bgs9 = `
   </article>
 </div>`;
 
-// BGS 10 Data
 const bgs10MCQ = [
   {category:"Resources",question:"Which is a non-renewable resource?",options:["Solar energy","Wind","Coal","Water"],answer:2,explanation:"Coal cannot be replenished once used."},
   {category:"Economy",question:"In which economy do market forces determine prices?",options:["Capitalist","Socialist","Mixed","Communist"],answer:0,explanation:"Capitalist economies rely on free market forces."},
@@ -628,13 +630,13 @@ const NOTES_bgs10 = `
 </div>`;
 
 /* ============================================================
-   JS § 3. DATA — CHEMISTRY & PHYSICS (Original)
+   JS § 3. DATA — CHEMISTRY & PHYSICS
    ============================================================ */
 const chem8MCQ=[
 {category:"Electrochemistry",question:"Which ion will be charge-free (discharged) first at the cathode?",options:["Mg²⁺","Fe²⁺","Sn²⁺","Pb²⁺"],answer:3,explanation:"The ion lowest in the electrochemical series is discharged first at the cathode; among these, Pb²⁺ sits lowest."},
-{category:"Thermochemistry",question:"What happens when ammonium chloride dissolves in water?",options:["Produces heat","No change in heat","Absorbs heat","ΔH is negative"],answer:2,explanation:"NH₄Cl dissolving in water is endothermic (ΔH ≈ +14.8 kJ/mol), so it absorbs heat."},
+{category:"Thermochemistry",question:"What happens when ammonium chloride dissolves in water?",options:["Produces heat","No change in heat","Absorbs heat","$\\Delta H$ is negative"],answer:2,explanation:"NH₄Cl dissolving in water is endothermic ($\\Delta H \\approx +14.8 \\text{ kJ/mol}$), so it absorbs heat."},
 {category:"Thermochemistry",question:"What is the bond energy of the C-O bond, in kJ/mol?",options:["350","615","724","812"],answer:0,explanation:"Standard bond energies: C-O = 350 kJ/mol, C-H = 414 kJ/mol."},
-{category:"Cells & Batteries",question:"Which one is the reducing agent in a dry cell?",options:["Zn rod","Carbon rod","NH₄⁺","MnO₂"],answer:0,explanation:"At the anode, Zn → Zn²⁺ + 2e⁻; zinc loses electrons, making it the reducing agent."},
+{category:"Cells & Batteries",question:"Which one is the reducing agent in a dry cell?",options:["Zn rod","Carbon rod","NH₄⁺","MnO₂"],answer:0,explanation:"At the anode, $\\text{Zn} \\rightarrow \\text{Zn}^{2+} + 2e^-$; zinc loses electrons, making it the reducing agent."},
 {category:"Environment & Energy",question:"Which of the following is NOT responsible for photochemical smog?",options:["SO₂","CO","N₂O","CH₄"],answer:0,explanation:"Photochemical smog forms in sunlight from CO, NOₓ and unburned hydrocarbons — not SO₂."},
 {category:"Electrochemistry",question:"Which one is oxidized first?",options:["OH⁻","SO₄²⁻","Br⁻","NO₃⁻"],answer:0,explanation:"Anions lower in the electrochemical series give up electrons first; OH⁻ is lowest."},
 {category:"Electrochemistry",question:"The aqueous solution of which compound is electroconductive?",options:["Blue vitriol","Glucose","Sugar","Urea"],answer:0,explanation:"Blue vitriol (CuSO₄) is ionic and dissociates into ions."},
@@ -644,19 +646,19 @@ const chem8MCQ=[
 ];
 
 const chem8SQ=[
-{category:"Knowledge",question:"What is meant by one calorie?",answer:"The amount of heat energy required to raise the temperature of 1 gram of water by 1°C is called one calorie. (1 Cal = 4.18 J)"},
+{category:"Knowledge",question:"What is meant by one calorie?",answer:"The amount of heat energy required to raise the temperature of 1 gram of water by 1°C is called one calorie. ($1 \\text{ cal} = 4.18 \\text{ J}$)"},
 {category:"Knowledge",question:"How much is the bond energy of H-Cl?",answer:"The bond energy of H-Cl is 431 kJ/mole."},
 {category:"Knowledge",question:"What is Heat of Reaction?",answer:"The amount of heat changed (absorbed or released) during a chemical reaction is called the Heat of Reaction."},
-{category:"Comprehension",question:"Why is heat generated when lime is mixed with water?",answer:"CaO + H₂O → Ca(OH)₂ + Heat. The internal chemical energy within the product is less than the total internal chemical energy present in the reactants. After the total chemical energy of the reactants is consumed, the excess energy is released as heat."}
+{category:"Comprehension",question:"Why is heat generated when lime is mixed with water?",answer:"$\\text{CaO} + \\text{H}_2\\text{O} \\rightarrow \\text{Ca(OH)}_2 + \\text{Heat}$. The internal chemical energy within the product is less than the total internal chemical energy present in the reactants. After the total chemical energy of the reactants is consumed, the excess energy is released as heat."}
 ];
 
 const NOTES_chem8=`<div class="notes">
 <article class="note"><h3>1 · Energy Basics</h3>
 <p>Energy is the capacity to do work or produce heat. All energy on Earth ultimately comes from the <span class="term">Sun</span>. Plants capture it through <span class="term">photosynthesis</span>.</p>
-<div class="formula">1 cal = 4.18 J · 1 Cal = 1000 cal = 4180 J</div></article>
+<div class="formula">$$ 1 \\text{ cal} = 4.18 \\text{ J} \\quad \\cdot \\quad 1 \\text{ Cal} = 1000 \\text{ cal} = 4180 \\text{ J} $$</div></article>
 <article class="note"><h3>2 · Thermochemistry</h3>
-<div class="formula">ΔH = Σ(bonds broken) − Σ(bonds formed)</div>
-<table><thead><tr><th>Type</th><th>ΔH sign</th><th>Heat</th></tr></thead><tbody><tr><td>Exothermic</td><td>Negative (−)</td><td>Released</td></tr><tr><td>Endothermic</td><td>Positive (+)</td><td>Absorbed</td></tr></tbody></table></article>
+<div class="formula">$$ \\Delta H = \\Sigma(\\text{bonds broken}) - \\Sigma(\\text{bonds formed}) $$</div>
+<table><thead><tr><th>Type</th><th>$\\Delta H$ sign</th><th>Heat</th></tr></thead><tbody><tr><td>Exothermic</td><td>Negative (−)</td><td>Released</td></tr><tr><td>Endothermic</td><td>Positive (+)</td><td>Absorbed</td></tr></tbody></table></article>
 <article class="note"><h3>3 · Electrochemistry</h3>
 <ul><li><span class="term">Electrolysis:</span> using electric current to decompose a substance.</li><li><span class="term">Galvanic cell:</span> converts chemical → electrical energy.</li><li><span class="term">Galvanizing:</span> coating iron with zinc.</li></ul></article>
 </div>`;
@@ -665,18 +667,18 @@ const chem7MCQ=[
 {category:"Oxidation Numbers",question:"In which compound is the latent valency of S equal to 2?",options:["SFe","SO₃","SF₄","H₂S"],answer:2,explanation:"SF₄: sulfur shows +4 active. Highest valency = 6, so latent valency = 6 − 4 = 2."},
 {category:"Redox",question:"H₂S + Cl₂ → S + 2HCl. What type of reaction is this?",options:["Redox reaction","Neutralization","Hydrolysis","Decomposition"],answer:0,explanation:"Cl₂ is reduced (0 → −1), S is oxidized (−2 → 0). Redox reaction."},
 {category:"Reaction Types",question:"Which one is both a hydrolysis and a precipitation reaction?",options:["SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl","AlCl₃ + 3H₂O → Al(OH)₃↓ + 3HCl","CaCl₂ + 6H₂O → CaCl₂·6H₂O","FeSO₄ + 7H₂O → FeSO₄·7H₂O"],answer:1,explanation:"AlCl₃ hydrolyzes, and Al(OH)₃ precipitates out."},
-{category:"Oxidation Numbers",question:"What is the oxidation number of the central atom in K₂Cr₂O₇?",options:["-6","+5","+6","+3"],answer:2,explanation:"2(+1) + 2x + 7(−2) = 0 → x = +6."}
+{category:"Oxidation Numbers",question:"What is the oxidation number of the central atom in K₂Cr₂O₇?",options:["-6","+5","+6","+3"],answer:2,explanation:"$2(+1) + 2x + 7(-2) = 0 \\rightarrow x = +6$."}
 ];
 
 const chem7SQ=[
 {category:"Knowledge",question:"What are reactants?",answer:"The starting substances that participate in a chemical reaction and are converted into products are called reactants."},
 {category:"Knowledge",question:"What are reversible reactions?",answer:"Reactions in which reactants form products and products simultaneously react to reform the original reactants are called reversible reactions."},
-{category:"Comprehension",question:"What is meant by a non-redox reaction?",answer:"A non-redox reaction is a chemical reaction in which no transfer of electrons takes place between reactants. Example: NaOH + HCl → NaCl + H₂O."}
+{category:"Comprehension",question:"What is meant by a non-redox reaction?",answer:"A non-redox reaction is a chemical reaction in which no transfer of electrons takes place between reactants. Example: $\\text{NaOH} + \\text{HCl} \\rightarrow \\text{NaCl} + \\text{H}_2\\text{O}$."}
 ];
 
 const NOTES_chem7=`<div class="notes">
 <article class="note"><h3>1 · Reaction Basics</h3>
-<ul><li><span class="term">Reactants:</span> starting substances converted into products.</li><li><span class="term">Reversible:</span> reactants ⇌ products simultaneously.</li></ul></article>
+<ul><li><span class="term">Reactants:</span> starting substances converted into products.</li><li><span class="term">Reversible:</span> reactants $\\rightleftharpoons$ products simultaneously.</li></ul></article>
 <article class="note"><h3>2 · Redox Reactions</h3>
 <ul><li><span class="term">Oxidation:</span> loss of electrons.</li><li><span class="term">Reduction:</span> gain of electrons.</li></ul>
 <p><strong>OIL RIG:</strong> Oxidation Is Loss, Reduction Is Gain.</p></article>
@@ -691,34 +693,34 @@ const phy8MCQ=[
 
 const phy8SQ=[
 {category:"Knowledge",question:"What type of wave is light?",answer:"Light is an electromagnetic wave."},
-{category:"Knowledge",question:"Range of wavelength of visible light?",answer:"4 × 10⁻⁷ m to 7 × 10⁻⁷ m (400 nm to 700 nm)."},
+{category:"Knowledge",question:"Range of wavelength of visible light?",answer:"$4 \\times 10^{-7} \\text{ m}$ to $7 \\times 10^{-7} \\text{ m}$ (400 nm to 700 nm)."},
 {category:"Knowledge",question:"State the 1st law of reflection.",answer:"The incident ray, the reflected ray, and the normal drawn at the point of incidence all lie in the same plane."}
 ];
 
 const NOTES_phy8=`<div class="notes">
 <article class="note"><h3>1 · Nature of Light</h3>
-<ul><li>Speed of light in vacuum: <strong>3 × 10⁸ m/s</strong>.</li><li>Light is an <span class="term">electromagnetic wave</span>.</li><li>Visible range: <strong>400–700 nm</strong>.</li></ul></article>
+<ul><li>Speed of light in vacuum: <strong>$3 \\times 10^8 \\text{ m/s}$</strong>.</li><li>Light is an <span class="term">electromagnetic wave</span>.</li><li>Visible range: <strong>400–700 nm</strong>.</li></ul></article>
 <article class="note"><h3>2 · Reflection &amp; Laws</h3>
-<ol><li>Incident ray, reflected ray, and normal lie in the same plane.</li><li>Angle of incidence equals angle of reflection: ∠i = ∠r.</li></ol></article>
+<ol><li>Incident ray, reflected ray, and normal lie in the same plane.</li><li>Angle of incidence equals angle of reflection: $\\angle i = \\angle r$.</li></ol></article>
 <article class="note"><h3>3 · Spherical Mirrors</h3>
-<ul><li><strong>Pole (P):</strong> midpoint of reflecting surface.</li><li><strong>Center of curvature (C):</strong> center of the sphere.</li><li><strong>Focal length:</strong> f = r / 2.</li></ul>
+<ul><li><strong>Pole (P):</strong> midpoint of reflecting surface.</li><li><strong>Center of curvature (C):</strong> center of the sphere.</li><li><strong>Focal length:</strong> $f = r / 2$.</li></ul>
 <p><strong>Concave = converging; Convex = diverging.</strong></p></article>
 </div>`;
 
 const phy7MCQ=[
-{category:"SHM",question:"Which relation is correct?",options:["Fs = −kx","T = 2π√(g/l)","1/u + 1/f = 1/v","f = vλ"],answer:0,explanation:"Fs = −kx (Hooke's Law)."},
-{category:"SHM",question:"5 kg hung from spring, length increases by 2 cm. Spring constant?",options:["24.5 N/m","245 N/m","250 N/m","2450 N/m"],answer:3,explanation:"k = mg/x = (5 × 9.8)/0.02 = 2450 N/m."},
+{category:"SHM",question:"Which relation is correct?",options:["$F_s = -kx$","$T = 2\\pi\\sqrt{g/l}$","$1/u + 1/f = 1/v$","$f = v\\lambda$"],answer:0,explanation:"$F_s = -kx$ (Hooke's Law)."},
+{category:"SHM",question:"5 kg hung from spring, length increases by 2 cm. Spring constant?",options:["24.5 N/m","245 N/m","250 N/m","2450 N/m"],answer:3,explanation:"$k = mg/x = (5 \\times 9.8)/0.02 = 2450 \\text{ N/m}$."},
 {category:"Waves",question:"Which is an electromagnetic wave?",options:["Light wave","Sound wave","Water wave","Spring wave"],answer:0,explanation:"Light is electromagnetic."}
 ];
 
 const phy7SQ=[
-{category:"SHM",question:"What is simple harmonic motion?",answer:"SHM is a special type of periodic motion where the restoring force is directly proportional to the displacement from the equilibrium position and is directed toward the equilibrium. F = −kx."},
+{category:"SHM",question:"What is simple harmonic motion?",answer:"SHM is a special type of periodic motion where the restoring force is directly proportional to the displacement from the equilibrium position and is directed toward the equilibrium. $F = -kx$."},
 {category:"Waves",question:"What is a wave?",answer:"A wave is a disturbance that transfers energy and information from one point to another without transferring matter."}
 ];
 
 const NOTES_phy7=`<div class="notes">
 <article class="note"><h3>1 · Simple Harmonic Motion</h3>
-<div class="formula">F = −kx · T = 2π√(l/g) · g = 4π²L/T²</div></article>
+<div class="formula">$$ F = -kx \\quad \\cdot \\quad T = 2\\pi\\sqrt{\\frac{l}{g}} \\quad \\cdot \\quad g = \\frac{4\\pi^2 L}{T^2} $$</div></article>
 <article class="note"><h3>2 · Wave Types</h3>
 <table><thead><tr><th>Type</th><th>Vibration</th><th>Examples</th></tr></thead><tbody>
 <tr><td>Transverse</td><td>Perpendicular</td><td>Light, water, radio</td></tr>
@@ -874,7 +876,6 @@ function renderChapters(){
         <span>📖 ${ch.sq.length} SQs</span>
       </div>
     `;
-    // Directly open chapter, mode picker removed
     btn.addEventListener("click",()=>openChapter(cid));
     chapterList.appendChild(btn);
   });
@@ -1178,6 +1179,40 @@ function renderSQ(root,ch){
    ============================================================ */
 renderSubjects();
 showStep("subject");
+</script>
+
+<!-- KaTeX Auto-render Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const renderMath = () => {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError: false,
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        });
+      }
+    };
+
+    // Initial render
+    renderMath();
+
+    // Re-render when DOM changes (for dynamic content)
+    let timeout;
+    const observer = new MutationObserver((mutations) => {
+      // Ignore mutations caused by KaTeX itself to prevent infinite loops
+      if (mutations.every(m => m.target.closest('.katex'))) return;
+      clearTimeout(timeout);
+      timeout = setTimeout(renderMath, 100);
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
 </script>
 </body>
 </html>
