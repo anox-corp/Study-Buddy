@@ -3,8 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#3a3f22" />
+<meta name="theme-color" content="#7a8b68" />
 <title>Study Buddy</title>
+
+<!-- Cozy Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <!-- KaTeX CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
@@ -12,118 +17,227 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
 <style>
-/* § 1. THEME */
-:root{
-  --bg:#e8e2cd;--surface:#f2ecda;--surface-2:#e5dfc8;--surface-3:#dcd5b9;
-  --ink:#2c2c1e;--ink-soft:#4a4a32;--muted:#736d52;
-  --line:#cfc8ab;--line-strong:#b8b090;
-  --accent:#6d7c38;--accent-hover:#7c8a44;--accent-soft:#a3b968;--accent-tint:#dde4c4;
-  --dark:#3a3f22;--dark-2:#4a5030;
-  --correct:#3d5a24;--correct-bg:#e2e9cf;--correct-line:#8fa860;
-  --incorrect:#8a382a;--incorrect-bg:#eed8cc;--incorrect-line:#bc8270;
-  --radius:14px;
-  --shadow-sm:0 1px 2px rgba(58,63,34,.05);
-  --shadow:0 2px 8px rgba(58,63,34,.07);
-  --shadow-lg:0 8px 24px rgba(58,63,34,.1);
+/* § 1. THEME — Cozy Twilight */
+:root {
+  /* Deep twilight purple/blue palette */
+  --bg: #1e1b2e; 
+  --surface: rgba(30, 27, 46, 0.65); /* Frosted glass base */
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --surface-3: rgba(255, 255, 255, 0.15);
+  --ink: #f8f8f2; 
+  --ink-soft: #c5c1d6;
+  --muted: #9590a8;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.25);
+  
+  /* Soft peach/pink accent like the studywithme site */
+  --accent: #f4a261; 
+  --accent-hover: #e76f51;
+  --accent-soft: #f4a261;
+  --accent-tint: rgba(244, 162, 97, 0.15);
+  
+  --dark: #110f1a; 
+  --dark-2: #1a1726;
+  
+  --correct: #2a9d8f;
+  --correct-bg: rgba(42, 157, 143, 0.15);
+  --correct-line: rgba(42, 157, 143, 0.5);
+  --incorrect: #e76f51;
+  --incorrect-bg: rgba(231, 111, 81, 0.15);
+  --incorrect-line: rgba(231, 111, 81, 0.5);
+  
+  --radius: 16px;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
 }
 
 /* § 2. BASE */
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--bg);
-  background-image:
-    radial-gradient(circle at 100% 0%, rgba(163,185,104,.12), transparent 400px),
-    radial-gradient(circle at 0% 100%, rgba(163,185,104,.08), transparent 400px);
-  background-attachment:fixed;
-  color:var(--ink);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15px;line-height:1.6;min-height:100vh;
-  -webkit-font-smoothing:antialiased;
+body {
+  /* Cozy blurred twilight city background with dark overlay */
+  background: linear-gradient(rgba(30, 27, 46, 0.85), rgba(30, 27, 46, 0.95)), url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--ink);
+  font-family: 'Nunito', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 button{font:inherit;color:inherit;}
 
 /* § 3. TOPBAR */
-.topbar{
-  background:var(--dark);color:#f0ebd8;height:64px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 40px;gap:16px;
-  box-shadow:0 2px 12px rgba(0,0,0,.15);
-  position:sticky;top:0;z-index:50;
+.topbar {
+  background: var(--dark);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  gap: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-.brand{
-  display:flex;align-items:center;gap:10px;
-  font-weight:700;font-size:13px;letter-spacing:.08em;
-  cursor:pointer;user-select:none;color:#f0ebd8;
-  padding:6px 8px;border-radius:8px;transition:.15s ease;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .08em;
+  cursor: pointer;
+  user-select: none;
+  color: var(--ink);
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: .15s ease;
 }
-.brand:hover{background:rgba(255,255,255,.06);}
-.brand-dot{
-  width:9px;height:9px;border-radius:50%;
-  background:var(--accent-soft);
-  box-shadow:0 0 8px rgba(163,185,104,.6);
+.brand:hover{background: rgba(255, 255, 255, 0.06);}
+.brand-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(244, 162, 97, 0.7);
 }
-.topbar-right{display:flex;align-items:center;gap:14px;}
+.topbar-right{display: flex; align-items: center; gap: 14px;}
 
 /* § 4. POMODORO */
-.pomo{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:11px;padding:5px 10px;
-  font-size:12px;color:#f0ebd8;transition:.2s ease;
+.pomo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  transition: .2s ease;
 }
-.pomo.running{border-color:var(--accent-soft);background:rgba(163,185,104,.12);}
-.pomo.break-mode{border-color:#a3b968;background:rgba(163,185,104,.15);}
-.pomo.warning{border-color:#d4a860;background:rgba(212,168,96,.12);}
-.pomo.warning .pomo-time{color:#e8b878;}
-.pomo-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;min-width:46px;color:#fff;}
-.pomo-mode{font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.75;font-weight:700;}
-.pomo button{
-  background:transparent;border:1px solid rgba(255,255,255,.18);
-  color:#f0ebd8;border-radius:7px;padding:4px 11px;
-  font-size:11px;font-weight:600;cursor:pointer;transition:.15s ease;
+.pomo.running { border-color: var(--accent); background: rgba(244, 162, 97, 0.12); }
+.pomo.break-mode { border-color: var(--correct); background: rgba(42, 157, 143, 0.15); }
+.pomo.warning { border-color: #d4a860; background: rgba(212, 168, 96, 0.12); }
+.pomo.warning .pomo-time { color: #e8b878; }
+.pomo-time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 13px;
+  min-width: 46px;
+  color: var(--ink);
 }
-.pomo button:hover{border-color:var(--accent-soft);background:rgba(255,255,255,.05);}
-.pomo button.primary{background:var(--accent-soft);color:var(--dark);border-color:var(--accent-soft);font-weight:700;}
-.pomo button.primary:hover{background:#b5cc80;}
-.pomo select{
-  background:rgba(255,255,255,.08);color:#f0ebd8;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:7px;padding:4px 22px 4px 8px;
-  font-size:11px;cursor:pointer;font-weight:600;
-  -webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%23d4d0b0' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 6px center;background-size:9px;
+.pomo-mode {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  opacity: .75;
+  font-weight: 700;
 }
-.pomo select option{background:var(--dark);color:#f0ebd8;}
+.pomo button {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 4px 11px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s ease;
+}
+.pomo button:hover { border-color: var(--accent); background: rgba(255, 255, 255, 0.05); }
+.pomo button.primary {
+  background: var(--accent);
+  color: var(--dark);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.pomo button.primary:hover { background: var(--accent-hover); }
+.pomo select {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 4px 22px 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 600;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%23c5c1d6' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 9px;
+}
+.pomo select option { background: var(--dark); color: var(--ink); }
 
 /* § 5. LAYOUT */
 .wrap{width:100%;max-width:1200px;margin:0 auto;padding:56px 40px 100px;}
 .step-head{text-align:center;margin-bottom:52px;}
-.step-eyebrow{
-  color:var(--accent);text-transform:uppercase;
-  font-size:11px;letter-spacing:.18em;font-weight:800;margin:0 0 14px;
+.step-eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .18em;
+  font-weight: 800;
+  margin: 0 0 14px;
 }
-.step-title{margin:0;font-size:clamp(30px,4vw,42px);font-weight:800;letter-spacing:-.04em;line-height:1.15;color:var(--ink);}
-.step-sub{color:var(--muted);font-size:15px;margin:14px auto 0;max-width:560px;line-height:1.65;}
+.step-title {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.step-sub {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 14px auto 0;
+  max-width: 560px;
+  line-height: 1.65;
+}
 .grid{display:grid;gap:20px;}
 .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
 
 /* § 6. CARDS */
-.card-btn{
-  display:block;width:100%;text-align:left;
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:30px;
-  cursor:pointer;transition:.2s ease;font-family:inherit;
-  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+.card-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px;
+  cursor: pointer;
+  transition: .2s ease;
+  font-family: inherit;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  color: var(--ink);
 }
-.card-btn::before{
-  content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 100% 0%, rgba(163,185,104,.14), transparent 60%);
-  opacity:0;transition:opacity .25s ease;pointer-events:none;
+.card-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 100% 0%, rgba(244, 162, 97, 0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
 }
-.card-btn:hover{border-color:var(--accent-soft);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.card-btn:hover {
+  border-color: var(--accent-soft);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
 .card-btn:hover::before{opacity:1;}
 .card-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .card-emoji{font-size:44px;line-height:1;margin-bottom:16px;display:block;}
@@ -132,132 +246,273 @@ button{font:inherit;color:inherit;}
 .card-num{font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--accent);margin-bottom:12px;}
 .card-desc{color:var(--ink-soft);font-size:14px;line-height:1.65;margin:10px 0 18px;}
 .card-stats{display:flex;gap:18px;color:var(--muted);font-size:13px;font-weight:600;padding-top:16px;border-top:1px solid var(--line);}
-.back{
-  display:inline-flex;align-items:center;gap:6px;
-  background:transparent;border:0;color:var(--muted);
-  font-size:13px;font-weight:600;cursor:pointer;
-  padding:6px 10px;margin-bottom:22px;border-radius:8px;transition:.15s ease;
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  margin-bottom: 22px;
+  border-radius: 8px;
+  transition: .15s ease;
 }
 .back:hover{color:var(--ink);background:var(--surface-2);}
 .subject-title{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:0 0 30px;color:var(--ink);}
 
 /* § 7. BREADCRUMB */
 .crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:26px;}
-.crumbs button{
-  background:transparent;border:0;padding:3px 8px;
-  border-radius:6px;color:var(--accent);font-weight:700;
-  cursor:pointer;font-size:13px;transition:.15s ease;
+.crumbs button {
+  background: transparent;
+  border: 0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  transition: .15s ease;
 }
 .crumbs button:hover{background:var(--surface-2);}
 .crumbs .current{color:var(--ink);font-weight:700;}
 .crumbs .sep{color:var(--line-strong);font-weight:700;}
 .crumbs .spacer{flex:1;}
-.crumbs .switch{
-  background:var(--surface);border:1px solid var(--line);
-  color:var(--ink-soft);padding:7px 15px;border-radius:999px;
-  font-size:12px;font-weight:600;cursor:pointer;
-  transition:.15s ease;box-shadow:var(--shadow-sm);
+.crumbs .switch {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  padding: 7px 15px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s ease;
+  box-shadow: var(--shadow-sm);
 }
 .crumbs .switch:hover{color:var(--ink);border-color:var(--accent-soft);}
 
 /* § 8. TABS */
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap;}
-.tab{
-  background:transparent;border:0;padding:12px 22px;
-  cursor:pointer;font-size:14px;font-weight:700;
-  color:var(--muted);border-bottom:2px solid transparent;
-  margin-bottom:-1px;transition:.15s ease;
+.tab {
+  background: transparent;
+  border: 0;
+  padding: 12px 22px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: .15s ease;
 }
-.tab:hover{color:var(--ink);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Sub-tabs inside suggestion views */
+.subtabs{display:flex;gap:4px;margin-bottom:22px;flex-wrap:wrap;border-bottom:1px solid var(--line);}
+.subtab {
+  background: transparent;
+  border: 0;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: .15s ease;
+}
+.subtab:hover { color: var(--ink); }
+.subtab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
 
 /* § 9. NOTES */
 .notes{display:grid;gap:18px;}
-.note{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-sm);
+.note {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
 }
 .note h3{margin:0 0 16px;font-size:18px;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
 .note h4{margin:20px 0 8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 .note p,.note li{font-size:14.5px;line-height:1.8;color:var(--ink-soft);}
 .note ul,.note ol{padding-left:24px;margin:12px 0;}
 .note li{margin-bottom:5px;}
-.term{color:var(--accent);font-weight:700;background:var(--accent-tint);padding:1px 7px;border-radius:5px;font-size:13px;}
-.formula{
-  background:var(--surface-2);border-left:3px solid var(--accent);
-  padding:14px 20px;border-radius:0 10px 10px 0;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:14px;line-height:1.8;margin:14px 0;color:var(--ink);overflow-x:auto;
+.term {
+  color: var(--accent);
+  font-weight: 700;
+  background: var(--accent-tint);
+  padding: 1px 7px;
+  border-radius: 5px;
+  font-size: 13px;
 }
-table{width:100%;border-collapse:collapse;margin:16px 0 4px;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
-table th,table td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;line-height:1.6;}
-table th{font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface-2);}
+.formula {
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  border-radius: 0 10px 10px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 14px 0;
+  color: var(--ink);
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 4px;
+  font-size: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+table th, table td {
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  text-align: left;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+table th {
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink);
+  background: var(--surface-3);
+}
 table tr:last-child td{border-bottom:0;}
-table tbody tr:hover td{background:var(--surface-2);}
+table tbody tr:hover td{background:var(--surface-3);}
 
 /* § 10. STUDY CARD */
-.study-card{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);box-shadow:var(--shadow);
-  display:flex;flex-direction:column;
-  height:min(82vh, 700px);min-height:480px;
-  overflow:hidden;
-  padding:0;
+.study-card {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  height: min(82vh, 700px);
+  min-height: 480px;
+  overflow: hidden;
+  padding: 0;
 }
-.card-scroll{
-  flex:1 1 auto;
-  overflow-y:auto;overflow-x:hidden;
-  padding:36px 44px 12px;
-  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+.card-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 36px 44px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
 }
 .card-scroll::-webkit-scrollbar{width:6px;}
-.card-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.card-scroll::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px;}
 
-.study-card > .actions{
-  flex:0 0 auto;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;flex-wrap:wrap;
-  padding:16px 44px 20px;
-  border-top:1px solid var(--line);
-  background:var(--surface);
-  margin-top:0;
+.study-card > .actions {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 44px 20px;
+  border-top: 1px solid var(--line);
+  background: rgba(30, 27, 46, 0.5);
+  margin-top: 0;
 }
 
-.study-top{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;margin-bottom:20px;font-size:12.5px;color:var(--muted);font-weight:700;
+.study-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 700;
 }
-.study-top .cat{
-  background:var(--accent-tint);padding:6px 14px;border-radius:999px;
-  font-size:11.5px;color:var(--accent);font-weight:800;
-  letter-spacing:.04em;text-transform:uppercase;
+.study-top .cat {
+  background: var(--accent-tint);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(244, 162, 97, 0.3);
 }
 .bar{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-bottom:32px;}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-soft));width:0;transition:width .3s ease;border-radius:3px;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));width:0;transition:width .3s ease;border-radius:3px;}
 .question{font-size:22px;line-height:1.5;letter-spacing:-.015em;font-weight:700;margin:0 0 26px;color:var(--ink);}
 
 /* § 11. MCQ */
 .opts{display:grid;gap:10px;}
-.opt{
-  display:flex;align-items:center;gap:14px;padding:16px 18px;
-  background:var(--surface-2);border:1px solid transparent;
-  border-radius:12px;cursor:pointer;text-align:left;
-  font-size:15px;transition:.15s ease;color:var(--ink);font-weight:500;
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  transition: .15s ease;
+  color: var(--ink);
+  font-weight: 500;
 }
-.opt:hover:not(:disabled){border-color:var(--accent-soft);background:var(--surface);}
+.opt:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
 .opt:disabled{cursor:default;}
-.opt .lt{
-  flex:0 0 26px;height:26px;border-radius:7px;
-  background:var(--surface);display:grid;place-items:center;
-  font-size:12px;font-weight:800;color:var(--muted);
-  border:1px solid var(--line);transition:.15s ease;
+.opt .lt {
+  flex: 0 0 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--surface-3);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  transition: .15s ease;
 }
-.opt.sel{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 2px var(--accent-tint);}
-.opt.sel .lt{background:var(--accent);color:#fff;border-color:var(--accent);}
+.opt.sel {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+.opt.sel .lt {
+  background: var(--accent);
+  color: var(--dark);
+  border-color: var(--accent);
+}
 .opt.right{background:var(--correct-bg);border-color:var(--correct-line);color:var(--correct);}
-.opt.right .lt{background:var(--correct);color:#fff;border-color:var(--correct);}
+.opt.right .lt{background:var(--correct);color:var(--dark);border-color:var(--correct);}
 .opt.wrong{background:var(--incorrect-bg);border-color:var(--incorrect-line);color:var(--incorrect);}
-.opt.wrong .lt{background:var(--incorrect);color:#fff;border-color:var(--incorrect);}
+.opt.wrong .lt{background:var(--incorrect);color:var(--dark);border-color:var(--incorrect);}
 .fb{display:none;margin-top:20px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.7;}
 .fb.show{display:block;}
 .fb.good{background:var(--correct-bg);color:var(--correct);border-left:3px solid var(--correct-line);}
@@ -265,48 +520,106 @@ table tbody tr:hover td{background:var(--surface-2);}
 .fb strong{display:block;margin-bottom:5px;font-size:14px;font-weight:800;}
 .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px;flex-wrap:wrap;}
 .actions-right{display:flex;gap:10px;margin-left:auto;}
-.btn{
-  background:var(--dark);color:#f0ebd8;border:0;border-radius:10px;
-  padding:11px 20px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s ease;
+.btn {
+  background: var(--dark);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
 }
 .btn:hover:not(:disabled){background:var(--dark-2);transform:translateY(-1px);}
 .btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
-.btn.accent{background:var(--accent);color:#f0ebd8;}
+.btn.accent{background:var(--accent);color:var(--dark);border-color:var(--accent);}
 .btn.accent:hover:not(:disabled){background:var(--accent-hover);}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn.ghost{background:transparent;border:1px solid var(--line-strong);color:var(--ink);}
 .btn.ghost:hover:not(:disabled){border-color:var(--accent);background:var(--surface-2);}
 .hint{font-size:12px;color:var(--muted);font-weight:500;}
 
 /* Filters */
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
-.filters .pill{
-  background:var(--surface);border:1px solid var(--line);color:var(--muted);
-  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;
-  cursor:pointer;transition:.15s ease;box-shadow:var(--shadow-sm);
+.filters .pill {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s ease;
+  box-shadow: var(--shadow-sm);
 }
 .filters .pill:hover{color:var(--ink);border-color:var(--accent-soft);}
-.filters .pill.on{background:var(--dark);color:#f0ebd8;border-color:var(--dark);}
+.filters .pill.on{background:var(--accent);color:var(--dark);border-color:var(--accent);}
 .filters .spacer{flex:1;}
-.filters .shuffle{
-  background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);
-  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
-  cursor:pointer;transition:.15s ease;box-shadow:var(--shadow-sm);
+.filters .shuffle {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+  box-shadow: var(--shadow-sm);
 }
 .filters .shuffle:hover{color:var(--ink);border-color:var(--accent-soft);}
 
 /* § 12. SQ */
-.sq-answer{
-  display:none;margin-top:18px;padding:20px 24px;
-  background:var(--surface-2);border-radius:12px;
-  border-left:3px solid var(--accent);
-  font-size:14.5px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;
+.sq-answer {
+  display: none;
+  margin-top: 18px;
+  padding: 20px 24px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  border-left: 3px solid var(--accent);
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
 }
 .sq-answer.show{display:block;}
 
+/* Creative questions (CQ) */
+.cq-block {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--accent);
+}
+.cq-block h4{margin:0 0 10px;font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+.cq-block p{margin:0 0 10px;font-size:14.5px;line-height:1.8;color:var(--ink-soft);}
+.cq-block p:last-child{margin-bottom:0;}
+.cq-tag {
+  display: inline-block;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(244, 162, 97, 0.3);
+}
+
 /* § 13. RESULTS */
-.results{
-  text-align:center;padding:52px 40px;background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+.results {
+  text-align: center;
+  padding: 52px 40px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 .results .big{font-size:56px;font-weight:800;letter-spacing:-.045em;margin:0;color:var(--ink);}
 .results .big span{color:var(--accent);}
@@ -320,25 +633,39 @@ table tbody tr:hover td{background:var(--surface-2);}
 .missed-item span{color:var(--muted);font-size:13px;}
 
 /* § 14. FIGURES */
-.q-figure{
-  display:block;
-  max-width:100%;height:auto;max-height:280px;
-  margin:0 0 18px;
-  border-radius:10px;border:1px solid var(--line);
-  background:var(--surface);object-fit:contain;
+.q-figure {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 280px;
+  margin: 0 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  object-fit: contain;
 }
 
 /* § 15. WATERMARK */
-.wm{
-  position:fixed;bottom:22px;right:26px;z-index:100;
-  font-size:12px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dark);
-  padding:9px 18px;border-radius:999px;
-  background:rgba(242,236,218,.85);
-  border:1px solid var(--line-strong);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  pointer-events:none;user-select:none;
-  box-shadow:0 4px 14px rgba(58,63,34,.12);opacity:.9;
+.wm {
+  position: fixed;
+  bottom: 22px;
+  right: 26px;
+  z-index: 100;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(30, 27, 46, 0.75);
+  border: 1px solid var(--line-strong);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+  user-select: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  opacity: .9;
 }
 .wm::before{content:"* ";color:var(--accent);font-weight:900;}
 
@@ -372,6 +699,7 @@ table tbody tr:hover td{background:var(--surface-2);}
   .crumbs{font-size:12px;margin-bottom:20px;}
   .crumbs .switch{padding:6px 12px;font-size:11.5px;}
   .tab{padding:10px 14px;font-size:13px;}
+  .subtab{padding:7px 12px;font-size:12px;}
   .card-btn{padding:22px;}
   .card-emoji{font-size:34px;margin-bottom:12px;}
   .card-title{font-size:17px;}
@@ -385,6 +713,8 @@ table tbody tr:hover td{background:var(--surface-2);}
   .results{padding:36px 22px;}
   .results .big{font-size:44px;}
   .wm{bottom:14px;right:14px;font-size:10.5px;padding:7px 14px;letter-spacing:.1em;}
+  .cq-block{padding:16px 18px;}
+  .cq-block p{font-size:13.5px;}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none !important;animation:none !important;}
@@ -410,6 +740,7 @@ table tbody tr:hover td{background:var(--surface-2);}
         <option value="50">50/10</option>
       </select>
       <button class="primary" id="pomoStart" type="button">Start</button>
+      <button id="pomoSkip" type="button" title="Skip phase">⏭</button>
       <button id="pomoReset" type="button" title="Reset">↺</button>
     </div>
   </div>
@@ -458,11 +789,22 @@ table tbody tr:hover td{background:var(--surface-2);}
 const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
-function ensureAudio(){
-  if(!audioCtx){
-    try{ audioCtx = new AudioCtxClass(); }catch(e){ audioCtx = null; }
+function ensureAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new AudioCtxClass();
+    } catch (e) {
+      audioCtx = null;
+    }
   }
-  if(audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
+  // The fix is right here: force it to resume if suspended
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume().then(() => {
+      console.log("Audio Context Resumed Successfully!");
+    }).catch((err) => {
+      console.log("Failed to resume audio: ", err);
+    });
+  }
   return audioCtx;
 }
 
@@ -888,208 +1230,144 @@ const NOTES_chem7=`<div class="notes">
 /* ============================================================
    JS § 3b. SUPER SUGGESTION DATA — Chapter 7 (from PDF)
    ============================================================ */
-const chem7SuperSuggestion = `
-<div class="notes">
-  <article class="note">
-    <h3>📋 Information Bank (Super Suggestion)</h3>
-    <ol>
-      <li>The internal structure does not change even if the state changes with a change in temperature.</li>
-      <li><strong>N₂(g) + O₂(g) → 2NO(g)</strong> : The value of ΔH in this reaction is <strong>+180 kJ</strong>.</li>
-      <li>In K₂O₂ (Potassium Peroxide), the oxidation number of Oxygen is <strong>−1</strong> and that of K is <strong>+1</strong>.</li>
-      <li>The oxidation number of Fluorine in Cryolite (Na₃AlF₆) is <strong>−1</strong>.</li>
-      <li>Oxidation numbers of the central element: K₂SO₃ (+4), K₂S (−2), KNO₃ (+5), K₂Cr₂O₇ (+6), Na₂S (−2), Na₂SO₄ (+6), Na₂S₂O₃ (+2), Na₂S₄O₆ (+2.5), Na₂SO₃ (+4), H₂S₂O₇ (+6), H₂SO₄ (+6), HClO (+1), CuSO₄ (+6), FeSO₄ (+6), HNO₃ (+5), CHCl₃ (+2), Fe₂O₃ (+3), NO₃⁻ (+5), Al₂O₃ (+3).</li>
-      <li>Cu⁺, Fe²⁺, Pb²⁺ all three act as both oxidizing and reducing agents.</li>
-      <li>In reactions like H₂(g) + I₂(g) ⇌ 2HI(g), H₂(g) + F₂(g) ⇌ 2HF(g), H₂(g) + Cl₂(g) ⇌ 2HCl(g), N₂(g) + O₂(g) ⇌ 2NO(g), since the number of gaseous moles of reactants and products are equal, <strong>pressure has no effect</strong> on the equilibrium state.</li>
-      <li>NH₄CNO (Ammonium Cyanate) → NH₂−CO−NH₂ (urea): Since urea is a solid substance in this isomerization reaction, pressure has no effect on the equilibrium state.</li>
-      <li>Cu₂Cl₂ + Cl₂ → 2CuCl₂ is a <strong>combination reaction</strong>.</li>
-      <li>AlCl₃ + 3H₂O → Al(OH)₃ + 3HCl is a <strong>hydrolysis and precipitation</strong> reaction.</li>
-      <li>NaCl(aq) + AgNO₃(aq) → AgCl(s) + NaNO₃(aq) is a precipitation and non-redox reaction; Na⁺ and NO₃⁻ are spectator ions.</li>
-      <li>HNO₃(aq) + KOH(aq) → KNO₃(aq) + H₂O(l): spectator ions are K⁺ and NO₃⁻.</li>
-      <li>The heat of neutralization for a strong acid-strong base reaction is always <strong>ΔH = −57.34 kJ</strong>.</li>
-      <li>SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl is a <strong>hydrolysis reaction</strong>.</li>
-      <li>Hydrated calcium chloride contains 6 molecules of water (CaCl₂·6H₂O), while heptahydrate ferrous sulfate contains 7 molecules of water (FeSO₄·7H₂O).</li>
-      <li>SiO₂ or sand removes the slipperiness of house roofs/yards during the rainy season.</li>
-      <li>In the Haber process, N₂(g) + 3H₂(g) ⇌ 2NH₃(g) is an exothermic reaction with ΔH = −92 kJ and produces <strong>46 kJ of heat per mole of NH₃</strong> produced.</li>
-      <li>In Sn + Cl₂ → SnCl₂, Sn (Tin) has been oxidized (acting as a reducing agent).</li>
-      <li>Mg + O₂ → MgO: this reaction is simultaneously a combination, redox (oxidation-reduction), synthesis, and combustion reaction. Mg is the reducing agent, O₂ is the oxidizing agent.</li>
-      <li>3HCl(aq) + Al(OH)₃ → AlCl₃ + 3H₂O: In this neutralization reaction, there is no transfer of electrons and it is exothermic.</li>
-      <li>Ba(OH)₂ + H₂SO₄ → BaSO₄ + 2H₂O: simultaneously an exothermic, double displacement, neutralization, and precipitation reaction.</li>
-    </ol>
-  </article>
-
-  <article class="note">
-    <h3>🅰️ MCQs & Answers (Super Suggestion)</h3>
-    <table>
-      <thead><tr><th>#</th><th>Question</th><th>Answer</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>In which compound the latent valency of 'S' is 2? (H₂S, SF₄, SF₆, SO₃)</td><td>H₂S</td></tr>
-        <tr><td>2</td><td>H₂S + Cl₂ → S + 2HCl : type of reaction?</td><td>Redox reaction</td></tr>
-        <tr><td>3</td><td>Which one is both hydrolysis and precipitation?</td><td>AlCl₃ + 3H₂O → Al(OH)₃ + 3HCl</td></tr>
-        <tr><td>4</td><td>Oxidation number of central atom in K₂Cr₂O₇?</td><td>+6</td></tr>
-        <tr><td>12</td><td>Oxidation number of Mn in MnO₄⁻?</td><td>+7</td></tr>
-        <tr><td>13</td><td>Oxidation number of hydrogen in CaH₂?</td><td>−1</td></tr>
-        <tr><td>14</td><td>Oxidation number of Oxygen in NaO₂?</td><td>−1/2</td></tr>
-        <tr><td>15</td><td>Oxidation number of carbon in K₂CO₃?</td><td>+4</td></tr>
-        <tr><td>16</td><td>Oxidation number of oxygen in a peroxide (e.g. H₂O₂)?</td><td>−1</td></tr>
-        <tr><td>17</td><td>CuCl₂ + Cl₂ → 2CuCl: type?</td><td>Addition</td></tr>
-        <tr><td>18</td><td>N₂ + 3H₂ → 2NH₃ + 92 kJ; what happens if heat is applied?</td><td>Production will be decreased</td></tr>
-        <tr><td>19</td><td>Which one is an exothermic reaction?</td><td>N₂(g) + 3H₂(g) → 2NH₃(g)</td></tr>
-        <tr><td>20</td><td>Which is a reductant substance?</td><td>Fe²⁺</td></tr>
-        <tr><td>21</td><td>Oxidation number of oxygen in KO₂?</td><td>−1/2</td></tr>
-        <tr><td>22</td><td>Ca + Cl₂ → CaCl₂; which is oxidized?</td><td>Ca</td></tr>
-        <tr><td>23</td><td>Oxidation number of 'S' in Na₂S₄O₆?</td><td>+2.5</td></tr>
-        <tr><td>24</td><td>Which type of reaction is always exothermic?</td><td>Neutralization</td></tr>
-        <tr><td>25</td><td>Vinegar added to an alkaline solution — what kind of reaction?</td><td>Neutralization reaction</td></tr>
-        <tr><td>26</td><td>Oxidation number of Chromium in CrO₄²⁻?</td><td>+6</td></tr>
-        <tr><td>27</td><td>ZnO + C → Zn + CO; which one is the oxidant?</td><td>ZnO</td></tr>
-        <tr><td>28</td><td>Colour of Fe(OH)₃ precipitate?</td><td>Reddish brown</td></tr>
-        <tr><td>29</td><td>How many water molecules in blue vitriol (CuSO₄·5H₂O)?</td><td>5</td></tr>
-        <tr><td>30</td><td>Which one is an oxidant? (Zn, Cr, O²⁻, Cu²⁺)</td><td>Cu²⁺</td></tr>
-        <tr><td>31</td><td>Zn + Cu²⁺ → Zn²⁺ + Cu; which is the oxidant?</td><td>Cu²⁺</td></tr>
-        <tr><td>32</td><td>What is hydrated ferric oxide (Fe₂O₃·nH₂O)?</td><td>Rust</td></tr>
-        <tr><td>33</td><td>Which ion can be oxidized? (Na⁺, Sc³⁺, Cu²⁺, Fe²⁺)</td><td>Fe²⁺</td></tr>
-        <tr><td>34</td><td>How many water molecules with CaCl₂ for crystal formation?</td><td>6</td></tr>
-        <tr><td>35</td><td>Type of chemical reaction on taking antacid medicine?</td><td>Neutralization</td></tr>
-        <tr><td>36</td><td>Which is not a redox reaction?</td><td>Na₂SO₄(aq) + BaCl₂(aq) → BaSO₄(s) + 2NaCl(aq)</td></tr>
-        <tr><td>37</td><td>Optimum temperature and pressure for Haber process?</td><td>450–550°C, 200–250 atm</td></tr>
-        <tr><td>38</td><td>Which ions act as oxidant and reductant respectively?</td><td>Fe³⁺, Fe²⁺</td></tr>
-        <tr><td>39</td><td>FeCl₃ + H₂S → FeCl₂ + S + HCl: (i) Fe³⁺ reduced, (ii) Cl⁻ spectator, (iii) S²⁻ oxidized — which are correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>40</td><td>PCl₅ → PCl₃ + Cl₂; reaction type?</td><td>Redox</td></tr>
-        <tr><td>41</td><td>Which is the isomerization reaction?</td><td>NH₄CNO → NH₂−CO−NH₂</td></tr>
-        <tr><td>42</td><td>What kind of substance is SiO₂?</td><td>Acidic</td></tr>
-        <tr><td>43</td><td>Oxidation number of C in K₂CO₃?</td><td>+4</td></tr>
-        <tr><td>44</td><td>S + O₂ → A (SO₂); latent valency of sulfur in A?</td><td>2</td></tr>
-        <tr><td>45</td><td>Oxidation number of central atom in H₂SO₄?</td><td>+6</td></tr>
-        <tr><td>46</td><td>Which one is right? (Ca²⁺ + 2e⁻ → Ca)</td><td>Ca²⁺ + 2e⁻ → Ca</td></tr>
-        <tr><td>47</td><td>Which is a non-redox reaction?</td><td>AgNO₃ + NaCl → AgCl + NaNO₃</td></tr>
-        <tr><td>48</td><td>Oxidation number of sulfur in Na₂SO₃?</td><td>+4</td></tr>
-        <tr><td>49</td><td>AgNO₃ + KCl → KNO₃ + AgCl(s); spectator ions?</td><td>K⁺ and NO₃⁻</td></tr>
-        <tr><td>50</td><td>Heat evolved to produce 1 mole of water in neutralization?</td><td>57.34 kJ</td></tr>
-        <tr><td>51</td><td>Water molecules with one molecule of ferrous sulfate in crystal form?</td><td>7</td></tr>
-        <tr><td>52</td><td>SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl; type?</td><td>Hydrolysis</td></tr>
-        <tr><td>53</td><td>Which one is an oxidant? (C, Cl₂, Mg, H₂S)</td><td>Cl₂</td></tr>
-        <tr><td>54</td><td>g of O₂ required when 5 g Mg is combusted?</td><td>3.33 g</td></tr>
-        <tr><td>55</td><td>SnCl₂ + 2FeCl₃ → 2FeCl₂ + SnCl₄; reaction type?</td><td>Redox</td></tr>
-        <tr><td>56</td><td>2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O: (i) no redox, (ii) ΔH ≈ −57.34 kJ, (iii) pH = 7 — correct?</td><td>i and ii</td></tr>
-        <tr><td>57</td><td>2Mg + O₂ → 2MgO: (i) addition, (ii) combustion, (iii) non-redox — correct?</td><td>i and ii</td></tr>
-        <tr><td>58</td><td>Ester hydrolysis: (i) reversible, (ii) hydration, (iii) hydrolysis — correct?</td><td>i and iii</td></tr>
-        <tr><td>59</td><td>Sn²⁺ + 2Fe³⁺ → Sn⁴⁺ + 2Fe²⁺: Sn²⁺ (i) loses electrons, (ii) reduces others, (iii) acts as reductant — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>60</td><td>A₂ + 2B₂ ⇌ 2AB₂ + Heat: (i) heat decreases yield, (ii) pressure favors forward, (iii) exothermic — correct?</td><td>ii and iii</td></tr>
-        <tr><td>61</td><td>Sn⁴⁺ + 2Fe²⁺ → Sn²⁺ + 2Fe³⁺: (i) Sn⁴⁺ oxidant, (ii) Fe²⁺ donates e⁻, (iii) redox — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>62</td><td>A₂ + B₂ ⇌ 2AB, ΔH = +180 kJ: (i) endothermic, (ii) temperature ↑ shifts right, (iii) pressure no effect — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>63</td><td>SnCl₂ + 2FeCl₃ → SnCl₄ + 2FeCl₂: (i) Sn²⁺ oxidized, (ii) Fe³⁺ reduced, (iii) Cl⁻ spectator — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>64</td><td>2Mg + O₂ → 2MgO: (i) addition, (ii) synthesis, (iii) redox — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>65</td><td>Sn⁴⁺ + 2Fe²⁺ → Sn²⁺ + 2Fe³⁺: (i) Sn⁴⁺ oxidant, (ii) Fe²⁺ reductant, (iii) Sn⁴⁺ reduced — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>66</td><td>2HCl + Ca(OH)₂ → CaCl₂ + 2H₂O: (i) heat evolved, (ii) spectator ions present, (iii) no electron exchange — correct?</td><td>i, ii and iii</td></tr>
-        <tr><td>67</td><td>Mg + ZnSO₄ → MgSO₄ + Zn: (i) Mg reductant, (ii) Mg reduced, (iii) Mg oxidized — correct?</td><td>i and iii</td></tr>
-        <tr><td>68</td><td>FeCl₃ + 3NaOH → X + 3NaCl; colour of X [Fe(OH)₃]?</td><td>Reddish brown</td></tr>
-        <tr><td>69</td><td>FeCl₃ + 3NaOH → Fe(OH)₃(s) + 3NaCl(aq): (i) non-redox, (ii) precipitate formed, (iii) salt dissolves — correct?</td><td>ii and iii</td></tr>
-      </tbody>
-    </table>
-  </article>
-
-  <article class="note">
-    <h3>📝 Short Answer Questions (Super Suggestion)</h3>
-    <div style="display:grid;gap:18px;">
-      <div><strong>Q1. What is meant by a non-redox reaction?</strong><br>
-      Chemical reactions in which no transfer of electrons occurs between the reacting species. Oxidation number of none of the atoms changes. Example: NaOH + HCl → NaCl + H₂O.</div>
-      <div><strong>Q2. What are spectator ions?</strong><br>
-      Ions in a solution that do not participate in the actual chemical reaction and remain unchanged in state and oxidation number. Example: In HCl + NaOH → NaCl + H₂O, Na⁺ and Cl⁻ are spectator ions.</div>
-      <div><strong>Q3. Determine the oxidation number of the central atom of K₂Cr₂O₇ and Na₂CO₃.</strong><br>
-      K₂Cr₂O₇: 2(+1) + 2x + 7(−2) = 0 → x = +6 (Cr). Na₂CO₃: 2(+1) + x + 3(−2) = 0 → x = +4 (C).</div>
-      <div><strong>Q4. Hydrolysis and hydration reactions are not the same. Explain.</strong><br>
-      Hydrolysis: water reacts and breaks chemical bonds (e.g., SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl). Hydration: water molecules associate directly with an ionic compound without breaking chemical bonds (e.g., CuSO₄ + 5H₂O → CuSO₄·5H₂O).</div>
-      <div><strong>Q5. Chemical equilibrium is dynamic. Explain.</strong><br>
-      At equilibrium, the rate of the forward reaction equals the rate of the reverse reaction. Both processes continue simultaneously at equal rates, so equilibrium is dynamic, not static.</div>
-      <div><strong>Q6. What do you mean by an exothermic reaction?</strong><br>
-      A reaction that releases thermal energy to its surroundings; the enthalpy of products is less than that of reactants (ΔH < 0). Example: N₂ + 3H₂ ⇌ 2NH₃, ΔH = −92 kJ.</div>
-      <div><strong>Q7. Why is sand used on the slippery spots of yards of house?</strong><br>
-      Sand (SiO₂) particles are coarse, increasing friction. SiO₂ is acidic and neutralizes alkaline substances on the ground, eliminating slipperiness.</div>
-      <div><strong>Q8. Complete and balance the thermal decomposition reaction of Mg(NO₃)₂.</strong><br>
-      2Mg(NO₃)₂(s) →Δ→ 2MgO(s) + 4NO₂(g) + O₂(g).</div>
-      <div><strong>Q9. Fe²⁺ can act as both oxidant and reductant. Explain.</strong><br>
-      Fe²⁺ − e⁻ → Fe³⁺ (reducing agent); Fe²⁺ + 2e⁻ → Fe (oxidizing agent). Since it is in an intermediate oxidation state (+2), it can do both.</div>
-      <div><strong>Q10. Explain oxidation number.</strong><br>
-      The real or imaginary electric charge assigned to an atom in a compound when all bonds are considered purely ionic. It can be positive, negative, zero, or fractional.</div>
-      <div><strong>Q11. Why is the heat of neutralization of a strong acid and strong base constant?</strong><br>
-      Strong acids and bases ionize completely; spectator ions don't react. The actual reaction is always H⁺ + OH⁻ → H₂O with ΔH = −57.34 kJ/mol.</div>
-      <div><strong>Q12. What is the aqueous nature of AlCl₃? Explain with reaction.</strong><br>
-      Aqueous AlCl₃ is acidic. AlCl₃ + 3H₂O → Al(OH)₃(s) + 3HCl(aq); Al(OH)₃ precipitates while HCl dissociates fully, making the solution acidic.</div>
-      <div><strong>Q13. What is an endothermic reaction?</strong><br>
-      A reaction that absorbs heat energy from surroundings; enthalpy of products is greater than reactants (ΔH > 0). Example: N₂ + O₂ → 2NO, ΔH = +180 kJ.</div>
-      <div><strong>Q14. Why is the formation of urea from ammonium cyanate called an isomerization reaction?</strong><br>
-      NH₄CNO →Δ→ NH₂−CO−NH₂. Both compounds have the same molecular formula (CH₄N₂O) but different structural arrangements.</div>
-      <div><strong>Q15. Why are precipitation reactions non-redox reactions?</strong><br>
-      In a precipitation reaction, ions exchange but the oxidation state of every element remains unchanged. Since no electrons are transferred, it is non-redox.</div>
-      <div><strong>Q16. 'Rusting is a redox process' — Explain.</strong><br>
-      Oxidation: Fe → Fe²⁺ + 2e⁻. Reduction: O₂ + 2H₂O + 4e⁻ → 4OH⁻. Electron donation and acceptance occur simultaneously, making rusting a redox process.</div>
-      <div><strong>Q17. Explain two ways of prevention of harmful chemical reactions (like rusting).</strong><br>
-      (1) Barrier coating: paint/oil forms a protective layer against oxygen and moisture. (2) Galvanization: coating iron with zinc, which oxidizes sacrificially.</div>
-      <div><strong>Q18. Explain hydrolysis reaction with examples.</strong><br>
-      Water reacts with a substance, cleaving bonds and forming new compounds. Example: SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl.</div>
-      <div><strong>Q19. Why is a reversible reaction an incomplete reaction?</strong><br>
-      Both forward and reverse reactions occur. Once equilibrium is reached, complete conversion of reactants into products is never achieved in a closed system.</div>
-      <div><strong>Q20. How to relieve the pain of a bee bite?</strong><br>
-      Bee venom contains formic acid. Apply a mild base like lime (CaO/Ca(OH)₂) to neutralize it: 2HCOOH + CaO → (HCOO)₂Ca + H₂O.</div>
-      <div><strong>Q21. What is meant by an isomerization reaction?</strong><br>
-      A process in which a compound undergoes structural rearrangement of its atoms to transform into another isomer with the same molecular formula. Example: NH₄CNO →Δ→ NH₂−CO−NH₂.</div>
-      <div><strong>Q22. In Fe(NO₃)₂ + 2NaOH → Fe(OH)₂↓ + 2NaNO₃, which are the spectator ions?</strong><br>
-      Na⁺ and NO₃⁻ remain dissolved and do not participate in forming the Fe(OH)₂ precipitate.</div>
-      <div><strong>Q23. How do you convert a reversible reaction to an irreversible reaction?</strong><br>
-      By eliminating one of the products: (1) Escaping gas in an open container; (2) Precipitation; (3) Removal of water (e.g., esterification).</div>
-      <div><strong>Q24. Write down the differences between exothermic and endothermic reactions.</strong><br>
-      Exothermic: releases heat, ΔH < 0. Endothermic: absorbs heat, ΔH > 0.</div>
-      <div><strong>Q25. Write the differences between oxidation number and valency.</strong><br>
-      Valency is the combining capacity (always a positive whole number). Oxidation number is the real or hypothetical charge (can be positive, negative, zero, or fractional).</div>
-      <div><strong>Q26. Ethanol is water soluble — Explain.</strong><br>
-      Ethanol has a polar −OH group that forms strong intermolecular hydrogen bonds with water molecules, enabling complete solubility.</div>
-      <div><strong>Q27. Explain precipitation reaction.</strong><br>
-      Two clear, soluble ionic solutions are mixed to produce an insoluble solid (precipitate). Example: AgNO₃(aq) + NaCl(aq) → AgCl(s)↓ + NaNO₃(aq).</div>
-    </div>
-  </article>
-
-  <article class="note">
-    <h3>🧠 Creative Questions &amp; Higher Ability (Super Suggestion)</h3>
-    <div style="display:grid;gap:18px;">
-      <div><strong>Q1. What is meant by a synthesis reaction? Explain.</strong><br>
-      Two or more elementary substances combine directly to form a single compound. Example: H₂(g) + Cl₂(g) → 2HCl(g).</div>
-      <div><strong>Q2. Na is an oxidant — Explain.</strong><br>
-      Na⁺ has a stable octet (2,8). To revert to metallic sodium, Na⁺ must accept an electron: Na⁺ + e⁻ → Na. Since it accepts an electron, Na⁺ acts as an oxidant.</div>
-      <div><strong>Q3. What do you understand by a decomposition reaction?</strong><br>
-      A single compound breaks down into two or more simpler substances upon heating or electrolysis. Example: PCl₅ →Δ→ PCl₃ + Cl₂.</div>
-      <div><strong>Q4. All decomposition reactions are not electrolysis reactions — Explain.</strong><br>
-      Decomposition can occur by heat, light, or electricity. Electrolysis specifically uses electrical energy to decompose an ionic compound into elements. Thermal decomposition (e.g., CaCO₃ → CaO + CO₂) produces compounds, not just elements.</div>
-      <div><strong>Q5. Explain why the oxidation number of hydrogen in metal hydrides is −1.</strong><br>
-      Hydrogen is more electronegative than alkali/alkaline earth metals. In hydrides like NaH or CaH₂, the metal donates an electron to hydrogen, which gains a −1 charge to achieve the stable helium configuration.</div>
-      <div><strong>Q6. 'The oxidation number of oxygen in superoxide is −1/2' — Explain.</strong><br>
-      In KO₂, potassium is +1. Let oxygen be x: (+1) + 2x = 0 → x = −1/2.</div>
-      <div><strong>Q7. Determine the oxidation number of Mn in KMnO₄.</strong><br>
-      1(+1) + x + 4(−2) = 0 → x = +7.</div>
-      <div><strong>Q8. Determine the oxidation number of sulfur in Na₂S₂O₃.</strong><br>
-      2(+1) + 2x + 3(−2) = 0 → 2x = +4 → x = +2.</div>
-      <div><strong>Q9. Explain why H₂S is a reductant.</strong><br>
-      In H₂S + Cl₂ → 2HCl + S, sulfur goes from −2 (in H₂S) to 0 (in S) by losing electrons. Since it donates electrons and is oxidized, H₂S acts as a reductant.</div>
-      <div><strong>Q10. Explain how a reversible reaction can be made into an irreversible reaction.</strong><br>
-      By removing a product so the reverse reaction cannot occur. Example: CaCO₃ →Δ→ CaO + CO₂↑ in an open vessel — the escaping CO₂ drives the reaction to completion.</div>
-      <div><strong>Q11. Explain why the thermal decomposition of CaCO₃ is an endothermic reaction.</strong><br>
-      Energy must be continuously supplied to break the strong ionic and covalent bonds in the CaCO₃ crystal lattice. Since energy is absorbed, ΔH > 0.</div>
-      <div><strong>Q12. Explain polymerisation reaction with an example.</strong><br>
-      Many small monomer molecules combine under high temperature, pressure, and catalyst to form a giant macromolecule. Example: n(CH₂=CHCl) → [−CH₂−CHCl−]ₙ (PVC).</div>
-      <div><strong>Q13. Why is lime used at the spot of an ant's bite?</strong><br>
-      Ant bites inject formic acid (HCOOH). Lime (CaO/Ca(OH)₂) is basic and neutralizes it: 2HCOOH + CaO → (HCOO)₂Ca + H₂O, relieving the pain.</div>
-      <div><strong>Q14. What is meant by optimum temperature?</strong><br>
-      The specific temperature at which a reaction achieves its maximum rate and highest product yield under given pressure and catalyst conditions. For the Haber process, it is 450–550°C.</div>
-      <div><strong>Q15. Analyze why reactions of AlCl₃ (hydrolysis) and CaCl₂ (hydration) with water are fundamentally different in nature.</strong><br>
-      AlCl₃ + 3H₂O → Al(OH)₃↓ + 3HCl is a hydrolysis reaction where water breaks chemical bonds. CaCl₂ + 6H₂O → CaCl₂·6H₂O is hydration where water molecules simply associate with the crystal lattice without breaking bonds.</div>
-      <div><strong>Q16. Analyze with logic whether precipitation and hydrolysis occur simultaneously in FeCl₃ + 3H₂O → Fe(OH)₃↓ + 3HCl.</strong><br>
-      Yes. FeCl₃ hydrolyzes (water breaks bonds) to form Fe(OH)₃, which is insoluble and precipitates out. Both hydrolysis and precipitation occur simultaneously.</div>
-      <div><strong>Q17. PCl₅(g) ⇌ PCl₃(g) + Cl₂(g), ΔH = +124 kJ: Analyze the effects of temperature and pressure on equilibrium.</strong><br>
-      Temperature: forward reaction is endothermic; increasing temperature shifts equilibrium to the right (more PCl₃ and Cl₂). Pressure: forward reaction increases gaseous moles (1 → 2); increasing pressure shifts equilibrium to the left.</div>
-      <div><strong>Q18. N₂O₄(g) ⇌ 2NO₂(g), ΔH = +57 kJ/mol: Analyze equilibrium shifts under varying temperature and pressure.</strong><br>
-      Temperature: endothermic forward reaction; increasing temperature shifts right (more NO₂). Pressure: forward reaction increases gaseous moles (1 → 2); increasing pressure shifts left (more N₂O₄). Decreasing pressure shifts right.</div>
-    </div>
-  </article>
-</div>`;
+const chem7SuperSuggestion = {
+  infoBank: [
+    "The internal structure does not change even if the state changes with a change in temperature.",
+    "N₂(g) + O₂(g) → 2NO(g): The value of ΔH in this reaction is +180 kJ.",
+    "In K₂O₂ (Potassium Peroxide), the oxidation number of Oxygen is −1 and that of K is +1.",
+    "The oxidation number of Fluorine in Cryolite (Na₃AlF₆) is −1.",
+    "Oxidation numbers of the central element: K₂SO₃ (+4), K₂S (−2), KNO₃ (+5), K₂Cr₂O₇ (+6), Na₂S (−2), Na₂SO₄ (+6), Na₂S₂O₃ (+2), Na₂S₄O₆ (+2.5), Na₂SO₃ (+4), H₂S₂O₇ (+6), H₂SO₄ (+6), HClO (+1), CuSO₄ (+6), FeSO₄ (+6), HNO₃ (+5), CHCl₃ (+2), Fe₂O₃ (+3), NO₃⁻ (+5), Al₂O₃ (+3).",
+    "Cu⁺, Fe²⁺, Pb²⁺ all three act as both oxidizing and reducing agents.",
+    "In reactions like H₂(g) + I₂(g) ⇌ 2HI(g), H₂(g) + F₂(g) ⇌ 2HF(g), H₂(g) + Cl₂(g) ⇌ 2HCl(g), N₂(g) + O₂(g) ⇌ 2NO(g), since the number of gaseous moles of reactants and products are equal, pressure has no effect on the equilibrium state.",
+    "NH₄CNO (Ammonium Cyanate) → NH₂−CO−NH₂ (urea): Since urea is a solid substance in this isomerization reaction, pressure has no effect on the equilibrium state.",
+    "Cu₂Cl₂ + Cl₂ → 2CuCl₂ is a combination reaction.",
+    "AlCl₃ + 3H₂O → Al(OH)₃ + 3HCl is a hydrolysis and precipitation reaction.",
+    "NaCl(aq) + AgNO₃(aq) → AgCl(s) + NaNO₃(aq) is a precipitation and non-redox reaction; Na⁺ and NO₃⁻ are spectator ions.",
+    "HNO₃(aq) + KOH(aq) → KNO₃(aq) + H₂O(l): spectator ions are K⁺ and NO₃⁻.",
+    "The heat of neutralization for a strong acid-strong base reaction is always ΔH = −57.34 kJ.",
+    "SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl is a hydrolysis reaction.",
+    "Hydrated calcium chloride contains 6 molecules of water (CaCl₂·6H₂O), while heptahydrate ferrous sulfate contains 7 molecules of water (FeSO₄·7H₂O).",
+    "SiO₂ or sand removes the slipperiness of house roofs/yards during the rainy season.",
+    "In the Haber process, N₂(g) + 3H₂(g) ⇌ 2NH₃(g) is an exothermic reaction with ΔH = −92 kJ and produces 46 kJ of heat per mole of NH₃ produced.",
+    "In Sn + Cl₂ → SnCl₂, Sn (Tin) has been oxidized (acting as a reducing agent).",
+    "Mg + O₂ → MgO: this reaction is simultaneously a combination, redox (oxidation-reduction), synthesis, and combustion reaction. Mg is the reducing agent, O₂ is the oxidizing agent.",
+    "3HCl(aq) + Al(OH)₃ → AlCl₃ + 3H₂O: In this neutralization reaction, there is no transfer of electrons and it is exothermic.",
+    "Ba(OH)₂ + H₂SO₄ → BaSO₄ + 2H₂O: simultaneously an exothermic, double displacement, neutralization, and precipitation reaction."
+  ],
+  mcq: [
+    {category:"Latent Valency",question:"In which compound the latent valency of 'S' is 2?",options:["H₂S","SF₄","SF₆","SO₃"],answer:0,explanation:"H₂S: sulfur shows +2; highest valency 6, so latent valency = 4. (Per the PDF answer key.)"},
+    {category:"Redox",question:"H₂S + Cl₂ → S + 2HCl: What type of reaction is it?",options:["Redox reaction","Neutralization reaction","Hydrolysis reaction","Decomposition reaction"],answer:0,explanation:"Cl₂ is reduced, S is oxidized — redox."},
+    {category:"Reaction Types",question:"Which one is both a hydrolysis and precipitation reaction?",options:["SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl","AlCl₃ + 3H₂O → Al(OH)₃ + 3HCl","CaCl₂ + 6H₂O → CaCl₂·6H₂O","FeSO₄ + 7H₂O → FeSO₄·7H₂O"],answer:1,explanation:"AlCl₃ hydrolyzes and Al(OH)₃ precipitates."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of the central atom of K₂Cr₂O₇?",options:["-6","+3","+5","+6"],answer:3,explanation:"2(+1) + 2x + 7(−2) = 0 → x = +6."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of Mn in MnO₄⁻?",options:["+1","+3","+7","+6"],answer:2,explanation:"x + 4(−2) = −1 → x = +7."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of hydrogen in CaH₂?",options:["+1","−1","+2","−1/2"],answer:1,explanation:"In metal hydrides, hydrogen is −1."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of Oxygen in NaO₂?",options:["−2","−1","−1/2","+1/2"],answer:2,explanation:"Superoxide: (+1) + 2x = 0 → x = −1/2."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of carbon in Potassium carbonate (K₂CO₃)?",options:["0","+2","+4","+5"],answer:2,explanation:"2(+1) + x + 3(−2) = 0 → x = +4."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of oxygen in a peroxide compound (e.g., H₂O₂)?",options:["−2","−1","−1/2","0"],answer:1,explanation:"In peroxides, oxygen is −1."},
+    {category:"Reaction Types",question:"CuCl₂ + Cl₂ → 2CuCl; What type of reaction is it?",options:["Addition","Decomposition","Synthesis","Non-redox"],answer:0,explanation:"Two substances combine into one — addition."},
+    {category:"Equilibrium",question:"N₂(g) + 3H₂(g) → 2NH₃(g) + 92 kJ; What happens if heat is applied?",options:["Production will be decreased","Production will be increased","Reaction will proceed forward","Amount of heat generated will increase"],answer:0,explanation:"Exothermic — heating shifts equilibrium backward."},
+    {category:"Thermochemistry",question:"Which one is an exothermic reaction?",options:["SO₂(g) → S(s) + O₂(g)","H₂O(g) → H₂(g) + 1/2O₂(g)","N₂(g) + O₂(g) → 2NO(g)","N₂(g) + 3H₂(g) → 2NH₃(g)"],answer:3,explanation:"Haber process is exothermic."},
+    {category:"Redox",question:"Which of the following is a reductant substance?",options:["Fe²⁺","Mg²⁺","Zn²⁺","Cu²⁺"],answer:0,explanation:"Fe²⁺ can donate an electron (→ Fe³⁺)."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of oxygen in KO₂?",options:["−2","+1/2","−1/2","+2"],answer:2,explanation:"Superoxide: (+1) + 2x = 0 → x = −1/2."},
+    {category:"Redox",question:"Ca + Cl₂ → CaCl₂; In this reaction, which is oxidized?",options:["Cl₂","Ca","Ca²⁺","Cl⁻"],answer:1,explanation:"Ca loses electrons (0 → +2)."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of 'S' in Na₂S₄O₆?",options:["+2.5","+4","+6","+2"],answer:0,explanation:"2(+1) + 4x + 6(−2) = 0 → x = +2.5."},
+    {category:"Reaction Types",question:"Which type of reaction is always exothermic?",options:["Addition","Substitution","Decomposition","Neutralization"],answer:3,explanation:"Neutralization always releases heat."},
+    {category:"Reaction Types",question:"If a required amount of vinegar is added to an alkaline solution, what kind of reaction takes place?",options:["Addition reaction","Substitution reaction","Neutralization reaction","Redox reaction"],answer:2,explanation:"Acid + base → neutralization."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of Chromium in Chromate ion (CrO₄²⁻)?",options:["+3","+6","+7","+2"],answer:1,explanation:"x + 4(−2) = −2 → x = +6."},
+    {category:"Redox",question:"ZnO + C → Zn + CO. In this reaction, which one is the oxidant?",options:["C","Zn","ZnO","CO"],answer:2,explanation:"ZnO is reduced."},
+    {category:"Applications",question:"What is the colour of the precipitate of Fe(OH)₃?",options:["White","Light blue","Reddish brown","Greenish"],answer:2,explanation:"Reddish brown."},
+    {category:"Applications",question:"How many water molecules are there in blue vitriol (CuSO₄·5H₂O)?",options:["3","5","7","10"],answer:1,explanation:"5 water molecules."},
+    {category:"Redox",question:"Which one of the following is an oxidant?",options:["Zn","Cr","O²⁻","Cu²⁺"],answer:3,explanation:"Cu²⁺ accepts electrons."},
+    {category:"Redox",question:"Zn + Cu²⁺ → Zn²⁺ + Cu; Above reaction, which one is the oxidant?",options:["Zn","Cu²⁺","Zn²⁺","Cu"],answer:1,explanation:"Cu²⁺ is reduced."},
+    {category:"Applications",question:"What is hydrated ferric oxide (Fe₂O₃·nH₂O)?",options:["Paraffin Wax","Teflon","Rust","Polymer"],answer:2,explanation:"Rust is hydrated ferric oxide."},
+    {category:"Redox",question:"Which ion can be oxidized?",options:["Na⁺","Sc³⁺","Cu²⁺","Fe²⁺"],answer:3,explanation:"Fe²⁺ → Fe³⁺ + e⁻."},
+    {category:"Applications",question:"How many molecules of water are added with CaCl₂ for the formation of crystal?",options:["3","5","6","7"],answer:2,explanation:"CaCl₂·6H₂O — 6 water molecules."},
+    {category:"Reaction Types",question:"What type of chemical reaction occurs on taking antacid medicines?",options:["Neutralization","Substitution","Addition","Combustion"],answer:0,explanation:"Antacids neutralize stomach acid."},
+    {category:"Redox",question:"Which one is not a redox reaction?",options:["2FeCl₃(aq) + H₂S(g) → 2FeCl₂(aq) + S(s) + 2HCl(aq)","Na₂SO₄(aq) + BaCl₂(aq) → BaSO₄(s) + 2NaCl(aq)","Zn(s) + CuSO₄(aq) → ZnSO₄(aq) + Cu(s)","CuO(s) + CO(g) → Cu(s) + CO₂(g)"],answer:1,explanation:"Precipitation of BaSO₄ — no redox."},
+    {category:"Equilibrium",question:"What is the optimum temperature and pressure to produce ammonia gas in Haber process?",options:["450°C, 200 atm","550°C, 250 atm","450-550°C, 200-250 atm","200-250°C, 450 atm"],answer:2,explanation:"450–550°C, 200–250 atm."},
+    {category:"Redox",question:"Which ions act as oxidant and reductant respectively?",options:["Fe²⁺, Hg⁺","Fe³⁺, Hg²⁺","Fe³⁺, Fe²⁺","Fe³⁺, Hg"],answer:2,explanation:"Fe³⁺ (oxidant) and Fe²⁺ (reductant)."},
+    {category:"Redox",question:"In the reaction FeCl₃ + H₂S → FeCl₂ + S + HCl: (i) Fe³⁺ is reduced, (ii) Cl⁻ is spectator ion, (iii) S²⁻ is oxidized. Which one is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Reaction Types",question:"PCl₅ → PCl₃ + Cl₂; This reaction is:",options:["Redox","Non-redox","Endothermic","Exothermic"],answer:0,explanation:"P is reduced, Cl is oxidized — redox."},
+    {category:"Reaction Types",question:"Which one is the isomerization reaction?",options:["MgCO₃(s) → MgO(s) + CO₂(g)","NH₄CNO → NH₂−CO−NH₂","NaCl(aq) + AgNO₃(aq) → NaNO₃(aq) + AgCl(s)","2Mg(s) + O₂(g) → 2MgO(s)"],answer:1,explanation:"Ammonium cyanate → urea."},
+    {category:"Applications",question:"What kind of substance is SiO₂?",options:["Inert","Neutral","Acidic","Alkaline"],answer:2,explanation:"SiO₂ is acidic."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of C in potassium carbonate (K₂CO₃)?",options:["0","+2","+4","+6"],answer:2,explanation:"2(+1) + x + 3(−2) = 0 → x = +4."},
+    {category:"Oxidation Numbers",question:"S + O₂ → A; What is the latent valency of sulfur in compound 'A' (SO₂)?",options:["0","2","4","6"],answer:1,explanation:"S shows +4; latent = 6 − 4 = 2."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of the central atom in sulfuric acid (H₂SO₄)?",options:["+2","+4","+5","+6"],answer:3,explanation:"2(+1) + x + 4(−2) = 0 → x = +6."},
+    {category:"Redox",question:"Which one is right?",options:["Fe²⁺ + e⁻ → Fe³⁺","Al + 3e⁻ → Al³⁻","Ca²⁺ + 2e⁻ → Ca","N → N³⁺ + 3e⁻"],answer:2,explanation:"Ca²⁺ + 2e⁻ → Ca is the correct reduction."},
+    {category:"Redox",question:"Which one is a non-redox reaction?",options:["2FeCl₂ + Cl₂ → 2FeCl₃","C + O₂ → CO₂","N₂ + O₂ → 2NO","AgNO₃ + NaCl → AgCl + NaNO₃"],answer:3,explanation:"Precipitation of AgCl — non-redox."},
+    {category:"Oxidation Numbers",question:"What is the oxidation number of sulfur in sodium sulfate (Na₂SO₃)?",options:["+2","+4","+6","+8"],answer:1,explanation:"2(+1) + x + 3(−2) = 0 → x = +4."},
+    {category:"Spectator Ions",question:"AgNO₃(aq) + KCl(aq) → KNO₃(aq) + AgCl(s); Which are the spectator ions?",options:["K⁺ and NO₃⁻","Cl⁻ and NO₃⁻","Ag⁺ and Cl⁻","Na⁺ and Cl⁻"],answer:0,explanation:"K⁺ and NO₃⁻ remain in solution."},
+    {category:"Thermochemistry",question:"What is the amount of heat evolved to produce 1 mole of water in a neutralization reaction?",options:["58.34 kJ","55.34 kJ","54.34 kJ","57.34 kJ"],answer:3,explanation:"ΔH = −57.34 kJ."},
+    {category:"Applications",question:"How many molecules of water are added with one molecule of ferrous sulfate in crystal form?",options:["2","5","6","7"],answer:3,explanation:"FeSO₄·7H₂O — 7 water molecules."},
+    {category:"Reaction Types",question:"SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl; The type of above reaction is:",options:["Neutralization","Hydration","Redox","Hydrolysis"],answer:3,explanation:"Water breaks bonds — hydrolysis."},
+    {category:"Redox",question:"Which one of the following is an oxidant?",options:["C","Cl₂","Mg","H₂S"],answer:1,explanation:"Cl₂ accepts electrons."},
+    {category:"Stoichiometry",question:"How much gm of O₂ is required when 5 gm of Mg is combusted?",options:["2.33 gm","3.33 gm","4.33 gm","5.33 gm"],answer:1,explanation:"Mg = 5/24 mol → O₂ = 2.5/24 mol = 3.33 g."},
+    {category:"Redox",question:"SnCl₂ + 2FeCl₃ → 2FeCl₂ + SnCl₄; The reaction is:",options:["Redox","Non-redox","Addition","Combustion"],answer:0,explanation:"Sn²⁺ oxidized, Fe³⁺ reduced — redox."},
+    {category:"Thermochemistry",question:"2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O: (i) Redox reaction doesn't occur, (ii) ΔH ≈ −57.34 kJ, (iii) pH value of salt solution is 7. Which one is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:0,explanation:"i and ii are indicated correct."},
+    {category:"Reaction Types",question:"2Mg + O₂ → 2MgO; This reaction is: (i) addition, (ii) combustion, (iii) non-redox. Which one is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:0,explanation:"i and ii are correct."},
+    {category:"Reaction Types",question:"CH₃COOCH₂CH₃ + H₂O ⇌ CH₃COOH + CH₃CH₂OH; This reaction is: (i) reversible, (ii) hydration, (iii) hydrolysis. Which one is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:2,explanation:"i and iii are correct."},
+    {category:"Redox",question:"Sn²⁺ + 2Fe³⁺ → Sn⁴⁺ + 2Fe²⁺: (i) Sn²⁺ loses electrons, (ii) Sn²⁺ reduces other substances, (iii) Sn²⁺ acts as a reductant. Which is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Equilibrium",question:"A₂(g) + 2B₂(g) ⇌ 2AB₂(g) + Heat; (i) Applying heat decreases yield, (ii) Applying pressure favors forward reaction, (iii) It is an exothermic reaction. Which one is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:2,explanation:"ii and iii are indicated correct."},
+    {category:"Redox",question:"Sn⁴⁺ + 2Fe²⁺ → Sn²⁺ + 2Fe³⁺: (i) Sn⁴⁺ is an oxidizing agent, (ii) Fe²⁺ donates electrons, (iii) Redox reaction occurs. Which one is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Equilibrium",question:"A₂(g) + B₂(g) ⇌ 2AB(g); ΔH = +180 kJ; (i) endothermic, (ii) temperature increase shifts right, (iii) pressure increase has no effect. Which is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Redox",question:"SnCl₂ + 2FeCl₃ → SnCl₄ + 2FeCl₂: (i) Sn²⁺ oxidized, (ii) Fe³⁺ reduced, (iii) Cl⁻ is spectator. Which is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Reaction Types",question:"2Mg + O₂ → 2MgO; (i) Addition, (ii) Synthesis, (iii) Redox. Which is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Redox",question:"Sn⁴⁺ + 2Fe²⁺ → Sn²⁺ + 2Fe³⁺: (i) Sn⁴⁺ is oxidizing agent, (ii) Fe²⁺ is reducing agent, (iii) Sn⁴⁺ is reduced. Which is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Thermochemistry",question:"2HCl + Ca(OH)₂ → CaCl₂ + 2H₂O: (i) Heat is evolved, (ii) Spectator ions are present, (iii) Electron exchange does not occur. Which is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:3,explanation:"All three are correct."},
+    {category:"Redox",question:"Mg + ZnSO₄ → MgSO₄ + Zn: (i) Mg is a reductant, (ii) Mg is reduced, (iii) Mg is oxidized. Which is correct?",options:["i and ii","i and iii","ii and iii","i, ii and iii"],answer:1,explanation:"i and iii are correct."},
+    {category:"Applications",question:"FeCl₃(aq) + 3NaOH(aq) → X + 3NaCl(aq); What is the colour of compound 'X' [Fe(OH)₃]?",options:["Blue","Reddish brown","Red","Green"],answer:1,explanation:"Reddish brown."},
+    {category:"Reaction Types",question:"FeCl₃(aq) + 3NaOH(aq) → Fe(OH)₃(s) + 3NaCl(aq): (i) Non-redox reaction, (ii) Precipitate formed, (iii) The produced salt dissolves in water. Which is correct?",options:["i and ii","ii and iii","i and iii","i, ii and iii"],answer:1,explanation:"ii and iii are indicated correct."}
+  ],
+  sq: [
+    {category:"Knowledge",question:"What is meant by a non-redox reaction?",answer:"Chemical reactions in which no transfer of electrons occurs between the reacting species. Oxidation number of none of the atoms changes. Example: NaOH + HCl → NaCl + H₂O."},
+    {category:"Knowledge",question:"What are spectator ions?",answer:"Ions in a solution that do not participate in the actual chemical reaction and remain unchanged in state and oxidation number. Example: In HCl + NaOH → NaCl + H₂O, Na⁺ and Cl⁻ are spectator ions."},
+    {category:"Comprehension",question:"Determine the oxidation number of the central atom of K₂Cr₂O₇ and Na₂CO₃.",answer:"K₂Cr₂O₇: 2(+1) + 2x + 7(−2) = 0 → x = +6 (Cr).\nNa₂CO₃: 2(+1) + x + 3(−2) = 0 → x = +4 (C)."},
+    {category:"Comprehension",question:"Hydrolysis and hydration reactions are not the same. Explain.",answer:"Hydrolysis: water reacts and breaks chemical bonds (e.g., SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl).\nHydration: water molecules associate with an ionic compound without breaking chemical bonds (e.g., CuSO₄ + 5H₂O → CuSO₄·5H₂O)."},
+    {category:"Comprehension",question:"Chemical equilibrium is dynamic. Explain.",answer:"At equilibrium, the rate of the forward reaction equals the rate of the reverse reaction. Both processes continue simultaneously at equal rates, so equilibrium is dynamic, not static."},
+    {category:"Knowledge",question:"What do you mean by an exothermic reaction?",answer:"A reaction that releases thermal energy to its surroundings; enthalpy of products is less than reactants (ΔH < 0). Example: N₂ + 3H₂ ⇌ 2NH₃, ΔH = −92 kJ."},
+    {category:"Comprehension",question:"Why is sand used on the slippery spots of yards of house?",answer:"Sand (SiO₂) particles are coarse, increasing friction. SiO₂ is acidic and neutralizes alkaline substances on the ground, eliminating slipperiness."},
+    {category:"Knowledge",question:"Complete and balance the thermal decomposition reaction of Mg(NO₃)₂.",answer:"2Mg(NO₃)₂(s) →Δ→ 2MgO(s) + 4NO₂(g) + O₂(g)."},
+    {category:"Comprehension",question:"Fe²⁺ can act as both oxidant and reductant. Explain.",answer:"Fe²⁺ − e⁻ → Fe³⁺ (reducing agent); Fe²⁺ + 2e⁻ → Fe (oxidizing agent). Since it is in an intermediate oxidation state (+2), it can do both."},
+    {category:"Knowledge",question:"Explain oxidation number.",answer:"The real or imaginary electric charge assigned to an atom in a compound when all bonds are considered purely ionic. It can be positive, negative, zero, or fractional."},
+    {category:"Comprehension",question:"Why is the heat of neutralization of a strong acid and strong base constant?",answer:"Strong acids and bases ionize completely; spectator ions don't react. The actual reaction is always H⁺ + OH⁻ → H₂O with ΔH = −57.34 kJ/mol."},
+    {category:"Comprehension",question:"What is the aqueous nature of AlCl₃? Explain with reaction.",answer:"Aqueous AlCl₃ is acidic. AlCl₃ + 3H₂O → Al(OH)₃(s) + 3HCl(aq); Al(OH)₃ precipitates while HCl dissociates fully, making the solution acidic."},
+    {category:"Knowledge",question:"What is an endothermic reaction?",answer:"A reaction that absorbs heat energy from surroundings; enthalpy of products is greater than reactants (ΔH > 0). Example: N₂ + O₂ → 2NO, ΔH = +180 kJ."},
+    {category:"Comprehension",question:"Why is the formation of urea from ammonium cyanate called an isomerization reaction?",answer:"NH₄CNO →Δ→ NH₂−CO−NH₂. Both compounds have the same molecular formula (CH₄N₂O) but different structural arrangements."},
+    {category:"Comprehension",question:"Why are precipitation reactions non-redox reactions?",answer:"In a precipitation reaction, ions exchange but the oxidation state of every element remains unchanged. Since no electrons are transferred, it is non-redox."},
+    {category:"Comprehension",question:"'Rusting is a redox process' — Explain.",answer:"Oxidation: Fe → Fe²⁺ + 2e⁻. Reduction: O₂ + 2H₂O + 4e⁻ → 4OH⁻. Electron donation and acceptance occur simultaneously, making rusting a redox process."},
+    {category:"Knowledge",question:"Explain two ways of prevention of harmful chemical reactions (like rusting).",answer:"(1) Barrier coating: paint/oil forms a protective layer against oxygen and moisture. (2) Galvanization: coating iron with zinc, which oxidizes sacrificially."},
+    {category:"Comprehension",question:"Explain hydrolysis reaction with examples.",answer:"Water reacts with a substance, cleaving bonds and forming new compounds. Example: SiCl₄ + 4H₂O → Si(OH)₄ + 4HCl."},
+    {category:"Comprehension",question:"Why is a reversible reaction an incomplete reaction?",answer:"Both forward and reverse reactions occur. Once equilibrium is reached, complete conversion of reactants into products is never achieved in a closed system."},
+    {category:"Application",question:"How to relieve the pain of a bee bite?",answer:"Bee venom contains formic acid. Apply a mild base like lime (CaO/Ca(OH)₂) to neutralize it: 2HCOOH + CaO → (HCOO)₂Ca + H₂O."},
+    {category:"Knowledge",question:"What is meant by an isomerization reaction?",answer:"A process in which a compound undergoes structural rearrangement of its atoms to transform into another isomer with the same molecular formula. Example: NH₄CNO →Δ→ NH₂−CO−NH₂."},
+    {category:"Comprehension",question:"In Fe(NO₃)₂ + 2NaOH → Fe(OH)₂↓ + 2NaNO₃, which are the spectator ions?",answer:"Na⁺ and NO₃⁻ remain dissolved and do not participate in forming the Fe(OH)₂ precipitate."},
+    {category:"Comprehension",question:"How do you convert a reversible reaction to an irreversible reaction?",answer:"By eliminating one of the products: (1) Escaping gas in an open container; (2) Precipitation; (3) Removal of water (e.g., esterification)."},
+    {category:"Comprehension",question:"Write down the differences between exothermic and endothermic reactions.",answer:"Exothermic: releases heat, ΔH < 0. Endothermic: absorbs heat, ΔH > 0."},
+    {category:"Comprehension",question:"Write the differences between oxidation number and valency.",answer:"Valency is the combining capacity (always a positive whole number). Oxidation number is the real or hypothetical charge (can be positive, negative, zero, or fractional)."},
+    {category:"Comprehension",question:"Ethanol is water soluble — Explain.",answer:"Ethanol has a polar −OH group that forms strong intermolecular hydrogen bonds with water molecules, enabling complete solubility."},
+    {category:"Knowledge",question:"Explain precipitation reaction.",answer:"Two clear, soluble ionic solutions are mixed to produce an insoluble solid (precipitate). Example: AgNO₃(aq) + NaCl(aq) → AgCl(s)↓ + NaNO₃(aq)."}
+  ],
+  cq: [
+    {tag:"Synthesis",q:"What is meant by a synthesis reaction? Explain.",a:"Two or more elementary substances combine directly to form a single compound. Example: H₂(g) + Cl₂(g) → 2HCl(g)."},
+    {tag:"Redox",q:"Na is an oxidant — Explain.",a:"Na⁺ has a stable octet (2,8). To revert to metallic sodium, Na⁺ must accept an electron: Na⁺ + e⁻ → Na. Since it accepts an electron, Na⁺ acts as an oxidant."},
+    {tag:"Decomposition",q:"What do you understand by a decomposition reaction?",a:"A single compound breaks down into two or more simpler substances upon heating or electrolysis. Example: PCl₅ →Δ→ PCl₃ + Cl₂."},
+    {tag:"Decomposition",q:"All decomposition reactions are not electrolysis reactions — Explain.",a:"Decomposition can occur by heat, light, or electricity. Electrolysis specifically uses electrical energy to decompose an ionic compound into elements. Thermal decomposition (e.g., CaCO₃ → CaO + CO₂) produces compounds, not just elements."},
+    {tag:"Oxidation Numbers",q:"Explain why the oxidation number of hydrogen in metal hydrides is −1.",a:"Hydrogen is more electronegative than alkali/alkaline earth metals. In hydrides like NaH or CaH₂, the metal donates an electron to hydrogen, which gains a −1 charge to achieve the stable helium configuration."},
+    {tag:"Oxidation Numbers",q:"'The oxidation number of oxygen in superoxide is −1/2' — Explain.",a:"In KO₂, potassium is +1. Let oxygen be x: (+1) + 2x = 0 → x = −1/2."},
+    {tag:"Oxidation Numbers",q:"Determine the oxidation number of Mn in KMnO₄.",a:"1(+1) + x + 4(−2) = 0 → x = +7."},
+    {tag:"Oxidation Numbers",q:"Determine the oxidation number of sulfur in Na₂S₂O₃.",a:"2(+1) + 2x + 3(−2) = 0 → 2x = +4 → x = +2."},
+    {tag:"Redox",q:"Explain why H₂S is a reductant.",a:"In H₂S + Cl₂ → 2HCl + S, sulfur goes from −2 (in H₂S) to 0 (in S) by losing electrons. Since it donates electrons and is oxidized, H₂S acts as a reductant."},
+    {tag:"Equilibrium",q:"Explain how a reversible reaction can be made into an irreversible reaction.",a:"By removing a product so the reverse reaction cannot occur. Example: CaCO₃ →Δ→ CaO + CO₂↑ in an open vessel — the escaping CO₂ drives the reaction to completion."},
+    {tag:"Thermochemistry",q:"Explain why the thermal decomposition of CaCO₃ is an endothermic reaction.",a:"Energy must be continuously supplied to break the strong ionic and covalent bonds in the CaCO₃ crystal lattice. Since energy is absorbed, ΔH > 0."},
+    {tag:"Polymerisation",q:"Explain polymerisation reaction with an example.",a:"Many small monomer molecules combine under high temperature, pressure, and catalyst to form a giant macromolecule. Example: n(CH₂=CHCl) → [−CH₂−CHCl−]ₙ (PVC)."},
+    {tag:"Application",q:"Why is lime used at the spot of an ant's bite?",a:"Ant bites inject formic acid (HCOOH). Lime (CaO/Ca(OH)₂) is basic and neutralizes it: 2HCOOH + CaO → (HCOO)₂Ca + H₂O, relieving the pain."},
+    {tag:"Equilibrium",q:"What is meant by optimum temperature?",a:"The specific temperature at which a reaction achieves its maximum rate and highest product yield under given pressure and catalyst conditions. For the Haber process, it is 450–550°C."},
+    {tag:"Hydrolysis vs Hydration",q:"Analyze why reactions of AlCl₃ (hydrolysis) and CaCl₂ (hydration) with water are fundamentally different in nature.",a:"AlCl₃ + 3H₂O → Al(OH)₃↓ + 3HCl is a hydrolysis reaction where water breaks chemical bonds. CaCl₂ + 6H₂O → CaCl₂·6H₂O is hydration where water molecules simply associate with the crystal lattice without breaking bonds."},
+    {tag:"Hydrolysis + Precipitation",q:"Analyze with logic whether precipitation and hydrolysis occur simultaneously in FeCl₃ + 3H₂O → Fe(OH)₃↓ + 3HCl.",a:"Yes. FeCl₃ hydrolyzes (water breaks bonds) to form Fe(OH)₃, which is insoluble and precipitates out. Both hydrolysis and precipitation occur simultaneously."},
+    {tag:"Equilibrium",q:"PCl₅(g) ⇌ PCl₃(g) + Cl₂(g), ΔH = +124 kJ: Analyze the effects of temperature and pressure on equilibrium.",a:"Temperature: forward reaction is endothermic; increasing temperature shifts equilibrium to the right (more PCl₃ and Cl₂). Pressure: forward reaction increases gaseous moles (1 → 2); increasing pressure shifts equilibrium to the left."},
+    {tag:"Equilibrium",q:"N₂O₄(g) ⇌ 2NO₂(g), ΔH = +57 kJ/mol: Analyze equilibrium shifts under varying temperature and pressure.",a:"Temperature: endothermic forward reaction; increasing temperature shifts right (more NO₂). Pressure: forward reaction increases gaseous moles (1 → 2); increasing pressure shifts left (more N₂O₄). Decreasing pressure shifts right."}
+  ]
+};
 
 /* ============================================================
    JS § 3c. PHYSICS (original)
@@ -1348,6 +1626,209 @@ const NOTES_phy7=`<div class="notes">
 </div>`;
 
 /* ============================================================
+   JS § 3d. PHYSICS — CHAPTER 10 (LAW OF REFRACTION) — ADDED
+   ============================================================ */
+const phy10MCQ = [
+  {category:"Refraction Basics",question:"What is refraction of light?",options:["Bending of light when passing from one medium to another","Reflection of light from a surface","Splitting of light into colours","Absorption of light by a medium"],answer:0,explanation:"Refraction is the change in direction of light as it passes from one transparent medium to another due to a change in speed."},
+  {category:"Refraction Basics",question:"Refraction of light occurs due to a change in:",options:["Frequency","Wavelength only","Speed of light","Amplitude"],answer:2,explanation:"The speed of light changes when it enters a different medium, causing refraction."},
+  {category:"Refraction Basics",question:"When light passes from one medium to another, which quantity remains unchanged?",options:["Speed","Wavelength","Frequency","Direction"],answer:2,explanation:"Frequency is determined by the source and does not change when light enters a new medium."},
+  {category:"Refraction Basics",question:"The bending of light at the boundary of two media is called:",options:["Diffraction","Reflection","Refraction","Dispersion"],answer:2,explanation:"Refraction is the bending of light as it passes from one medium to another."},
+  {category:"Refraction Basics",question:"Light travels in a straight line in a:",options:["Heterogeneous medium","Homogeneous medium","Vacuum only","Turbid medium"],answer:1,explanation:"In a homogeneous medium the speed is constant, so light travels in a straight line."},
+  {category:"Refraction Basics",question:"The normal at the point of incidence is:",options:["Parallel to the surface","Perpendicular to the surface","At 45° to the surface","Along the surface"],answer:1,explanation:"The normal is the line perpendicular to the refracting surface at the point of incidence."},
+  {category:"Refraction Basics",question:"When a ray of light passes obliquely from air to glass, it:",options:["Bends towards the normal","Bends away from the normal","Goes undeviated","Reflects back completely"],answer:0,explanation:"Air is rarer than glass, so light bends towards the normal."},
+  {category:"Refraction Basics",question:"When a ray of light passes obliquely from glass to air, it:",options:["Bends towards the normal","Bends away from the normal","Goes undeviated","Is absorbed"],answer:1,explanation:"Glass is denser than air, so light bends away from the normal."},
+  {category:"Refraction Basics",question:"A ray of light incident normally on a glass surface:",options:["Bends towards the normal","Bends away from the normal","Passes undeviated","Is totally reflected"],answer:2,explanation:"When the angle of incidence is 0°, the angle of refraction is also 0°, so the ray passes undeviated."},
+  {category:"Refraction Basics",question:"The angle of deviation is the angle between:",options:["Incident ray and refracted ray","Incident ray and normal","Refracted ray and normal","Reflected ray and normal"],answer:0,explanation:"Deviation is the angle between the incident ray produced and the refracted ray."},
+  {category:"Laws of Refraction",question:"According to Snell's law, the ratio of the sine of the angle of incidence to the sine of the angle of refraction is equal to:",options:["The refractive index of the second medium relative to the first","The speed of light in the first medium","The wavelength of light in vacuum","The critical angle"],answer:0,explanation:"Snell's law: $\\frac{\\sin i}{\\sin r} = n_{21} = \\frac{n_2}{n_1}$."},
+  {category:"Laws of Refraction",question:"The incident ray, the refracted ray, and the normal at the point of incidence all lie in:",options:["Different planes","The same plane","Perpendicular planes","Parallel planes"],answer:1,explanation:"First law of refraction: they all lie in the same plane."},
+  {category:"Laws of Refraction",question:"Snell's law is also known as:",options:["Law of reflection","Law of refraction","Law of dispersion","Law of interference"],answer:1,explanation:"Snell's law is the second law of refraction."},
+  {category:"Laws of Refraction",question:"If $\\angle i = 30°$ and $\\angle r = 20°$, the refractive index of the second medium relative to the first is approximately:",options:["1.46","1.50","0.68","0.50"],answer:0,explanation:"$n = \\frac{\\sin 30°}{\\sin 20°} = \\frac{0.5}{0.342} \\approx 1.46$."},
+  {category:"Laws of Refraction",question:"For a given pair of media, the ratio $\\frac{\\sin i}{\\sin r}$ is:",options:["Variable with angle","Constant","Zero","Infinite"],answer:1,explanation:"By Snell's law, this ratio is constant for a given pair of media and given colour."},
+  {category:"Laws of Refraction",question:"The refractive index of medium 2 with respect to medium 1 is given by:",options:["$n_{21} = \\frac{v_1}{v_2}$","$n_{21} = \\frac{v_2}{v_1}$","$n_{21} = v_1 \\times v_2$","$n_{21} = \\frac{\\lambda_1}{\\lambda_2}$"],answer:0,explanation:"$n_{21} = \\frac{\\text{speed in medium 1}}{\\text{speed in medium 2}} = \\frac{v_1}{v_2}$."},
+  {category:"Laws of Refraction",question:"If light passes from medium A ($n_A=1.5$) to medium B ($n_B=1.2$), the light ray will:",options:["Bend towards the normal","Bend away from the normal","Go straight","Be totally reflected"],answer:1,explanation:"Since $n_B < n_A$, light goes to a rarer medium and bends away from the normal."},
+  {category:"Laws of Refraction",question:"If light passes from medium A ($n_A=1.2$) to medium B ($n_B=1.5$), the light ray will:",options:["Bend towards the normal","Bend away from the normal","Go straight","Be totally reflected"],answer:0,explanation:"Since $n_B > n_A$, light goes to a denser medium and bends towards the normal."},
+  {category:"Laws of Refraction",question:"The product $n_1 \\sin i$ equals:",options:["$n_2 \\sin r$","$n_2 \\cos r$","$n_1 \\cos i$","$\\sin r$"],answer:0,explanation:"From Snell's law: $n_1 \\sin i = n_2 \\sin r$."},
+  {category:"Laws of Refraction",question:"The refractive index of a medium is $\\sqrt{2}$. If the angle of incidence is 45°, the angle of refraction is:",options:["30°","45°","60°","90°"],answer:0,explanation:"$\\sin r = \\frac{\\sin 45°}{\\sqrt{2}} = \\frac{1/\\sqrt{2}}{\\sqrt{2}} = 0.5 \\Rightarrow r = 30°$."},
+  {category:"Laws of Refraction",question:"A ray of light passes from air to glass. If the angle of incidence is 60° and the refractive index of glass is 1.5, the angle of refraction is approximately:",options:["30°","35°","40°","45°"],answer:1,explanation:"$\\sin r = \\frac{\\sin 60°}{1.5} = \\frac{0.866}{1.5} = 0.577 \\Rightarrow r \\approx 35.3°$."},
+  {category:"Laws of Refraction",question:"A light ray goes from water ($n=1.33$) to glass ($n=1.5$). It will:",options:["Bend towards the normal","Bend away from the normal","Go straight","Totally reflect"],answer:0,explanation:"Glass is denser than water, so light bends towards the normal."},
+  {category:"Laws of Refraction",question:"A light ray goes from glass ($n=1.5$) to water ($n=1.33$). It will:",options:["Bend towards the normal","Bend away from the normal","Go straight","Totally reflect"],answer:1,explanation:"Water is rarer than glass, so light bends away from the normal."},
+  {category:"Laws of Refraction",question:"If the refractive index of medium 1 is 1.0 and medium 2 is 1.5, $n_{21}$ is:",options:["0.67","1.0","1.5","2.5"],answer:2,explanation:"$n_{21} = \\frac{n_2}{n_1} = \\frac{1.5}{1.0} = 1.5$."},
+  {category:"Laws of Refraction",question:"If light travels from medium 1 to medium 2 and $v_1 = 3 \\times 10^8$ m/s, $v_2 = 2 \\times 10^8$ m/s, then $n_{21}$ is:",options:["1.5","0.67","1.0","2.0"],answer:0,explanation:"$n_{21} = \\frac{v_1}{v_2} = \\frac{3}{2} = 1.5$."},
+  {category:"Refractive Index",question:"The refractive index of a medium is defined as the ratio of the speed of light in vacuum to:",options:["The speed of light in the medium","The wavelength of light in the medium","The frequency of light in the medium","The angle of incidence"],answer:0,explanation:"$n = \\frac{c}{v}$, where $c$ is the speed of light in vacuum and $v$ is the speed in the medium."},
+  {category:"Refractive Index",question:"Which of the following has the highest refractive index?",options:["Air","Water","Glass","Diamond"],answer:3,explanation:"Diamond has a refractive index of about 2.42, the highest among common transparent materials."},
+  {category:"Refractive Index",question:"Which of the following has the lowest refractive index?",options:["Air","Water","Glass","Diamond"],answer:0,explanation:"Air has a refractive index of approximately 1.0003, the lowest among the options."},
+  {category:"Refractive Index",question:"If the refractive index of water is 1.33, the speed of light in water is approximately:",options:["$3 \\times 10^8$ m/s","$2.25 \\times 10^8$ m/s","$4 \\times 10^8$ m/s","$1.5 \\times 10^8$ m/s"],answer:1,explanation:"$v = \\frac{c}{n} = \\frac{3 \\times 10^8}{1.33} \\approx 2.25 \\times 10^8$ m/s."},
+  {category:"Refractive Index",question:"The refractive index of glass is 1.5. The speed of light in glass is:",options:["$2 \\times 10^8$ m/s","$1.5 \\times 10^8$ m/s","$3 \\times 10^8$ m/s","$4.5 \\times 10^8$ m/s"],answer:0,explanation:"$v = \\frac{3 \\times 10^8}{1.5} = 2 \\times 10^8$ m/s."},
+  {category:"Refractive Index",question:"The refractive index of a medium is 2.0. The speed of light in that medium is:",options:["$1.5 \\times 10^8$ m/s","$2 \\times 10^8$ m/s","$3 \\times 10^8$ m/s","$6 \\times 10^8$ m/s"],answer:0,explanation:"$v = \\frac{3 \\times 10^8}{2} = 1.5 \\times 10^8$ m/s."},
+  {category:"Refractive Index",question:"When light enters a denser medium, its speed:",options:["Increases","Decreases","Remains the same","Becomes zero"],answer:1,explanation:"In a denser medium the speed of light is lower, so it decreases."},
+  {category:"Refractive Index",question:"When light enters a rarer medium from a denser medium, its speed:",options:["Increases","Decreases","Remains the same","Becomes zero"],answer:0,explanation:"In a rarer medium the speed of light is higher, so it increases."},
+  {category:"Refractive Index",question:"The refractive index of a medium is a:",options:["Dimensional quantity","Dimensionless quantity","Vector quantity","Negative quantity"],answer:1,explanation:"Refractive index is a ratio of speeds, so it has no dimensions."},
+  {category:"Refractive Index",question:"If the wavelength of light in vacuum is $\\lambda_0$ and in a medium is $\\lambda$, the refractive index $n$ is:",options:["$\\frac{\\lambda_0}{\\lambda}$","$\\frac{\\lambda}{\\lambda_0}$","$\\lambda_0 \\times \\lambda$","$\\lambda_0 + \\lambda$"],answer:0,explanation:"$n = \\frac{v_{\\text{vac}}}{v_{\\text{med}}} = \\frac{\\lambda_0}{\\lambda}$ since frequency is constant."},
+  {category:"Refractive Index",question:"Light of wavelength 600 nm in vacuum enters a medium of refractive index 1.5. Its wavelength in the medium is:",options:["400 nm","450 nm","600 nm","900 nm"],answer:0,explanation:"$\\lambda = \\frac{600}{1.5} = 400$ nm."},
+  {category:"Refractive Index",question:"Light of wavelength 500 nm in vacuum enters glass ($n=1.5$). Its frequency remains:",options:["Unchanged","Halved","Doubled","Tripled"],answer:0,explanation:"Frequency is determined by the source and does not change when light enters a new medium."},
+  {category:"Refractive Index",question:"The refractive index of medium A with respect to medium B is $n_{AB}$. Then the refractive index of B with respect to A is:",options:["$n_{AB}$","$\\frac{1}{n_{AB}}$","$n_{AB}^2$","$2n_{AB}$"],answer:1,explanation:"$n_{AB} = \\frac{1}{n_{BA}}$, so $n_{BA} = \\frac{1}{n_{AB}}$."},
+  {category:"Refractive Index",question:"If $n_{12} = 1.5$, then $n_{21}$ is:",options:["0.67","1.0","1.5","2.25"],answer:0,explanation:"$n_{21} = \\frac{1}{n_{12}} = \\frac{1}{1.5} \\approx 0.67$."},
+  {category:"Refractive Index",question:"The refractive index of a medium is $\\sqrt{2}$. The critical angle for the medium-air boundary is:",options:["30°","45°","60°","90°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{\\sqrt{2}} \\Rightarrow \\theta_c = 45°$."},
+  {category:"Refractive Index",question:"The critical angle for a medium of refractive index 1.5 is approximately:",options:["30°","41.8°","48.6°","60°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{1.5} = 0.667 \\Rightarrow \\theta_c \\approx 41.8°$."},
+  {category:"Refractive Index",question:"The critical angle for water ($n=1.33$) is approximately:",options:["30°","48.8°","60°","41.8°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{1.33} = 0.752 \\Rightarrow \\theta_c \\approx 48.8°$."},
+  {category:"Refractive Index",question:"The critical angle for a medium of refractive index 2.0 is:",options:["30°","45°","60°","90°"],answer:0,explanation:"$\\sin\\theta_c = \\frac{1}{2} \\Rightarrow \\theta_c = 30°$."},
+  {category:"Refractive Index",question:"The critical angle for glass ($n=1.5$) is smaller than that for water ($n=1.33$) because:",options:["Glass has a lower refractive index","Glass has a higher refractive index","Glass is less dense","Glass is more transparent"],answer:1,explanation:"Higher refractive index gives a smaller critical angle."},
+  {category:"Refractive Index",question:"A medium has a critical angle of 30°. Its refractive index is:",options:["1.5","2.0","$\\sqrt{2}$","$\\sqrt{3}$"],answer:1,explanation:"$n = \\frac{1}{\\sin 30°} = 2$."},
+  {category:"Refractive Index",question:"A medium has a critical angle of 45°. Its refractive index is:",options:["$\\sqrt{2}$","$\\sqrt{3}$","2","1.5"],answer:0,explanation:"$n = \\frac{1}{\\sin 45°} = \\sqrt{2}$."},
+  {category:"Total Internal Reflection",question:"Total internal reflection occurs when light travels from:",options:["A rarer to a denser medium","A denser to a rarer medium at an angle greater than the critical angle","Any medium at any angle","Vacuum to a medium"],answer:1,explanation:"TIR requires light to go from denser to rarer medium and the angle of incidence must exceed the critical angle."},
+  {category:"Total Internal Reflection",question:"The critical angle is the angle of incidence for which the angle of refraction is:",options:["0°","45°","90°","180°"],answer:2,explanation:"At the critical angle, the refracted ray grazes the surface, so the angle of refraction is 90°."},
+  {category:"Total Internal Reflection",question:"The relation between critical angle $\\theta_c$ and refractive index $n$ is:",options:["$\\sin\\theta_c = n$","$\\sin\\theta_c = \\frac{1}{n}$","$\\cos\\theta_c = n$","$\\tan\\theta_c = n$"],answer:1,explanation:"At the critical angle, $n_1 \\sin\\theta_c = n_2 \\sin 90°$, so for medium-to-air, $\\sin\\theta_c = \\frac{1}{n}$."},
+  {category:"Total Internal Reflection",question:"Which optical phenomenon is responsible for the sparkling of a diamond?",options:["Dispersion","Total internal reflection","Diffraction","Polarization"],answer:1,explanation:"Multiple total internal reflections inside the diamond cause its sparkle."},
+  {category:"Total Internal Reflection",question:"Total internal reflection can occur when light passes from:",options:["Air to glass","Water to glass","Glass to water","Air to vacuum"],answer:2,explanation:"Glass is denser than water, so light going from glass to water can undergo TIR."},
+  {category:"Total Internal Reflection",question:"Total internal reflection cannot occur when light passes from:",options:["Glass to air","Water to air","Diamond to air","Air to glass"],answer:3,explanation:"Air is rarer than glass, so TIR cannot occur when going from air to glass."},
+  {category:"Total Internal Reflection",question:"At the critical angle, the refracted ray travels:",options:["Along the normal","Along the interface","Into the denser medium","Backwards"],answer:1,explanation:"At the critical angle the refracted ray grazes along the boundary/interface."},
+  {category:"Total Internal Reflection",question:"When the angle of incidence exceeds the critical angle, the light is:",options:["Partially reflected","Completely refracted","Totally internally reflected","Absorbed"],answer:2,explanation:"Beyond the critical angle, no refraction occurs — all light is totally internally reflected."},
+  {category:"Total Internal Reflection",question:"The critical angle for a glass-air boundary ($n=1.5$) is about:",options:["41.8°","48.8°","30°","45°"],answer:0,explanation:"$\\sin\\theta_c = \\frac{1}{1.5} = 0.667 \\Rightarrow \\theta_c \\approx 41.8°$."},
+  {category:"Total Internal Reflection",question:"Total internal reflection is used in:",options:["Optical fibres","Plane mirrors","Convex mirrors","Prisms only"],answer:0,explanation:"Optical fibres transmit light signals using repeated total internal reflection."},
+  {category:"Total Internal Reflection",question:"A ray of light in glass strikes the glass-air boundary at 50°. (Critical angle = 41.8°.) It will:",options:["Refract into air","Bend towards the normal","Undergo total internal reflection","Pass undeviated"],answer:2,explanation:"50° > 41.8°, so total internal reflection occurs."},
+  {category:"Total Internal Reflection",question:"A ray of light in water strikes the water-air boundary at 30°. (Critical angle = 48.8°.) It will:",options:["Refract into air","Totally reflect","Undergo total internal reflection","Be absorbed"],answer:0,explanation:"30° < 48.8°, so the light refracts into air."},
+  {category:"Total Internal Reflection",question:"For total internal reflection to occur, the angle of incidence must be:",options:["Less than the critical angle","Equal to the critical angle","Greater than the critical angle","Any angle"],answer:2,explanation:"TIR occurs when the angle of incidence is greater than the critical angle."},
+  {category:"Total Internal Reflection",question:"A diamond sparkles because its critical angle is:",options:["Very small","Very large","90°","0°"],answer:0,explanation:"Diamond has a very small critical angle (~24°), so light undergoes repeated TIR."},
+  {category:"Total Internal Reflection",question:"The critical angle for diamond ($n=2.42$) is approximately:",options:["24.4°","41.8°","48.8°","60°"],answer:0,explanation:"$\\sin\\theta_c = \\frac{1}{2.42} = 0.413 \\Rightarrow \\theta_c \\approx 24.4°$."},
+  {category:"Total Internal Reflection",question:"Total internal reflection occurs at an angle of incidence:",options:["0°","Equal to critical angle","Greater than critical angle","Less than critical angle"],answer:2,explanation:"TIR occurs for angles of incidence greater than the critical angle."},
+  {category:"Total Internal Reflection",question:"A ray is incident at exactly the critical angle. The angle of refraction is:",options:["0°","45°","90°","180°"],answer:2,explanation:"At the critical angle, the refracted ray grazes the surface, so $r = 90°$."},
+  {category:"Total Internal Reflection",question:"In a mirage, total internal reflection occurs because of:",options:["Reflection from the ground","Decreasing refractive index of hot air near the ground","Dispersion of light","Diffraction of light"],answer:1,explanation:"Hot air near the ground has a lower refractive index, causing TIR of light from the sky."},
+  {category:"Total Internal Reflection",question:"An optical fibre transmits light by:",options:["Refraction only","Total internal reflection","Dispersion","Diffraction"],answer:1,explanation:"Light signals are trapped inside the fibre by repeated total internal reflection."},
+  {category:"Total Internal Reflection",question:"The cladding of an optical fibre has a refractive index:",options:["Higher than the core","Lower than the core","Equal to the core","Zero"],answer:1,explanation:"The cladding must have a lower refractive index than the core to allow TIR."},
+  {category:"Total Internal Reflection",question:"Endoscopes use total internal reflection to:",options:["Reflect light off mirrors","Transmit images through optical fibres","Refract light through lenses","Disperse light"],answer:1,explanation:"Endoscopes use optical fibres that rely on total internal reflection."},
+  {category:"Total Internal Reflection",question:"Which of the following is NOT an application of total internal reflection?",options:["Optical fibres","Mirage","Sparkling of diamond","Image formation by a plane mirror"],answer:3,explanation:"A plane mirror works by reflection, not total internal reflection."},
+  {category:"Total Internal Reflection",question:"The critical angle depends on:",options:["The angle of incidence","The pair of media in contact","The intensity of light","The wavelength of light only"],answer:1,explanation:"The critical angle depends on the refractive indices of the two media in contact."},
+  {category:"Total Internal Reflection",question:"If the refractive index of a medium increases, its critical angle:",options:["Increases","Decreases","Remains the same","Becomes 90°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{n}$, so increasing $n$ decreases $\\theta_c$."},
+  {category:"Total Internal Reflection",question:"If the critical angle of a medium is 45°, the refractive index is:",options:["1.0","$\\sqrt{2}$","2.0","$\\sqrt{3}$"],answer:1,explanation:"$n = \\frac{1}{\\sin 45°} = \\sqrt{2}$."},
+  {category:"Applications",question:"Optical fibres work on the principle of:",options:["Refraction","Total internal reflection","Dispersion","Interference"],answer:1,explanation:"Light signals are trapped inside the fibre by repeated total internal reflection."},
+  {category:"Applications",question:"A mirage is caused by:",options:["Reflection of light","Total internal reflection due to varying air density","Dispersion of light","Diffraction of light"],answer:1,explanation:"Hot air near the ground has a lower refractive index, causing total internal reflection of light from the sky — appearing as water."},
+  {category:"Applications",question:"The bending of light when it enters a glass slab is due to:",options:["Reflection","Refraction","Dispersion","Scattering"],answer:1,explanation:"Refraction occurs at both surfaces of the glass slab."},
+  {category:"Applications",question:"A pencil partly immersed in water appears bent because of:",options:["Reflection","Refraction","Diffraction","Polarization"],answer:1,explanation:"Light from the immersed part refracts at the water-air boundary, creating a shifted image."},
+  {category:"Applications",question:"A swimming pool appears shallower than it is because of:",options:["Reflection","Refraction","Dispersion","Diffraction"],answer:1,explanation:"Light from the bottom refracts at the water-air boundary, making the bottom appear raised."},
+  {category:"Applications",question:"A star appears slightly higher than its actual position because of:",options:["Reflection","Refraction through the atmosphere","Dispersion","Diffraction"],answer:1,explanation:"Atmospheric refraction bends starlight, making stars appear higher than their true position."},
+  {category:"Applications",question:"Twinkling of stars is due to:",options:["Reflection","Atmospheric refraction","Dispersion","Total internal reflection"],answer:1,explanation:"Atmospheric refraction fluctuates as light passes through moving air layers, causing twinkling."},
+  {category:"Applications",question:"A lens works on the principle of:",options:["Reflection","Refraction","Dispersion","Total internal reflection"],answer:1,explanation:"Lenses bend light by refraction at their surfaces."},
+  {category:"Applications",question:"A prism disperses white light into its component colours because:",options:["Different colours have different refractive indices","Different colours have the same wavelength","Total internal reflection occurs","Light is absorbed"],answer:0,explanation:"Different colours have different refractive indices, so they bend by different amounts."},
+  {category:"Applications",question:"The back of a fish tank appears raised because of:",options:["Reflection","Refraction","Dispersion","Diffraction"],answer:1,explanation:"Light from the fish refracts at the water-air boundary, making the fish appear higher."},
+  {category:"Applications",question:"A coin placed in a cup of water appears raised because of:",options:["Reflection","Refraction","Dispersion","Scattering"],answer:1,explanation:"Light from the coin refracts at the water-air boundary, so it appears raised."},
+  {category:"Applications",question:"A rainbow is formed due to:",options:["Reflection only","Refraction and dispersion in water droplets","Total internal reflection","Diffraction"],answer:1,explanation:"Rainbows form by refraction and dispersion of sunlight in water droplets."},
+  {category:"Applications",question:"Diamond sparkles because of its:",options:["High refractive index and small critical angle","Low refractive index","Large critical angle","Colour"],answer:0,explanation:"High refractive index and small critical angle cause multiple total internal reflections."},
+  {category:"Applications",question:"The apparent depth of a pool is less than its real depth because of:",options:["Reflection","Refraction","Dispersion","Diffraction"],answer:1,explanation:"Light from the bottom refracts at the water-air interface, making the pool appear shallower."},
+  {category:"Applications",question:"A stick partly immersed in water appears bent at the surface because of:",options:["Reflection","Refraction","Dispersion","Diffraction"],answer:1,explanation:"Light from the immersed part refracts at the water-air boundary, causing apparent bending."},
+  {category:"Applications",question:"An endoscope uses:",options:["Mirrors","Optical fibres","Lenses only","Prisms"],answer:1,explanation:"Endoscopes use optical fibres that rely on total internal reflection."},
+  {category:"Applications",question:"A periscope works on the principle of:",options:["Refraction","Reflection","Dispersion","Total internal reflection"],answer:1,explanation:"A periscope uses plane mirrors to reflect light, not refraction."},
+  {category:"Applications",question:"The bending of light around the edges of an obstacle is:",options:["Refraction","Reflection","Diffraction","Dispersion"],answer:2,explanation:"Diffraction is the bending of light around obstacles, not refraction."},
+  {category:"Applications",question:"A magnifying glass works on the principle of:",options:["Reflection","Refraction","Total internal reflection","Dispersion"],answer:1,explanation:"A magnifying glass is a convex lens that refracts light."},
+  {category:"Numericals",question:"A light ray passes from air to glass. If $\\angle i = 45°$ and $\\angle r = 28°$, the refractive index is approximately:",options:["1.50","1.33","1.20","2.00"],answer:0,explanation:"$n = \\frac{\\sin 45°}{\\sin 28°} = \\frac{0.707}{0.469} \\approx 1.51$."},
+  {category:"Numericals",question:"A light ray passes from air to water. If $\\angle i = 50°$ and $n = 1.33$, the angle of refraction is approximately:",options:["30°","35°","40°","45°"],answer:1,explanation:"$\\sin r = \\frac{\\sin 50°}{1.33} = \\frac{0.766}{1.33} = 0.576 \\Rightarrow r \\approx 35.2°$."},
+  {category:"Numericals",question:"The speed of light in a medium is $2 \\times 10^8$ m/s. The refractive index is:",options:["1.5","1.33","2.0","1.0"],answer:0,explanation:"$n = \\frac{3 \\times 10^8}{2 \\times 10^8} = 1.5$."},
+  {category:"Numericals",question:"The speed of light in a medium is $2.5 \\times 10^8$ m/s. The refractive index is:",options:["1.2","1.5","2.0","1.0"],answer:0,explanation:"$n = \\frac{3 \\times 10^8}{2.5 \\times 10^8} = 1.2$."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.5. If the wavelength in vacuum is 600 nm, the wavelength in the medium is:",options:["400 nm","450 nm","500 nm","600 nm"],answer:0,explanation:"$\\lambda = \\frac{600}{1.5} = 400$ nm."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.2. If the wavelength in vacuum is 600 nm, the wavelength in the medium is:",options:["400 nm","500 nm","600 nm","720 nm"],answer:1,explanation:"$\\lambda = \\frac{600}{1.2} = 500$ nm."},
+  {category:"Numericals",question:"Light of frequency $5 \\times 10^{14}$ Hz travels in a medium of refractive index 1.5. The frequency in the medium is:",options:["$5 \\times 10^{14}$ Hz","$3.33 \\times 10^{14}$ Hz","$7.5 \\times 10^{14}$ Hz","$10 \\times 10^{14}$ Hz"],answer:0,explanation:"Frequency does not change when light enters a new medium."},
+  {category:"Numericals",question:"A ray of light is incident at 30° on a glass slab ($n=1.5$). The angle of refraction is approximately:",options:["18.6°","19.5°","20.5°","25°"],answer:1,explanation:"$\\sin r = \\frac{\\sin 30°}{1.5} = \\frac{0.5}{1.5} = 0.333 \\Rightarrow r \\approx 19.5°$."},
+  {category:"Numericals",question:"A ray of light goes from water ($n=1.33$) to air. If $\\angle i = 30°$, the angle of refraction is approximately:",options:["35°","41.8°","48.8°","60°"],answer:1,explanation:"$\\sin r = 1.33 \\times \\sin 30° = 0.665 \\Rightarrow r \\approx 41.7°$."},
+  {category:"Numericals",question:"A ray of light goes from glass ($n=1.5$) to air. If $\\angle i = 30°$, the angle of refraction is approximately:",options:["41.8°","48.6°","30°","45°"],answer:1,explanation:"$\\sin r = 1.5 \\times \\sin 30° = 0.75 \\Rightarrow r \\approx 48.6°$."},
+  {category:"Numericals",question:"The critical angle for a medium is 30°. The refractive index of the medium is:",options:["1.5","2.0","$\\sqrt{2}$","$\\sqrt{3}$"],answer:1,explanation:"$n = \\frac{1}{\\sin 30°} = 2$."},
+  {category:"Numericals",question:"The critical angle for a medium is 60°. The refractive index of the medium is:",options:["1.15","1.33","1.5","2.0"],answer:0,explanation:"$n = \\frac{1}{\\sin 60°} = \\frac{1}{0.866} \\approx 1.15$."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.25. The critical angle is approximately:",options:["48.6°","53.1°","41.8°","38.7°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{1.25} = 0.8 \\Rightarrow \\theta_c \\approx 53.1°$."},
+  {category:"Numericals",question:"The refractive index of a medium is 2.5. The critical angle is approximately:",options:["23.6°","30°","41.8°","48.8°"],answer:0,explanation:"$\\sin\\theta_c = \\frac{1}{2.5} = 0.4 \\Rightarrow \\theta_c \\approx 23.6°$."},
+  {category:"Numericals",question:"A ray of light in glass ($n=1.5$) hits the glass-air boundary at 45°. The critical angle is 41.8°. The ray will:",options:["Refract into air","Undergo total internal reflection","Pass undeviated","Be absorbed"],answer:1,explanation:"45° > 41.8°, so total internal reflection occurs."},
+  {category:"Numericals",question:"A ray of light in water ($n=1.33$) hits the water-air boundary at 50°. The critical angle is 48.8°. The ray will:",options:["Refract into air","Undergo total internal reflection","Pass undeviated","Be absorbed"],answer:1,explanation:"50° > 48.8°, so total internal reflection occurs."},
+  {category:"Numericals",question:"A ray of light in water ($n=1.33$) hits the water-air boundary at 40°. The critical angle is 48.8°. The ray will:",options:["Refract into air","Undergo total internal reflection","Pass undeviated","Be absorbed"],answer:0,explanation:"40° < 48.8°, so the ray refracts into air."},
+  {category:"Numericals",question:"If $v_1 = 2.25 \\times 10^8$ m/s and $v_2 = 1.5 \\times 10^8$ m/s, then $n_{12}$ is:",options:["1.5","0.67","1.0","2.0"],answer:0,explanation:"$n_{12} = \\frac{v_1}{v_2} = \\frac{2.25}{1.5} = 1.5$."},
+  {category:"Numericals",question:"If $n_{12} = 1.5$, the ratio $\\frac{v_1}{v_2}$ is:",options:["0.67","1.0","1.5","2.25"],answer:2,explanation:"$n_{12} = \\frac{v_1}{v_2} = 1.5$."},
+  {category:"Numericals",question:"A ray of light passes from air to a medium of refractive index 1.5. If the angle of refraction is 20°, the angle of incidence is approximately:",options:["30°","31°","32°","35°"],answer:1,explanation:"$\\sin i = 1.5 \\times \\sin 20° = 1.5 \\times 0.342 = 0.513 \\Rightarrow i \\approx 30.9°$."},
+  {category:"Numericals",question:"A ray of light passes from water ($n=1.33$) to glass ($n=1.5$). If the angle of incidence is 40°, the angle of refraction is approximately:",options:["34°","35°","36°","38°"],answer:1,explanation:"$\\sin r = \\frac{1.33 \\times \\sin 40°}{1.5} = \\frac{1.33 \\times 0.643}{1.5} = 0.570 \\Rightarrow r \\approx 34.7°$."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.4. The speed of light in the medium is approximately:",options:["$2.14 \\times 10^8$ m/s","$2.25 \\times 10^8$ m/s","$3 \\times 10^8$ m/s","$4.2 \\times 10^8$ m/s"],answer:0,explanation:"$v = \\frac{3 \\times 10^8}{1.4} \\approx 2.14 \\times 10^8$ m/s."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.6. The speed of light in the medium is:",options:["$1.875 \\times 10^8$ m/s","$2.0 \\times 10^8$ m/s","$2.5 \\times 10^8$ m/s","$3 \\times 10^8$ m/s"],answer:0,explanation:"$v = \\frac{3 \\times 10^8}{1.6} = 1.875 \\times 10^8$ m/s."},
+  {category:"Numericals",question:"If the critical angle of a medium is 40°, the refractive index is approximately:",options:["1.56","1.5","1.33","2.0"],answer:0,explanation:"$n = \\frac{1}{\\sin 40°} = \\frac{1}{0.643} \\approx 1.56$."},
+  {category:"Numericals",question:"If the critical angle of a medium is 50°, the refractive index is approximately:",options:["1.31","1.5","1.33","2.0"],answer:0,explanation:"$n = \\frac{1}{\\sin 50°} = \\frac{1}{0.766} \\approx 1.31$."},
+  {category:"Numericals",question:"The refractive index of a medium is 1.8. The critical angle is approximately:",options:["33.7°","41.8°","48.8°","23.6°"],answer:0,explanation:"$\\sin\\theta_c = \\frac{1}{1.8} = 0.556 \\Rightarrow \\theta_c \\approx 33.7°$."},
+  {category:"Numericals",question:"A ray of light passes from air to a medium. If $\\angle i = 60°$ and $\\angle r = 30°$, the refractive index is:",options:["$\\sqrt{3}$","$\\sqrt{2}$","2","1.5"],answer:0,explanation:"$n = \\frac{\\sin 60°}{\\sin 30°} = \\frac{0.866}{0.5} = 1.732 = \\sqrt{3}$."},
+  {category:"Numericals",question:"A ray of light passes from air to a medium. If $\\angle i = 45°$ and $\\angle r = 30°$, the refractive index is approximately:",options:["1.41","1.50","1.33","2.0"],answer:0,explanation:"$n = \\frac{\\sin 45°}{\\sin 30°} = \\frac{0.707}{0.5} = 1.414$."},
+  {category:"Numericals",question:"If a medium has refractive index $\\sqrt{3}$, the critical angle is:",options:["30°","35.3°","45°","60°"],answer:1,explanation:"$\\sin\\theta_c = \\frac{1}{\\sqrt{3}} = 0.577 \\Rightarrow \\theta_c \\approx 35.3°$."},
+  {category:"Numericals",question:"If the speed of light in a medium is $1.5 \\times 10^8$ m/s, the refractive index is:",options:["2.0","1.5","1.33","1.0"],answer:0,explanation:"$n = \\frac{3 \\times 10^8}{1.5 \\times 10^8} = 2$."},
+  {category:"Numericals",question:"A ray of light goes from air to glass ($n=1.5$). If the angle of incidence is 40°, the angle of refraction is approximately:",options:["25.4°","30°","35°","40°"],answer:0,explanation:"$\\sin r = \\frac{\\sin 40°}{1.5} = \\frac{0.643}{1.5} = 0.429 \\Rightarrow r \\approx 25.4°$."},
+  {category:"Numericals",question:"A ray of light goes from air to water ($n=1.33$). If the angle of incidence is 60°, the angle of refraction is approximately:",options:["40.6°","45°","50°","35°"],answer:0,explanation:"$\\sin r = \\frac{\\sin 60°}{1.33} = \\frac{0.866}{1.33} = 0.651 \\Rightarrow r \\approx 40.6°$."},
+  {category:"Numericals",question:"The refractive index of medium 1 is 1.2 and medium 2 is 1.8. $n_{21}$ is:",options:["0.67","1.5","2.16","3.0"],answer:1,explanation:"$n_{21} = \\frac{n_2}{n_1} = \\frac{1.8}{1.2} = 1.5$."},
+  {category:"Numericals",question:"The refractive index of medium 1 is 1.8 and medium 2 is 1.2. $n_{21}$ is:",options:["0.67","1.5","2.16","3.0"],answer:0,explanation:"$n_{21} = \\frac{n_2}{n_1} = \\frac{1.2}{1.8} \\approx 0.67$."},
+  {category:"Numericals",question:"A ray goes from medium A ($n=1.4$) to medium B ($n=1.6$). If $\\angle i = 30°$, $\\angle r$ is approximately:",options:["25.6°","26.5°","27.5°","28.5°"],answer:0,explanation:"$\\sin r = \\frac{1.4 \\times \\sin 30°}{1.6} = \\frac{0.7}{1.6} = 0.4375 \\Rightarrow r \\approx 25.9°$."},
+  {category:"Numericals",question:"If $n = 1.5$ and $\\lambda_0 = 750$ nm, the wavelength in the medium is:",options:["500 nm","550 nm","600 nm","650 nm"],answer:0,explanation:"$\\lambda = \\frac{750}{1.5} = 500$ nm."},
+  {category:"Numericals",question:"If $n = 1.25$ and $\\lambda_0 = 500$ nm, the wavelength in the medium is:",options:["400 nm","450 nm","500 nm","625 nm"],answer:0,explanation:"$\\lambda = \\frac{500}{1.25} = 400$ nm."},
+  {category:"Miscellaneous",question:"The refractive index of air is approximately:",options:["1.0","1.33","1.5","2.42"],answer:0,explanation:"Air has a refractive index of approximately 1.0003, close to 1.0."},
+  {category:"Miscellaneous",question:"The refractive index of water is approximately:",options:["1.0","1.33","1.5","2.42"],answer:1,explanation:"Water has a refractive index of about 1.33."},
+  {category:"Miscellaneous",question:"The refractive index of glass is typically:",options:["1.0","1.33","1.5","2.42"],answer:2,explanation:"Glass typically has a refractive index of about 1.5."},
+  {category:"Miscellaneous",question:"The refractive index of diamond is approximately:",options:["1.0","1.33","1.5","2.42"],answer:3,explanation:"Diamond has a refractive index of about 2.42."},
+  {category:"Miscellaneous",question:"Light travels fastest in:",options:["Air","Water","Glass","Diamond"],answer:0,explanation:"Air has the lowest refractive index, so light travels fastest in it among these options."},
+  {category:"Miscellaneous",question:"Light travels slowest in:",options:["Air","Water","Glass","Diamond"],answer:3,explanation:"Diamond has the highest refractive index, so light travels slowest in it."},
+  {category:"Miscellaneous",question:"Which colour of light has the highest refractive index in glass?",options:["Red","Green","Blue","Violet"],answer:3,explanation:"Violet has the shortest wavelength and highest refractive index in glass."},
+  {category:"Miscellaneous",question:"Which colour of light has the lowest refractive index in glass?",options:["Red","Green","Blue","Violet"],answer:0,explanation:"Red has the longest wavelength and lowest refractive index in glass."},
+  {category:"Miscellaneous",question:"The splitting of white light into its component colours by a prism is called:",options:["Refraction","Dispersion","Diffraction","Reflection"],answer:1,explanation:"Dispersion is the splitting of white light into its component colours."},
+  {category:"Miscellaneous",question:"The refractive index of a medium is $\\sqrt{2}$. The angle of refraction for an angle of incidence of 45° is:",options:["30°","45°","60°","90°"],answer:0,explanation:"$\\sin r = \\frac{\\sin 45°}{\\sqrt{2}} = 0.5 \\Rightarrow r = 30°$."},
+  {category:"Miscellaneous",question:"The refractive index of a medium is 2. The angle of refraction for an angle of incidence of 30° is approximately:",options:["14.5°","15.5°","16.5°","17.5°"],answer:0,explanation:"$\\sin r = \\frac{\\sin 30°}{2} = 0.25 \\Rightarrow r \\approx 14.5°$."},
+  {category:"Miscellaneous",question:"The angle of incidence for which the refracted ray grazes the surface is called:",options:["Angle of reflection","Critical angle","Angle of deviation","Angle of dispersion"],answer:1,explanation:"The critical angle is the angle of incidence for which the angle of refraction is 90°."},
+  {category:"Miscellaneous",question:"For total internal reflection, the light must travel from:",options:["Rarer to denser medium","Denser to rarer medium","Any medium","Vacuum"],answer:1,explanation:"TIR requires light to travel from a denser medium to a rarer medium."},
+  {category:"Miscellaneous",question:"A ray of light incident perpendicularly on a surface has an angle of incidence of:",options:["0°","45°","90°","180°"],answer:0,explanation:"When the ray is perpendicular to the surface, it coincides with the normal, so the angle of incidence is 0°."},
+  {category:"Miscellaneous",question:"The angle between the incident ray and the normal is called:",options:["Angle of reflection","Angle of refraction","Angle of incidence","Angle of deviation"],answer:2,explanation:"The angle of incidence is the angle between the incident ray and the normal."},
+  {category:"Miscellaneous",question:"The angle between the refracted ray and the normal is called:",options:["Angle of reflection","Angle of refraction","Angle of incidence","Angle of deviation"],answer:1,explanation:"The angle of refraction is the angle between the refracted ray and the normal."},
+  {category:"Miscellaneous",question:"When light travels from a denser to a rarer medium, the angle of refraction is:",options:["Less than the angle of incidence","Equal to the angle of incidence","Greater than the angle of incidence","Zero"],answer:2,explanation:"In going to a rarer medium, light bends away from the normal, so $r > i$."},
+  {category:"Miscellaneous",question:"When light travels from a rarer to a denser medium, the angle of refraction is:",options:["Less than the angle of incidence","Equal to the angle of incidence","Greater than the angle of incidence","Zero"],answer:0,explanation:"In going to a denser medium, light bends towards the normal, so $r < i$."},
+  {category:"Miscellaneous",question:"The refractive index of a medium is a measure of:",options:["How much light is absorbed","How much light is reflected","How much light bends when entering the medium","How much light is scattered"],answer:2,explanation:"Refractive index measures how much light bends (refracts) when entering a medium."},
+  {category:"Miscellaneous",question:"Snell's law is valid for:",options:["Only glass","Only water","Any pair of transparent media","Only vacuum"],answer:2,explanation:"Snell's law applies to any pair of transparent media."},
+  {category:"Miscellaneous",question:"The phenomenon of refraction is due to:",options:["Change in frequency","Change in speed of light","Change in amplitude","Change in phase"],answer:1,explanation:"Refraction occurs due to a change in the speed of light in different media."},
+  {category:"Miscellaneous",question:"Light bends towards the normal when it:",options:["Speeds up","Slows down","Remains at constant speed","Reflects"],answer:1,explanation:"When light slows down (entering a denser medium), it bends towards the normal."},
+  {category:"Miscellaneous",question:"Light bends away from the normal when it:",options:["Speeds up","Slows down","Remains at constant speed","Reflects"],answer:0,explanation:"When light speeds up (entering a rarer medium), it bends away from the normal."},
+  {category:"Miscellaneous",question:"The refractive index of a medium is inversely proportional to:",options:["The speed of light in the medium","The wavelength of light in vacuum","The frequency of light","The angle of incidence"],answer:0,explanation:"$n = \\frac{c}{v}$, so refractive index is inversely proportional to the speed of light in the medium."}
+];
+
+const phy10SQ = [
+  {category:"Knowledge",question:"What is refraction of light?",answer:"Refraction is the bending of light as it travels from one transparent medium to another due to a change in its speed."},
+  {category:"Knowledge",question:"State the laws of refraction.",answer:"First law: The incident ray, the refracted ray, and the normal at the point of incidence all lie in the same plane.\nSecond law (Snell's law): The ratio of the sine of the angle of incidence to the sine of the angle of refraction is constant for a given pair of media. $\\frac{\\sin i}{\\sin r} = n_{21}$."},
+  {category:"Knowledge",question:"Define the refractive index of a medium.",answer:"The refractive index of a medium is the ratio of the speed of light in vacuum to the speed of light in that medium: $n = \\frac{c}{v}$."},
+  {category:"Knowledge",question:"What is the critical angle?",answer:"The critical angle is the angle of incidence in the denser medium for which the angle of refraction in the rarer medium is 90°."},
+  {category:"Knowledge",question:"State the conditions for total internal reflection.",answer:"1. Light must travel from a denser medium to a rarer medium.\n2. The angle of incidence must be greater than the critical angle for that pair of media."},
+  {category:"Knowledge",question:"What is the relation between critical angle and refractive index?",answer:"$\\sin\\theta_c = \\frac{1}{n}$, where $\\theta_c$ is the critical angle and $n$ is the refractive index of the denser medium relative to the rarer medium."},
+  {category:"Comprehension",question:"Why does a stick appear bent when partly immersed in water?",answer:"Light from the immersed part travels from water (denser) to air (rarer) and bends away from the normal. The eye traces the rays back along straight lines, so the bottom of the stick appears raised, making the stick look bent at the water surface."},
+  {category:"Comprehension",question:"Explain why diamonds sparkle.",answer:"Diamond has a very high refractive index ($n \\approx 2.42$) and a small critical angle (about 24°). Light entering the diamond undergoes multiple total internal reflections before emerging. This concentrated, dispersed light makes the diamond sparkle."},
+  {category:"Comprehension",question:"Why does a pool of water appear shallower than it actually is?",answer:"Light from the bottom of the pool refracts at the water-air boundary and bends away from the normal. When these rays are extended backwards, they meet at a point higher than the actual bottom, so the pool appears shallower."},
+  {category:"Comprehension",question:"Explain how a mirage is formed.",answer:"On a hot day, the air near the ground becomes hotter and less dense, so its refractive index decreases. Light from the sky travelling downwards gradually bends towards the normal and, beyond the critical angle, undergoes total internal reflection. This reflected light reaches the observer’s eye and creates the illusion of water on the road."},
+  {category:"Comprehension",question:"Why is total internal reflection not possible when light travels from air to glass?",answer:"For TIR, light must travel from a denser to a rarer medium. Air is rarer than glass, so when light enters glass from air, it bends towards the normal and can never exceed the critical angle condition for the air-glass boundary."},
+  {category:"Application",question:"Explain the working principle of an optical fibre.",answer:"An optical fibre consists of a core of higher refractive index surrounded by a cladding of lower refractive index. Light entering the core at an angle greater than the critical angle undergoes repeated total internal reflection along the fibre, transmitting signals over long distances with minimal loss."}
+];
+
+const NOTES_phy10 = `<div class="notes">
+<article class="note">
+  <h3>1 · Refraction of Light</h3>
+  <p>Refraction is the bending of light when it passes from one transparent medium to another due to a change in speed.</p>
+  <ul>
+    <li>Rarer → Denser: light bends <strong>towards</strong> the normal.</li>
+    <li>Denser → Rarer: light bends <strong>away from</strong> the normal.</li>
+  </ul>
+  <div class="formula">$$ \\frac{\\sin i}{\\sin r} = n_{21} = \\frac{v_1}{v_2} = \\frac{n_2}{n_1} $$</div>
+</article>
+<article class="note">
+  <h3>2 · Refractive Index</h3>
+  <p>Absolute refractive index: $n = \\frac{c}{v}$, where $c = 3 \\times 10^8 \\text{ m/s}$.</p>
+  <table>
+    <thead><tr><th>Medium</th><th>Refractive Index</th></tr></thead>
+    <tbody>
+      <tr><td>Air</td><td>1.0003</td></tr>
+      <tr><td>Water</td><td>1.33</td></tr>
+      <tr><td>Glass</td><td>1.5 – 1.9</td></tr>
+      <tr><td>Diamond</td><td>2.42</td></tr>
+    </tbody>
+  </table>
+</article>
+<article class="note">
+  <h3>3 · Total Internal Reflection</h3>
+  <p>Occurs when light travels from denser to rarer medium and the angle of incidence exceeds the critical angle.</p>
+  <div class="formula">$$ \\sin\\theta_c = \\frac{1}{n} $$</div>
+  <p><strong>Applications:</strong> optical fibres, mirages, sparkling of diamond, endoscopes.</p>
+</article>
+</div>`;
+
+/* ============================================================
    JS § 4. REGISTRY & SUBJECTS
    ============================================================ */
 const REGISTRY={
@@ -1357,13 +1838,14 @@ const REGISTRY={
   chem8:{id:"chem8",subject:"chemistry",subjectLabel:"Chemistry",subjectIcon:"🧪",chapterNum:"08",title:"Chemistry & Energy",desc:"Electrochemistry, thermochemistry, bond energy, cells & batteries.",mcq:chem8MCQ,sq:chem8SQ,notesHTML:NOTES_chem8},
   chem7:{id:"chem7",subject:"chemistry",subjectLabel:"Chemistry",subjectIcon:"⚗",chapterNum:"07",title:"Chemical Reactions",desc:"Redox, oxidation numbers, hydrolysis, hydration, precipitation.",mcq:chem7MCQ,sq:chem7SQ,notesHTML:NOTES_chem7,superSuggestion:chem7SuperSuggestion},
   phy8:{id:"phy8",subject:"physics",subjectLabel:"Physics",subjectIcon:"⚛",chapterNum:"08",title:"Reflection of Light",desc:"Reflection laws, plane mirrors, spherical mirrors, image formation.",mcq:phy8MCQ,sq:phy8SQ,notesHTML:NOTES_phy8},
-  phy7:{id:"phy7",subject:"physics",subjectLabel:"Physics",subjectIcon:"🌊",chapterNum:"07",title:"SHM & Waves",desc:"Simple harmonic motion, wave types, sound waves, echo.",mcq:phy7MCQ,sq:phy7SQ,notesHTML:NOTES_phy7}
+  phy7:{id:"phy7",subject:"physics",subjectLabel:"Physics",subjectIcon:"🌊",chapterNum:"07",title:"SHM & Waves",desc:"Simple harmonic motion, wave types, sound waves, echo.",mcq:phy7MCQ,sq:phy7SQ,notesHTML:NOTES_phy7},
+  phy10:{id:"phy10",subject:"physics",subjectLabel:"Physics",subjectIcon:"🌈",chapterNum:"10",title:"Law of Refraction",desc:"Refraction, Snell's law, refractive index, total internal reflection, critical angle, optical fibres.",mcq:phy10MCQ,sq:phy10SQ,notesHTML:NOTES_phy10}
 };
 
 const SUBJECTS=[
   {id:"bgs",name:"BGS",icon:"🌍",tagline:"Bangladesh & Global Studies",chapters:["bgs8","bgs9","bgs10"]},
   {id:"chemistry",name:"Chemistry",icon:"🧪",tagline:"Matter, energy, and reactions",chapters:["chem8","chem7"]},
-  {id:"physics",name:"Physics",icon:"⚛",tagline:"Light, waves, and optics",chapters:["phy8","phy7"]}
+  {id:"physics",name:"Physics",icon:"⚛",tagline:"Light, waves, and optics",chapters:["phy8","phy7","phy10"]}
 ];
 
 /* ============================================================
@@ -1373,6 +1855,7 @@ const pomo=document.getElementById("pomo");
 const pomoMode=document.getElementById("pomoMode");
 const pomoTime=document.getElementById("pomoTime");
 const pomoStart=document.getElementById("pomoStart");
+const pomoSkip=document.getElementById("pomoSkip");
 const pomoReset=document.getElementById("pomoReset");
 const pomoSelect=document.getElementById("pomoSelect");
 const BREAK_MAP={"15":2,"25":5,"50":10};
@@ -1420,6 +1903,31 @@ pomoStart.addEventListener("click",()=>{
     startInterval();
   }else if(PS.intervalId){clearInterval(PS.intervalId);PS.intervalId=null;}
   updPomo();
+});
+
+/* NEW: Skip button logic */
+pomoSkip.addEventListener("click",()=>{
+  ensureAudio();
+  if(PS.running){
+    // Timer is running: set remaining to 0 so the interval triggers the next phase
+    PS.remaining = 0;
+    updPomo();
+  } else {
+    // Timer is paused: immediately switch mode
+    if(PS.mode === "focus"){
+      PS.mode = "break";
+      PS.total = breakSec();
+      PS.remaining = PS.total;
+      playChime();
+    } else {
+      PS.mode = "focus";
+      PS.total = focusSec();
+      PS.remaining = PS.total;
+      playBreakEnd();
+    }
+    PS.warnFired = false;
+    updPomo();
+  }
 });
 
 pomoReset.addEventListener("click",()=>{
@@ -1486,6 +1994,8 @@ function renderChapters(){
     const btn=document.createElement("button");
     btn.className="card-btn";
     btn.type="button";
+    const badges = [];
+    if(ch.superSuggestion) badges.push('🌟 Suggestion');
     btn.innerHTML=`
       <div class="card-num">Chapter ${ch.chapterNum}</div>
       <h3 class="card-title">${ch.title}</h3>
@@ -1493,7 +2003,7 @@ function renderChapters(){
       <div class="card-stats">
         <span>📝 ${ch.mcq.length} MCQs</span>
         <span>📖 ${ch.sq.length} SQs</span>
-        ${ch.superSuggestion ? '<span>⭐ Super Suggestion</span>' : ''}
+        ${badges.map(b=>`<span>${b}</span>`).join('')}
       </div>
     `;
     btn.addEventListener("click",()=>openChapter(cid));
@@ -1518,20 +2028,21 @@ function openChapter(cid){
   document.getElementById("switchChapter").onclick=()=>{renderChapters();showStep("chapter");};
 
   const hasSuper = !!ch.superSuggestion;
+  let tabsHTML = `
+    <button class="tab" data-tab="notes">Notes</button>
+    <button class="tab active" data-tab="mcq">MCQ</button>
+    <button class="tab" data-tab="sq">Short Questions</button>
+  `;
+  if(hasSuper)  tabsHTML += '<button class="tab" data-tab="super">🌟 Suggestion</button>';
+  
   studyBody.innerHTML=`
-    <div class="tabs">
-      <button class="tab" data-tab="notes">Notes</button>
-      <button class="tab active" data-tab="mcq">MCQ</button>
-      <button class="tab" data-tab="sq">Short Questions</button>
-      ${hasSuper ? '<button class="tab" data-tab="super">⭐ Super Suggestion</button>' : ''}
-    </div>
+    <div class="tabs">${tabsHTML}</div>
     <div id="viewNotes" class="hidden"></div>
     <div id="viewMCQ"></div>
     <div id="viewSQ" class="hidden"></div>
-    ${hasSuper ? '<div id="viewSuper" class="hidden"></div>' : ''}
+    ${hasSuper?'<div id="viewSuper" class="hidden"></div>':''}
   `;
   document.getElementById("viewNotes").innerHTML=ch.notesHTML||"<p>No notes.</p>";
-  if(hasSuper) document.getElementById("viewSuper").innerHTML=ch.superSuggestion;
 
   const tabs=studyBody.querySelectorAll(".tab");
   const views={
@@ -1549,6 +2060,7 @@ function openChapter(cid){
 
   renderMCQ(views.mcq,ch);
   renderSQ(views.sq,ch);
+  if(hasSuper)  renderSuperSuggestion(views.super,  ch.superSuggestion,  ch);
   showStep("study");
 }
 
@@ -1794,6 +2306,357 @@ function renderSQ(root,ch){
     if(!stepStudy.classList.contains("hidden")&&!document.getElementById("viewSQ")?.classList.contains("hidden")){
       if(e.key==="ArrowLeft"&&!sqPrev.disabled)sqPrev.click();
       if(e.key==="ArrowRight")sqNext.click();
+    }
+  });
+  render();
+}
+
+/* ---------- Suggestion (interactive like main tabs) ---------- */
+function renderSuperSuggestion(root, data, ch){
+  const infoBank = data.infoBank || [];
+  const mcqList = data.mcq || [];
+  const sqList = data.sq || [];
+  const cqList = data.cq || [];
+
+  root.innerHTML = `
+    <div class="subtabs" id="supSubtabs">
+      <button class="subtab" data-s="info">📋 Info Bank</button>
+      <button class="subtab active" data-s="mcq">📝 MCQ</button>
+      <button class="subtab" data-s="sq">📖 Short Questions</button>
+      <button class="subtab" data-s="cq">🧠 Creative Questions</button>
+    </div>
+    <div id="supBody"></div>
+  `;
+
+  const body = root.querySelector("#supBody");
+  const subtabs = root.querySelectorAll(".subtab");
+
+  subtabs.forEach(st => st.addEventListener("click", () => {
+    subtabs.forEach(x => x.classList.toggle("active", x === st));
+    renderSub(st.dataset.s);
+  }));
+
+  function renderSub(which) {
+    if (which === "info") {
+      body.innerHTML = `
+        <div class="notes">
+          <article class="note">
+            <h3>📋 Information Bank — Suggestion</h3>
+            <ol>
+              ${infoBank.map(t => `<li>${t}</li>`).join("")}
+            </ol>
+          </article>
+        </div>`;
+      return;
+    }
+    if (which === "mcq") {
+      renderStudyMCQ(body, mcqList, "super");
+      return;
+    }
+    if (which === "sq") {
+      renderStudySQ(body, sqList, "super");
+      return;
+    }
+    if (which === "cq") {
+      renderStudyCQ(body, cqList, "super");
+      return;
+    }
+  }
+
+  renderSub("info");
+}
+
+/* ---------- Reusable interactive study components ---------- */
+function renderStudyMCQ(root, mcqList, kind) {
+  if (!mcqList || !mcqList.length) {
+    root.innerHTML = "<p style='color:var(--muted);padding:20px'>No MCQs available.</p>";
+    return;
+  }
+  const cats = ["All topics", ...new Set(mcqList.map(q => q.category))];
+  root.innerHTML = `
+    <div class="filters">
+      ${cats.map((c,i)=>`<button class="pill${i===0?" on":""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("")}
+      <span class="spacer"></span>
+      <button class="shuffle" id="suggShuffle" type="button">🔄 Shuffle</button>
+    </div>
+    <div class="study-card">
+      <div class="card-scroll">
+        <div class="study-top">
+          <span id="suggQProgress">Question 1 / ${mcqList.length}</span>
+          <span class="cat" id="suggQCat">—</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="suggQBar"></div></div>
+        <h2 class="question" id="suggQText"></h2>
+        <div class="opts" id="suggQOpts"></div>
+        <div class="fb" id="suggQFb"></div>
+      </div>
+      <div class="actions">
+        <span class="hint">Press 1–4 to pick · Enter to submit · ← → to navigate</span>
+        <div class="actions-right">
+          <button class="btn ghost" id="suggPrev" disabled>← Previous</button>
+          <button class="btn accent" id="suggCheck" disabled>Check</button>
+        </div>
+      </div>
+    </div>
+    <div id="suggResults" class="hidden"></div>
+  `;
+
+  const st = { filter:"All topics", list:[...mcqList], idx:0, sel:null, checked:false, correct:0, missed:[], answerMap:{} };
+  const qCat = root.querySelector("#suggQCat");
+  const qProgress = root.querySelector("#suggQProgress");
+  const qBar = root.querySelector("#suggQBar");
+  const qText = root.querySelector("#suggQText");
+  const qOpts = root.querySelector("#suggQOpts");
+  const qFb = root.querySelector("#suggQFb");
+  const checkBtn = root.querySelector("#suggCheck");
+  const prevBtn = root.querySelector("#suggPrev");
+  const results = root.querySelector("#suggResults");
+  const cardScroll = root.querySelector(".card-scroll");
+
+  function render() {
+    if (st.idx >= st.list.length) return showResults();
+    const q = st.list[st.idx];
+    const saved = st.answerMap[st.idx];
+    st.sel = saved !== undefined ? saved : null;
+    st.checked = saved !== undefined;
+    qCat.textContent = q.category;
+    qProgress.textContent = `Question ${st.idx+1} / ${st.list.length}`;
+    qBar.style.width = `${(st.idx/st.list.length)*100}%`;
+    qText.textContent = q.question;
+    qFb.className = "fb"; qFb.innerHTML = "";
+    qOpts.innerHTML = "";
+    q.options.forEach((opt,i) => {
+      const b = document.createElement("button");
+      b.className = "opt"; b.type = "button";
+      b.innerHTML = `<span class="lt">${String.fromCharCode(65+i)}</span><span>${esc(opt)}</span>`;
+      if (st.checked) {
+        b.disabled = true;
+        if (i === q.answer) b.classList.add("right");
+        if (i === st.sel && st.sel !== q.answer) b.classList.add("wrong");
+      } else if (st.sel === i) {
+        b.classList.add("sel");
+      }
+      b.addEventListener("click", () => {
+        if (st.checked) return;
+        st.sel = i;
+        [...qOpts.children].forEach((o,k)=>o.classList.toggle("sel",k===i));
+        checkBtn.disabled = false;
+      });
+      qOpts.appendChild(b);
+    });
+    if (st.checked) {
+      const ok = st.sel === q.answer;
+      qFb.className = `fb show ${ok?"good":"bad"}`;
+      qFb.innerHTML = `<strong>${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}`;
+      checkBtn.textContent = st.idx === st.list.length-1 ? "See results" : "Next";
+    } else {
+      checkBtn.textContent = "Check";
+    }
+    checkBtn.disabled = !st.checked && st.sel === null;
+    prevBtn.disabled = st.idx === 0;
+    cardScroll.scrollTop = 0;
+  }
+
+  function check() {
+    if (st.sel === null) return;
+    const q = st.list[st.idx];
+    if (!st.checked) {
+      st.checked = true;
+      st.answerMap[st.idx] = st.sel;
+      const ok = st.sel === q.answer;
+      if (ok) st.correct++;
+      else st.missed.push({q:q.question, correct:q.options[q.answer], chosen:q.options[st.sel]});
+      render();
+    } else {
+      st.idx++; render();
+    }
+  }
+
+  function prev() { if (st.idx === 0) return; st.idx--; render(); }
+
+  function showResults() {
+    const pct = st.list.length ? Math.round((st.correct/st.list.length)*100) : 0;
+    root.querySelector(".study-card").style.display = "none";
+    root.querySelector(".filters").style.display = "none";
+    results.className = "results";
+    results.innerHTML = `
+      <p class="big"><span>${pct}%</span></p>
+      <p class="sub">${st.correct} of ${st.list.length} correct</p>
+      <div class="row">
+        <button class="btn accent" id="suggRetry">Try again</button>
+      </div>
+      ${st.missed.length?`<div class="missed"><h4>Missed questions</h4>${st.missed.map(m=>`<div class="missed-item"><strong>${esc(m.q)}</strong><span>Yours: ${esc(m.chosen)} · Correct: ${esc(m.correct)}</span></div>`).join("")}</div>`:""}
+    `;
+    root.querySelector("#suggRetry").addEventListener("click", () => start("All topics"));
+  }
+
+  function start(filter) {
+    st.filter = filter;
+    st.list = filter === "All topics" ? [...mcqList] : mcqList.filter(q => q.category === filter);
+    st.idx = 0; st.sel = null; st.checked = false; st.correct = 0; st.missed = []; st.answerMap = {};
+    results.className = "hidden";
+    root.querySelector(".study-card").style.display = "";
+    root.querySelector(".filters").style.display = "";
+    root.querySelectorAll(".pill").forEach(b => b.classList.toggle("on", b.dataset.cat === filter));
+    render();
+  }
+
+  root.querySelectorAll(".pill").forEach(b => b.addEventListener("click", () => start(b.dataset.cat)));
+  checkBtn.addEventListener("click", check);
+  prevBtn.addEventListener("click", prev);
+  root.querySelector("#suggShuffle").addEventListener("click", () => {
+    st.list = shuffle(st.list);
+    st.idx = 0; st.sel = null; st.checked = false; st.correct = 0; st.missed = []; st.answerMap = {};
+    results.className = "hidden";
+    root.querySelector(".study-card").style.display = "";
+    root.querySelector(".filters").style.display = "";
+    render();
+  });
+  document.addEventListener("keydown", e => {
+    const view = document.getElementById(kind === "super" ? "viewSuper" : "viewNormal");
+    if (view && !view.classList.contains("hidden")) {
+      if (["1","2","3","4"].includes(e.key) && !st.checked) {
+        const b = qOpts.children[Number(e.key)-1];
+        if (b) b.click();
+      }
+      if (e.key === "Enter" && !checkBtn.disabled) checkBtn.click();
+      if (e.key === "ArrowLeft" && !prevBtn.disabled) prevBtn.click();
+    }
+  });
+  render();
+}
+
+function renderStudySQ(root, sqList, kind) {
+  if (!sqList || !sqList.length) {
+    root.innerHTML = "<p style='color:var(--muted);padding:20px'>No short questions available.</p>";
+    return;
+  }
+  root.innerHTML = `
+    <div class="study-card">
+      <div class="card-scroll">
+        <div class="study-top">
+          <span id="suggSQProgress">Question 1 / ${sqList.length}</span>
+          <span class="cat" id="suggSQCat">—</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="suggSQBar"></div></div>
+        <h2 class="question" id="suggSQText"></h2>
+        <div class="sq-answer" id="suggSQAnswer"></div>
+      </div>
+      <div class="actions">
+        <span class="hint">← → to navigate</span>
+        <div class="actions-right">
+          <button class="btn ghost" id="suggSQPrev" disabled>← Previous</button>
+          <button class="btn accent" id="suggSQShow">Show answer</button>
+          <button class="btn" id="suggSQNext">Next →</button>
+        </div>
+      </div>
+    </div>
+  `;
+  let idx = 0, revealed = false;
+  const cat = root.querySelector("#suggSQCat");
+  const prog = root.querySelector("#suggSQProgress");
+  const bar = root.querySelector("#suggSQBar");
+  const txt = root.querySelector("#suggSQText");
+  const ans = root.querySelector("#suggSQAnswer");
+  const show = root.querySelector("#suggSQShow");
+  const next = root.querySelector("#suggSQNext");
+  const prev = root.querySelector("#suggSQPrev");
+  const cardScroll = root.querySelector(".card-scroll");
+
+  function render() {
+    const sq = sqList[idx];
+    cat.textContent = sq.category || "Short Question";
+    prog.textContent = `Question ${idx+1} / ${sqList.length}`;
+    bar.style.width = `${((idx+1)/sqList.length)*100}%`;
+    txt.textContent = sq.question;
+    ans.textContent = sq.answer;
+    ans.classList.remove("show");
+    revealed = false;
+    show.textContent = "Show answer";
+    prev.disabled = idx === 0;
+    cardScroll.scrollTop = 0;
+  }
+
+  show.addEventListener("click", () => {
+    revealed = !revealed;
+    ans.classList.toggle("show", revealed);
+    show.textContent = revealed ? "Hide answer" : "Show answer";
+  });
+  next.addEventListener("click", () => { idx = (idx+1) % sqList.length; render(); });
+  prev.addEventListener("click", () => { if (idx>0) { idx--; render(); } });
+  document.addEventListener("keydown", e => {
+    const view = document.getElementById(kind === "super" ? "viewSuper" : "viewNormal");
+    if (view && !view.classList.contains("hidden")) {
+      if (e.key === "ArrowLeft" && !prev.disabled) prev.click();
+      if (e.key === "ArrowRight") next.click();
+    }
+  });
+  render();
+}
+
+function renderStudyCQ(root, cqList, kind) {
+  if (!cqList || !cqList.length) {
+    root.innerHTML = "<p style='color:var(--muted);padding:20px'>No creative questions available.</p>";
+    return;
+  }
+  root.innerHTML = `
+    <div class="study-card">
+      <div class="card-scroll">
+        <div class="study-top">
+          <span id="suggCQProgress">Question 1 / ${cqList.length}</span>
+          <span class="cat" id="suggCQCat">Creative Question</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="suggCQBar"></div></div>
+        <div id="suggCQBody"></div>
+      </div>
+      <div class="actions">
+        <span class="hint">← → to navigate</span>
+        <div class="actions-right">
+          <button class="btn ghost" id="suggCQPrev" disabled>← Previous</button>
+          <button class="btn accent" id="suggCQShow">Show answer</button>
+          <button class="btn" id="suggCQNext">Next →</button>
+        </div>
+      </div>
+    </div>
+  `;
+  let idx = 0, revealed = false;
+  const prog = root.querySelector("#suggCQProgress");
+  const body = root.querySelector("#suggCQBody");
+  const show = root.querySelector("#suggCQShow");
+  const next = root.querySelector("#suggCQNext");
+  const prev = root.querySelector("#suggCQPrev");
+  const cardScroll = root.querySelector(".card-scroll");
+
+  function render() {
+    const cq = cqList[idx];
+    prog.textContent = `Question ${idx+1} / ${cqList.length}`;
+    body.innerHTML = `
+      <span class="cq-tag">${esc(cq.tag || "Creative")}</span>
+      <h2 class="question" style="margin-top:0">${esc(cq.q)}</h2>
+      <div class="cq-block" id="suggCQAnswer" style="display:none">
+        <h4>Answer</h4>
+        <p>${esc(cq.a)}</p>
+      </div>
+    `;
+    revealed = false;
+    show.textContent = "Show answer";
+    prev.disabled = idx === 0;
+    cardScroll.scrollTop = 0;
+  }
+
+  show.addEventListener("click", () => {
+    revealed = !revealed;
+    const ans = root.querySelector("#suggCQAnswer");
+    if (ans) ans.style.display = revealed ? "block" : "none";
+    show.textContent = revealed ? "Hide answer" : "Show answer";
+  });
+  next.addEventListener("click", () => { idx = (idx+1) % cqList.length; render(); });
+  prev.addEventListener("click", () => { if (idx>0) { idx--; render(); } });
+  document.addEventListener("keydown", e => {
+    const view = document.getElementById(kind === "super" ? "viewSuper" : "viewNormal");
+    if (view && !view.classList.contains("hidden")) {
+      if (e.key === "ArrowLeft" && !prev.disabled) prev.click();
+      if (e.key === "ArrowRight") next.click();
     }
   });
   render();
